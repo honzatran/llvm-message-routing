@@ -7,7 +7,7 @@ jobs:
         - checkout
         - run: 
             - name: build
-            - command: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G ninja && ninja 
+            - command: 'mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G ninja && ninja'
         - run:
             - name: test
-            - command: cd build && ninja test
+            - command: 'cd build && ninja test'
