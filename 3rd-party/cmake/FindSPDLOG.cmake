@@ -1,0 +1,3 @@
+set (SPD_VERSION 0.14.0)
+
+set (SPDLOG_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../spdlog-${SPD_VERSION}/include")
