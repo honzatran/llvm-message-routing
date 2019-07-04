@@ -1,5 +1,5 @@
 
-project(TCP_SANDWICH)
+project(MESSAGE_ROUTING)
 
 function (init_google_test)
     configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
@@ -80,7 +80,6 @@ option(BUILD_TESTING "Determine whether tests are build" ON)
 option(USE_ADDRESS_SANITIZER "Determine whether tests are build" ON)
 option(USE_LIBUNWIND "ENABLE LIBUWIND STACKTRACES" OFF)
 option(RUN_CLANG_TIDY "ENABLE CLANG TIDY" OFF)
-option(BUILD_LLVM_TOOLS "BUILD LLVM TOOLS" OFF)
 
 function (routing_test) 
     cmake_parse_arguments(ROUTING_TEST
@@ -104,7 +103,7 @@ function (routing_test)
             gmock_main ${ROUTING_TEST_PUBLIC_LIBRARIES})
 
         target_include_directories(${_NAME}_bin
-            PUBLIC ${ROUTING_TEST_PUBLIC_INCLUDE_DIRS} ra::fpga)
+            PUBLIC ${ROUTING_TEST_PUBLIC_INCLUDE_DIRS})
 
         add_test(NAME ${_NAME} COMMAND ${_NAME}_bin  --gtest_output=xml:${ROUTING_TEST_TARGET}_results.xml
              WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
@@ -125,7 +124,7 @@ function (routing_benchmark)
     cmake_parse_arguments(ROUTING_BENCHMARK
         ""
         "TARGET"
-        "SOURCES;PUBLIC_LIBROUTINGRIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS"
+        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS"
         ${ARGN}
     )
 
@@ -179,7 +178,7 @@ function(routing_library)
         PRIVATE ${ROUTING_LIB_PRIVATE_INCLUDE_DIRS})
 
     if (ROUTING_LIB_EXPORT_NAME)
-        add_library(ra::${ROUTING_LIB_EXPORT_NAME} ALIAS ${_NAME})
+        add_library(routing::${ROUTING_LIB_EXPORT_NAME} ALIAS ${_NAME})
     endif()
 
     if (NOT ROUTING_LIB_IGNORE_INSTALL)
@@ -221,61 +220,11 @@ function(routing_exe)
 
 endfunction()
 
-function (ra_fastlane_test) 
-    cmake_parse_arguments(RA_FASTLANE_TEST
-        "IGNORE_INSTALL"
-        "TARGET"
-        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS"
-        ${ARGN}
-    )
-
-    if (BUILD_TESTING)
-        set (_NAME ${RA_FASTLANE_TEST_TARGET}_fastlane_test)
-        string(TOUPPER ${_NAME} _UPPER_NAME)
-
-        add_executable(${_NAME}_bin
-            ${RA_FASTLANE_TEST_SOURCES} ${PROJECT_SOURCE_DIR}/testing/test_fpga_main.cpp)
-
-        target_compile_options(${_NAME}_bin 
-            PRIVATE ${RA_FASTLANE_TEST_PRIVATE_COMPILE_FLAGS})
-
-        target_link_libraries(${_NAME}_bin 
-            gmock_main ${RA_FASTLANE_TEST_PUBLIC_LIBRARIES} ra::fpga ra::fastlane::test)
-
-        target_include_directories(${_NAME}_bin
-            PUBLIC ${RA_FASTLANE_TEST_PUBLIC_INCLUDE_DIRS})
-
-        if (NOT RA_FASTLANE_TEST_IGNORE_INSTALL)
-            install_binary(${_NAME}_bin)
-        endif()
-
-         if (USE_ADDRESS_SANITIZER)
-             link_address_sanitizer(${_NAME}_bin)
-         endif()
-
-        if (RUN_CLANG_TIDY)
-            run_clang_tidy(${_NAME}_bin)
-        endif()
-
-    endif()
-
-endfunction()
-
 file(MAKE_DIRECTORY logs)
+file(MAKE_DIRECTORY config)
 
-set(TCP_SANDWICH "tcp-sandwich")
-set(FAST_LANE "fast-lane")
-set(FAST_LANE_JNI "fast-lane-jni")
-set(FPGA_FAST_LANE_JNI "fpga_fast-lane-jni")
-set(TCP_SANDWICH_TEST "tcp-sandwich-test")
-set(FPGA_FAST_LANE "fpga-fast-lane")
-
-
-if (PATH_LIBCPP STREQUAL "Default")
-	set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall")
-else (PATH_LIBCPP STREQUAL "Default")
-	set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wl,-rpath,${PATH_LIBCPP}/lib64")
-endif(PATH_LIBCPP STREQUAL "Default")
+set(CMAKE_CXX_FLAGS "-g -Wall")
+set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -311,31 +260,12 @@ add_custom_target(link_logs_target ALL
                       ${CMAKE_CURRENT_SOURCE_DIR}/logs
                       ${CMAKE_BINARY_DIR}/logs) 
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/setup_ld_library_path.sh.in 
-    ${CMAKE_CURRENT_SOURCE_DIR}/setup_ld_library_path.sh @ONLY)
-
-add_custom_target(setup_ld_library_path ALL
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  ${CMAKE_CURRENT_SOURCE_DIR}/setup_ld_library_path.sh
-  ${CMAKE_BINARY_DIR}/bin
-)
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/cmake)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(SPDLOG REQUIRED)
 find_package(Boost 1.53 COMPONENTS program_options thread REQUIRED)
-find_package(BITTWARE REQUIRED)
-find_package(STRINGVIEWLITE REQUIRED)
-# find_package(LLVM REQUIRED CONFIG)
-
-if (${USE_LIBUNWIND})
-    find_package(Libunwind)
-    set(LIBUNWIND_ENABLED 1)
-else(${USE_LIBUNWIND})
-    set(LIBUNWIND_ENABLED 0)
-endif()
 
 init_google_test()
 
@@ -357,13 +287,12 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/abseil)
 
 include_directories(
     ${SPDLOG_INCLUDE_DIRS} 
-    ${Boost_INCLUDE_DIR}
-    ${LIBUNWIND_INCLUDE_DIR})
+    ${Boost_INCLUDE_DIR})
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/routing)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
 
 add_custom_target(copy_compilation_db ALL
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -379,9 +308,3 @@ set(INSTALL_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
 install(DIRECTORY config logs 
     DIRECTORY_PERMISSIONS ${INSTALL_PERMISSIONS} 
     DESTINATION ".") 
-
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/setup_ld_library_path.sh 
-    PERMISSIONS ${INSTALL_PERMISSIONS}
-    DESTINATION ${BIN_INSTALL})
-
-install(DIRECTORY ${BITTWARE_INSTALL_LIB_DIR} DESTINATION ${LIB_INSTALL})
