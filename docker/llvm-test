@@ -20,10 +20,8 @@ RUN apt-get install -y --no-install-recommends \
     build-essential git cmake cmake-data \
     ninja-build zlib1g-dev llvm-8-dev
 
-RUN add-apt-repository "deb-src http://ppa.launchpad.net/mhier/libboost-latest/ubuntu bionic main" && \
-    apt-get update
 
-RUN apt-get install -y --no-install-recommends \
-    libboost-dev libboost-all-dev
-    
+# install boost 1.70.0
+RUN wget --max-redirect 3 https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1.70.0.tar.gz
+RUN mkdir -p /usr/include/boost && tar zxf boost_1.70.0.tar.gz -C /usr/include/boost --strip-components=1
 
