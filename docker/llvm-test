@@ -1,0 +1,21 @@
+# Taken from JitFromScratch repository 
+# https://github.com/weliveindetail/JitFromScratch/tree/master/docker
+#
+#
+FROM ubuntu:18.04
+
+# Install tools for apt-add-repository
+RUN apt-get update && \
+        apt-get install -y --no-install-recommends \
+        ca-certificates wget gnupg software-properties-common
+
+# Add LLVM apt repository
+RUN wget https://apt.llvm.org/llvm-snapshot.gpg.key && \
+    apt-key add llvm-snapshot.gpg.key && \
+    apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main" && \
+    apt-get update
+
+# Install tools and libs for JitFromScratch build
+RUN apt-get install -y --no-install-recommends \
+    build-essential git cmake cmake-data \
+    ninja-build zlib1g-dev llvm-8-dev
