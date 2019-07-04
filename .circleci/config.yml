@@ -1,8 +1,8 @@
 version: 2
 jobs:
-    build:
-        docker:
-            - image: honzatran/llvm-message-routing:latest
-              steps:
-                  - checkout
-                  - run: echo "A first hello"
+  build:
+    docker:
+      - image: honzatran/llvm-message-routing:latest
+    steps:
+        - checkout
+        - run: echo "A first hello"
