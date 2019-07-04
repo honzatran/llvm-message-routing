@@ -19,3 +19,11 @@ RUN wget https://apt.llvm.org/llvm-snapshot.gpg.key && \
 RUN apt-get install -y --no-install-recommends \
     build-essential git cmake cmake-data \
     ninja-build zlib1g-dev llvm-8-dev
+
+RUN add-apt-repository "deb-src http://ppa.launchpad.net/mhier/libboost-latest/ubuntu bionic main" && \
+    apt-get update
+
+RUN apt-get install -y --no-install-recommends \
+    libboost-dev libboost-all-dev
+    
+
