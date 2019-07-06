@@ -4,6 +4,8 @@
 #include <boost/optional.hpp>
 #include <functional>
 
+#include <string>
+
 namespace routing
 {
 void

@@ -145,6 +145,8 @@ Tcp_initiator_socket::start(std::error_code &error_code)
         sizeof(server));
 
     int one = 1;
+
+#if linux
     call_posix_method(
         error_code,
         ::setsockopt,
@@ -153,6 +155,7 @@ Tcp_initiator_socket::start(std::error_code &error_code)
         TCP_NODELAY,
         &one,
         sizeof(one));
+#endif
 
     if (error_code)
     {
@@ -320,9 +323,11 @@ Tcp_acceptor_socket::wait_for_incoming_connection(
 
     int one = 1;
 
+#if linux
     call_posix_method(
         ec, ::setsockopt, client_socket, SOL_TCP, TCP_NODELAY, &one,
         sizeof(one));
+#endif
 
     if (ec)
     {

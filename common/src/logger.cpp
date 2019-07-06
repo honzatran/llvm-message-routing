@@ -180,7 +180,7 @@ Logger_factory::Logger_factory(routing::Config const& config)
     auto debug_loggers
         = config.get<std::vector<std::string>>(k_log_debug);
 
-    if (debug_loggers != nullptr)
+    if (debug_loggers)
     {
         m_debug_loggers
             = std::set<std::string>(debug_loggers->begin(), debug_loggers->end());

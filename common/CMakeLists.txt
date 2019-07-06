@@ -119,6 +119,7 @@ routing_library(
         ${Boost_LIBRARIES} 
         pthread 
         absl::flat_hash_map
+        absl::failure_signal_handler
     PUBLIC_INCLUDE_DIRS
         "include"
     PRIVATE_INCLUDE_DIRS 

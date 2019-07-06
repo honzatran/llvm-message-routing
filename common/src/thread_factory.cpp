@@ -50,7 +50,7 @@ void Thread_pinning_factory::load_pinned_threads(Config const& config)
 
     std::string line;
 
-    while (std::getline(config_stream, line) != nullptr)
+    while (std::getline(config_stream, line))
     {
         boost::algorithm::trim(line);
 

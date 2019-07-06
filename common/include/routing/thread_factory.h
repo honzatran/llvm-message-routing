@@ -73,6 +73,7 @@ private:
     cpu_set_t m_old_set;
 
 #else
+public:
     Affinity_guard(std::uint32_t core) {}
 #endif
 };
