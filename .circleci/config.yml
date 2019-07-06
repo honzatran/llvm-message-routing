@@ -5,8 +5,15 @@ jobs:
       - image: honzatran/llvm-message-routing:latest
     steps:
         - checkout
+        - run:
+            name: "Pull submodules"
+            command: |
+                git submodule init
+                git submodule update --remote
         - run: 
             name: cmake 
+            environment:
+                Boost_INCLUDE_DIR: /usr/local/include/boost
             command: |
                 mkdir build 
                 cd build 
