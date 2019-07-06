@@ -10,7 +10,7 @@ jobs:
             command: |
                 mkdir build 
                 cd build 
-                cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G ninja 
+                cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G Ninja 
         - run:
             name: build
             command: |
