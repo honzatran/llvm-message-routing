@@ -6,8 +6,19 @@ jobs:
     steps:
         - checkout
         - run: 
+            - name: cmake 
+            - command: |
+                mkdir build 
+                cd build 
+                cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G ninja 
+        - run:
             - name: build
-            - command: 'mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G ninja && ninja'
+            - command: |
+                cd build
+                ninja
         - run:
             - name: test
-            - command: 'cd build && ninja test'
+            - command: | 
+                cd build 
+                ninja test
+
