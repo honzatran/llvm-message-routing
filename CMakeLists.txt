@@ -265,7 +265,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/cmake)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(SPDLOG REQUIRED)
-find_package(Boost 1.53 COMPONENTS program_options thread REQUIRED)
+find_package(Boost 1.70 COMPONENTS program_options thread REQUIRED)
 
 init_google_test()
 
