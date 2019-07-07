@@ -264,6 +264,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/cmake)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(Boost_NO_BOOST_CMAKE ON CACHE BOOL "" FORCE)
+
 find_package(SPDLOG REQUIRED)
 find_package(Boost 1.70 COMPONENTS program_options thread REQUIRED)
 
