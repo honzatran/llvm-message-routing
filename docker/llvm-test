@@ -54,7 +54,7 @@ RUN add-apt-repository -y ppa:git-core/ppa \
 # install boost 1.70.0
 RUN wget --max-redirect 3 https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz
 RUN mkdir /tmp/boost && tar zxf boost_1_70_0.tar.gz -C /tmp/boost --strip-component 1
-ADD project-config.jam /tmp/project-config.jam
+ADD ./docker/project-config.jam /tmp/project-config.jam
 
 RUN cd /tmp/boost/ \
     && ./bootstrap.sh \
