@@ -23,6 +23,8 @@ jobs:
                 ninja -j1
         - run:
             name: test
+            environment:
+                CTEST_OUTPUT_ON_FAILURE: 1
             command: | 
                 cd build 
                 ninja test
