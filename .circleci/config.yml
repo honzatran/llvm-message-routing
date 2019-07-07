@@ -12,12 +12,10 @@ jobs:
                 git submodule update --remote
         - run: 
             name: cmake 
-            environment:
-                 BOOST_INCLUDE_DIR: /usr/include/boost
             command: |
                 mkdir build 
                 cd build 
-                cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DBoost_INCLUDE_DIR=${BOOST_INCLUDE_DIR} -G Ninja 
+                cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G Ninja 
         - run:
             name: build
             command: |
