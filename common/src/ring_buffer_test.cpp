@@ -185,7 +185,7 @@ TEST_F(
 {
     // For some reason the capacity must be 3 not 2, this is a
     // behaviour of the boost spsc queue
-    Typed_spsc_ring_buffer<Test_content, 3> ring_buffer;
+    Typed_spsc_ring_buffer<Test_content, 2> ring_buffer;
 
     EXPECT_TRUE(ring_buffer.try_push(Test_content()));
     EXPECT_TRUE(ring_buffer.try_push(Test_content()));
@@ -198,7 +198,7 @@ TEST_F(
     Typed_spsc_ring_buffer_test,
     force_push)
 {
-    Typed_spsc_ring_buffer<Test_content, 3> ring_buffer;
+    Typed_spsc_ring_buffer<Test_content, 2> ring_buffer;
 
     EXPECT_TRUE(ring_buffer.try_push(Test_content()));
     EXPECT_TRUE(ring_buffer.try_push(Test_content()));
@@ -220,7 +220,7 @@ TEST_F(
     Typed_spsc_ring_buffer_test,
     push)
 {
-    Typed_spsc_ring_buffer<Test_content, 3> ring_buffer;
+    Typed_spsc_ring_buffer<Test_content, 2> ring_buffer;
 
     EXPECT_TRUE(ring_buffer.try_push(Test_content()));
     EXPECT_TRUE(ring_buffer.try_push(Test_content()));
