@@ -9,6 +9,7 @@
 #include <iterator>
 #include <memory>
 #include <vector>
+#include <functional>
 
 #include <spdlog/fmt/fmt.h>
 
