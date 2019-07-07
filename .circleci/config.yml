@@ -22,7 +22,7 @@ jobs:
             name: build
             command: |
                 cd build
-                ninja
+                ninja -j1
         - run:
             name: test
             command: | 
