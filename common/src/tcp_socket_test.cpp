@@ -53,11 +53,11 @@ public:
                 "tcp_socket.acceptor.port", 
                 port + port_delta);
 
-        m_acceptor = make_unique<Tcp_acceptor_socket>(
+        m_acceptor = std::make_unique<Tcp_acceptor_socket>(
                 "tcp_socket.acceptor", 
                 config);
 
-        m_initiator = make_unique<Tcp_initiator_socket>(
+        m_initiator = std::make_unique<Tcp_initiator_socket>(
                 "tcp_socket.initiator",
                 config);
 

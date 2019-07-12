@@ -69,7 +69,7 @@ TEST_F(Time_mixin_test, DISABLED_repeat)
     auto f = [] { fmt::print("hitted\n"); };
 
     std::unique_ptr<IBase> tmp
-        = make_unique<Repeat_derived>(5, chrono::milliseconds{200}, f);
+        = routing::make_unique<Repeat_derived>(5, chrono::milliseconds{200}, f);
 
     tmp->run();
 }

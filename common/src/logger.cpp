@@ -83,7 +83,7 @@ routing::init_logger(routing::Config const& config)
                 return;
             }
 
-            g_logger_factory = make_unique<Logger_factory>(config);
+            g_logger_factory = std::make_unique<Logger_factory>(config);
             
         },
         config);
@@ -122,7 +122,7 @@ init_logger(std::string const& log_file, bool async_logging)
                 return;
             }
 
-            g_logger_factory = make_unique<Logger_factory>(
+            g_logger_factory = std::make_unique<Logger_factory>(
                 log_file, async_logging, true, debug_loggers);
             
         });

@@ -6,7 +6,7 @@
 using namespace routing;
 using namespace std;
 
-constexpr int size = 8192;
+constexpr int buffer_size = 8192;
 
 class BufferTest : public ::testing::Test
 {
@@ -17,10 +17,10 @@ protected:
 
 TEST_F(BufferTest, position_remaining_test)
 {
-    EXPECT_EQ(size, buffer.remaining());
+    EXPECT_EQ(buffer_size, buffer.remaining());
 
     buffer.set_position(42);
-    EXPECT_EQ(size - 42, buffer.remaining());
+    EXPECT_EQ(buffer_size - 42, buffer.remaining());
 
     buffer.set_position(8192);
     EXPECT_EQ(0, buffer.remaining());

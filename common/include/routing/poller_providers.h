@@ -41,7 +41,7 @@ public:
     {
         for (std::size_t i = 0; i < poller_count; ++i)
         {
-            m_pollers.push_back(make_unique<Poller_t>(
+            m_pollers.push_back(std::make_unique<Poller_t>(
                 fmt::format("{}_{}", name, i),
                 poller_capacity,
                 poller_insert_capacity));

@@ -16,7 +16,7 @@ public:
 
     void SetUp() override
     {
-        auto slab_allocator = make_unique<Slab_allocator_t>(Malloc_allocator());
+        auto slab_allocator = std::make_unique<Slab_allocator_t>(Malloc_allocator());
         m_tested_message = engine::Message(std::move(slab_allocator));
     }
 
