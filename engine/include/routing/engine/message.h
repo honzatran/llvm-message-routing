@@ -24,9 +24,7 @@
 #include <memory>
 #include <mutex>
 
-namespace routing
-{
-namespace engine
+namespace routing::engine
 {
 namespace detail
 {
@@ -514,7 +512,6 @@ private:
         reset_ctrl();
     }
 };
-}  // namespace engine
 }  // namespace routing
 
 #endif

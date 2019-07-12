@@ -212,7 +212,7 @@ protected:
         { 
             int work_count = 0;
 
-            for (int i = 0; i < m_pollables.size(); ++i)
+            for (std::size_t i = 0; i < m_pollables.size(); ++i)
             {
                 Poll_result poll_result = m_pollables[i].poll();
 
