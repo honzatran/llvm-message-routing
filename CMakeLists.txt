@@ -158,7 +158,7 @@ function(routing_library)
     cmake_parse_arguments(ROUTING_LIB
         "IGNORE_INSTALL"
         "TARGET;EXPORT_NAME"
-        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS;PRIVATE_INCLUDE_DIRS"
+        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS;PRIVATE_INCLUDE_DIRS;PRIVATE_COMPILE_DEFINITIONS"
         ${ARGN}
     )
 
@@ -180,6 +180,9 @@ function(routing_library)
     if (ROUTING_LIB_EXPORT_NAME)
         add_library(routing::${ROUTING_LIB_EXPORT_NAME} ALIAS ${_NAME})
     endif()
+
+    target_compile_definitions(${_NAME} 
+        PRIVATE ${ROUTING_LIB_PRIVATE_COMPILE_DEFINITIONS})
 
     if (NOT ROUTING_LIB_IGNORE_INSTALL)
         install_lib(${_NAME})
@@ -294,6 +297,7 @@ include_directories(
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/message)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
 
 add_custom_target(copy_compilation_db ALL
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
