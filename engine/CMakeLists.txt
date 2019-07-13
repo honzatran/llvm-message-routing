@@ -178,11 +178,11 @@ routing_library(
         LLVMDemangle
     PUBLIC_INCLUDE_DIRS
         "include"
-    PRIVATE
-        "src"
         ${LLVM_INCLUDE_DIRS}
         ${LLVM_BUILD_BINARY_DIR}/tools/clang/include
         ${LLVM_BUILD_MAIN_SRC_DIR}/${CLANG_SRC_DIR_PREFIX}/clang/include
+    PRIVATE_INCLUDE_DIRS
+        "src"
     PRIVATE_COMPILE_FLAGS
         ${DISABLE_RTTI_FLAG}
     PRIVATE_COMPILE_DEFINITIONS
@@ -190,17 +190,33 @@ routing_library(
         JIT_FROM_SCRATCH_CLANG_RESOURCE_DIR=${LLVM_BUILD_BINARY_DIR}/lib/clang/${LLVM_PACKAGE_VERSION}
 )
 
+routing_exe(
+    TARGET 
+        "engine_orc"
+    SOURCES
+        "src/JitFromScratch.cpp"
+    PUBLIC_LIBRARIES
+        routing::orc
+    PRIVATE_COMPILE_FLAGS
+        ${DISABLE_RTTI_FLAG}
+
+)
+
+
+
+
+
 # get_target_property(ALL_INCLUDE_DIRECTORIES JitFromScratch INCLUDE_DIRECTORIES)
 # message(STATUS "Include directories: ${ALL_INCLUDE_DIRECTORIES}")
 #
-get_target_property(ALL_LINK_LIBRARIES "routing_orc" LINK_LIBRARIES)
-message(STATUS "Link libraries: ${ALL_LINK_LIBRARIES}")
+# get_target_property(ALL_LINK_LIBRARIES "routing_orc" LINK_LIBRARIES)
+# message(STATUS "Link libraries: ${ALL_LINK_LIBRARIES}")
+# 
+# get_target_property(ALL_COMPILE_OPTIONS "routing_orc" COMPILE_OPTIONS)
+# message(STATUS "Compile options: ${ALL_COMPILE_OPTIONS}")
 #
-get_target_property(ALL_COMPILE_OPTIONS "routing_orc" COMPILE_OPTIONS)
-message(STATUS "Compile options: ${ALL_COMPILE_OPTIONS}")
-#
-get_target_property(ALL_COMPILE_DEFINITIONS "routing_orc" COMPILE_DEFINITIONS)
-message(STATUS "Compile definitions: ${ALL_COMPILE_DEFINITIONS}")
+# get_target_property(ALL_COMPILE_DEFINITIONS "routing_orc" COMPILE_DEFINITIONS)
+# message(STATUS "Compile definitions: ${ALL_COMPILE_DEFINITIONS}")
 #
 # message(STATUS "Other flags: ${CMAKE_CXX_FLAGS}")
 # message(STATUS "Other flags Debug: ${CMAKE_CXX_FLAGS_DEBUG}")

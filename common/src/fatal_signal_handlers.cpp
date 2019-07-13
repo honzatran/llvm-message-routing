@@ -1,13 +1,13 @@
 
+#include <routing/configuration.h>
 #include <routing/fatal_signal_handlers.h>
 #include <routing/logger.h>
 #include <routing/stacktrace.h>
 #include <routing/stacktrace_printer.h>
-#include <routing/configuration.h>
 
 #include <absl/debugging/failure_signal_handler.h>
 
-#include <signal.h>
+#include <csignal>
 
 using namespace routing;
 using namespace std;
@@ -20,5 +20,4 @@ routing::install_fatal_signal_handler()
     options.call_previous_handler = true;
 
     absl::InstallFailureSignalHandler(options);
-
 }

@@ -1,21 +1,15 @@
-#include <llvm/ExecutionEngine/ExecutionEngine.h>
-#include <llvm/IR/IRBuilder.h>
-#include <llvm/IR/LLVMContext.h>
-#include <llvm/IR/Module.h>
-#include <llvm/IR/Verifier.h>
-#include <llvm/Support/CommandLine.h>
-#include <llvm/Support/Error.h>
-#include <llvm/Support/ManagedStatic.h>
-#include <llvm/Support/PrettyStackTrace.h>
-#include <llvm/Support/Signals.h>
-#include <llvm/Support/TargetSelect.h>
-#include <llvm/Support/raw_ostream.h>
+
 #include <memory>
 
 #include <routing/engine/SimpleOrcJit.h>
 
 #include <routing/engine/ClangCC1Driver.h>
-#include "llvm/Target/TargetOptions.h"
+
+#include <llvm/Support/CommandLine.h>
+#include <llvm/Support/PrettyStackTrace.h>
+#include <llvm/Support/Error.h>
+#include <llvm/Support/Signals.h>
+#include <llvm/Support/TargetSelect.h>
 
 #include <iostream>
 
@@ -77,10 +71,7 @@ int main(int argc, char **argv) {
 
   // Implementation of the integerDistances function.
   std::string sourceCode =
-      "#include <vector>\n"
-      "extern int g();\n"
-      "template <typename T> T sum(T a, T b) { return a + b; } \n"
-      "extern \"C\" int f() { print(); return g() + sum<int>(1, 2); } \n";
+      "extern \"C\" int f() { return 42; } \n";
 
   // Compile C++ to bitcode.
   LLVMContext context;

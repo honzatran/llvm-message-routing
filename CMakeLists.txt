@@ -194,7 +194,7 @@ function(routing_exe)
     cmake_parse_arguments(ROUTING_EXE
         "NOT_INSTALL;ADDRESS_SANITIZER"
         "TARGET"
-        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_LIBRARIES;PRIVATE_COMPILE_FLAGS"
+        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_LIBRARIES;INCLUDE_DIRS;PRIVATE_COMPILE_FLAGS"
         ${ARGN}
     )
 
@@ -208,6 +208,9 @@ function(routing_exe)
 
     target_link_libraries(
         ${_NAME} PUBLIC ${ROUTING_EXE_PUBLIC_LIBRARIES})
+
+    target_include_directories(${_NAME}
+        PRIVATE ${ROUTING_LIB_INCLUDE_DIRS})
 
     if (NOT ROUTING_EXE_IGNORE_INSTALL)
         install_binary(${ROUTING_EXE_TARGET})

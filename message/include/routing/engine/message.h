@@ -466,25 +466,25 @@ private:
     {
         assert(detail::is_power_of2(capacity) && "capacity must be power of 2");
 
-        Message_chunk* old_chunks = m_chunks;
-        std::size_t const old_capacity = m_capacity;
+        Message_chunk* old_chunks          = m_chunks;
+        std::size_t const old_capacity     = m_capacity;
         std::size_t const old_chunks_count = m_chunks_count;
-        m_capacity = capacity;
+        m_capacity                         = capacity;
 
         initialize_chunks();
 
         for (std::size_t i = 0; i < old_chunks_count; ++i)
         {
             Message_chunk* old_chunk = &old_chunks[i];
-            
+
             for (int index : old_chunk->match_used())
             {
                 auto value = old_chunk->get_value_view(index);
 
-                std::size_t new_hash = detail::City_hash::compute(value.key());
+                std::size_t new_hash  = detail::City_hash::compute(value.key());
                 Field_type field_type = value.type();
 
-                auto new_position =  find_first_non_null(new_hash, field_type);
+                auto new_position = find_first_non_null(new_hash, field_type);
 
                 new_position.set_ctrl(detail::H2(new_hash));
                 new_position.set(field_type, value.key(), value.get());
@@ -496,7 +496,7 @@ private:
     void initialize_chunks()
     {
         m_chunks_count = m_capacity / Message_chunk::k_width;
-        m_growth_left = detail::compute_growth_left(m_capacity);
+        m_growth_left  = detail::compute_growth_left(m_capacity);
 
         auto layout = create_layout(m_chunks_count, Message_chunk::k_width);
 
@@ -507,7 +507,7 @@ private:
         m_chunks = layout.Pointer<0>(data);
 
         absl::container_internal::SanitizerPoisonMemoryRegion(
-                data, layout.AllocSize());
+            data, layout.AllocSize());
 
         reset_ctrl();
     }

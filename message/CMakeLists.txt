@@ -25,6 +25,7 @@ routing_library(
         "include"
     PRIVATE_INCLUDE_DIRS 
         "src"
+    PRIVATE_COMPILE_DEFINITIONS
 )
 
 routing_test(

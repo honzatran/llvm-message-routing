@@ -6,8 +6,8 @@
 #include "buffer.h"
 #include "stdext.h"
 
-#include <boost/lockfree/spsc_queue.hpp>
 #include <spdlog/fmt/fmt.h>
+#include <boost/lockfree/spsc_queue.hpp>
 
 namespace routing
 {
@@ -39,7 +39,6 @@ public:
           m_queue(other.m_size),
           m_receive_buffer(std::move(other.m_receive_buffer))
     {
-
     }
 
     SPSC_ring_buffer& operator=(SPSC_ring_buffer&& other) = delete;
@@ -78,8 +77,7 @@ public:
         std::size_t processed
             = poller(m_receive_buffer.slice_from_position(popped));
 
-        m_receive_buffer.reset(
-            processed, prev_position + popped - processed);
+        m_receive_buffer.reset(processed, prev_position + popped - processed);
 
         return processed;
     }
@@ -93,22 +91,16 @@ private:
 
 /// This wraper around the boost spsc_queue implements move semantics.
 /// Moving instance of this class during live run results in Undefined
-/// Behaviour. Also moving does not copy the items inside the moved 
+/// Behaviour. Also moving does not copy the items inside the moved
 /// instance. T must also be default constructible.
 template <typename T, std::size_t CAPACITY>
 class Typed_spsc_ring_buffer
 {
 public:
-    Typed_spsc_ring_buffer() 
-    {
-        m_queue = routing::make_unique<Spsc_queue_t>();
-    }
+    Typed_spsc_ring_buffer() { m_queue = routing::make_unique<Spsc_queue_t>(); }
 
     /// Tries to push one item into the spsc queue
-    bool try_push(T const& instance)
-    {
-        return m_queue->push(instance);
-    }
+    bool try_push(T const& instance) { return m_queue->push(instance); }
 
     /// Force push one item into the spsc queue, idle strategy
     /// is used to when backpressure is detected
@@ -150,7 +142,7 @@ public:
             fn(instance);
             return true;
         }
-        
+
         return false;
     }
 
@@ -187,7 +179,6 @@ public:
         return popped_items;
     }
 
-
 private:
     using Spsc_queue_t
         = boost::lockfree::spsc_queue<T, boost::lockfree::capacity<CAPACITY>>;
@@ -195,7 +186,6 @@ private:
     std::unique_ptr<Spsc_queue_t> m_queue;
 };
 
-
-}
+}  // namespace routing
 
 #endif

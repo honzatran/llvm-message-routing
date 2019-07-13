@@ -10,42 +10,41 @@
 
 #include <iostream>
 
-#include "absl/container/internal/raw_hash_set.h"
-#include "absl/meta/type_traits.h"
+#include <absl/container/internal/raw_hash_set.h>
+#include <absl/meta/type_traits.h>
 #include "have_intrinsics.h"
 
-namespace routing
-{
-namespace engine
+namespace routing::engine
 {
 namespace detail
 {
-
-
 /// Returns the number of bytes for each key
-constexpr std::int32_t key_width() {
+constexpr std::int32_t
+key_width()
+{
     return 28;
 }
 
 /// Returns the mask for the key
-constexpr std::int32_t key_mask() {
+constexpr std::int32_t
+key_mask()
+{
     return (1 << key_width()) - 1;
 }
 
-
-}
+}  // namespace detail
 
 /// Represents the allowed types of field within message.
 enum class Field_type : std::uint8_t
 {
-    INT         = 0,
-    LONG        = 1,
-    DOUBLE      = 2,
-    DECIMAL     = 3,
-    TIME        = 4,
-    DATE        = 5,
-    STRING      = 6,
-    CUSTOM_DATA = 7,
+    INT           = 0,
+    LONG          = 1,
+    DOUBLE        = 2,
+    DECIMAL       = 3,
+    TIME          = 4,
+    DATE          = 5,
+    STRING        = 6,
+    CUSTOM_DATA   = 7,
     MESSAGE_ARRAY = 8
 };
 
@@ -53,23 +52,16 @@ class Message_key
 {
     static constexpr std::int32_t max() { return (1 << detail::key_width()); }
 
-    explicit Message_key(std::int32_t key)
-        : m_key(key)
-    {
-    }
+    explicit Message_key(std::int32_t key) : m_key(key) {}
 
     /// Gets the integer representing the actual key.
-    std::int32_t key() const
-    {
-        return m_key;
-    }
+    std::int32_t key() const { return m_key; }
 
 private:
     std::int32_t m_key;
 };
 
-
-/// Represents a combined key inside the routing message with the 
+/// Represents a combined key inside the routing message with the
 /// field type
 class Combined_message_key
 {
@@ -82,15 +74,12 @@ public:
     }
 
     /// Gets the integer representing the actual key.
-    std::int32_t key() const
-    {
-        return m_key_value & detail::key_mask();
-    }
+    std::int32_t key() const { return m_key_value & detail::key_mask(); }
 
     /// Gets the field type with this key.
-    Field_type field_type()  const
+    Field_type field_type() const
     {
-        int raw_type = m_key_value >> detail::key_width(); 
+        int raw_type = m_key_value >> detail::key_width();
         return Field_type(raw_type & 0xF);
     }
 
@@ -100,14 +89,12 @@ private:
 
 #if RA_HAVE_SSE2
 
-
 struct Message_chunk_sse_properties
 {
     static constexpr std::size_t k_width = 16;
 
     using BitMask = absl::container_internal::BitMask<std::uint32_t, k_width>;
 };
-
 
 class Message_chunk_sse_group
 {
@@ -124,8 +111,8 @@ public:
         auto match = _mm_set1_epi8(h2_hash);
         return _mm_movemask_epi8(_mm_cmpeq_epi8(match, m_ctrl));
     }
-    
-    int match_empty() const 
+
+    int match_empty() const
     {
 #if RA_HAVE_SSE3
         return _mm_movemask_epi8(_mm_sign_epi8(m_ctrl, m_ctrl));
@@ -154,26 +141,20 @@ private:
     __m128i m_ctrl;
 };
 
-
-
 /// SSE based implementation of the group
 class Message_value_group_sse_types
 {
 public:
-    Message_value_group_sse_types()
-    {
-        m_types = _mm_set1_epi8(-1);
-    }
+    Message_value_group_sse_types() { m_types = _mm_set1_epi8(-1); }
 
     Message_value_group_sse_types(__m128i types) : m_types(types) {}
 
-
-    /// Gets the mask, with bit set where the type in the underlying 
+    /// Gets the mask, with bit set where the type in the underlying
     /// type is the same like parameter field_type
     ///
     /// \param field_type type of the field
     template <Field_type field_type>
-    std::int32_t get_mask() const 
+    std::int32_t get_mask() const
     {
         __m128i type_mask
             = _mm_set1_epi8(static_cast<std::uint8_t>(field_type));
@@ -183,7 +164,7 @@ public:
         return _mm_movemask_epi8(compare_mask);
     }
 
-    std::int32_t get_mask(Field_type field_type) const 
+    std::int32_t get_mask(Field_type field_type) const
     {
         __m128i type_mask
             = _mm_set1_epi8(static_cast<std::uint8_t>(field_type));
@@ -195,10 +176,10 @@ public:
 
     /// sets the type byte in the mask to the specific type
     /// index must be < 16
-    void set_type(std::uint8_t index, Field_type field_type) 
+    void set_type(std::uint8_t index, Field_type field_type)
     {
         std::uint8_t* value = reinterpret_cast<std::uint8_t*>(&m_types);
-        value[index] = static_cast<std::uint8_t>(field_type);
+        value[index]        = static_cast<std::uint8_t>(field_type);
     }
 
     Field_type operator[](int index) const
@@ -219,16 +200,15 @@ private:
     __m128i m_types;
 };
 
-
-using Message_chunk_properties = Message_chunk_sse_properties;
-using Message_chunk_group = Message_chunk_sse_group;
+using Message_chunk_properties  = Message_chunk_sse_properties;
+using Message_chunk_group       = Message_chunk_sse_group;
 using Message_value_group_types = Message_value_group_sse_types;
 #else
 
 class Message_chunk_properties_portability;
 class Message_value_group_portability;
 
-using Mesage_chunk_properties = Message_chunk_properties_portability;
+using Mesage_chunk_properties   = Message_chunk_properties_portability;
 using Message_value_group_types = Message_value_group_portability;
 #endif
 
@@ -247,7 +227,6 @@ public:
 
     bool all_zeros()
     {
-
         for (int i = 0; i < 4; ++i)
         {
             __m128i cmp_result = _mm_cmpeq_epi8(m_keys[i], _mm_setzero_si128());
@@ -263,8 +242,8 @@ public:
 
     void set_key(std::uint8_t index, std::int32_t key)
     {
-        std::uint8_t key_field_index = index/4;
-        std::uint8_t index_within_key_field = index%4;
+        std::uint8_t key_field_index        = index / 4;
+        std::uint8_t index_within_key_field = index % 4;
 
         std::int32_t* sse_key_field
             = reinterpret_cast<std::int32_t*>(&m_keys[key_field_index]);
@@ -273,8 +252,8 @@ public:
     }
 
     int contains(std::int32_t key) const
-    { 
-        __m128i key_mask = _mm_set1_epi32(key); 
+    {
+        __m128i key_mask = _mm_set1_epi32(key);
 
         for (int i = 0; i < 4; ++i)
         {
@@ -282,13 +261,12 @@ public:
 
             std::int32_t value = _mm_movemask_epi8(cmp_result);
 
-            std::int32_t mask = 1 | (1 << 4) | (1 << 8) | (1 << 12); 
+            std::int32_t mask   = 1 | (1 << 4) | (1 << 8) | (1 << 12);
             std::int32_t filter = value & mask;
-
 
             if (filter != 0)
             {
-                return i * 4 + __builtin_ctz(filter)/4;
+                return i * 4 + __builtin_ctz(filter) / 4;
             }
         }
 
@@ -331,20 +309,16 @@ private:
     __m128i m_keys[4];
 };
 
-
 using Message_value_group_keys = Message_value_group_sse_keys;
-#else 
+#else
 
 #endif
-
 
 /// Allows accesses and insertion elements to the map
 class Message_value_view;
 
-
-
 /// Message value group is stored inside a message and has following layout:
-/// 16 byte for h2 of keys 
+/// 16 byte for h2 of keys
 /// 16 byte for type
 /// 16 int32 for keys
 /// 16 int64 for values or pointers
@@ -411,17 +385,14 @@ public:
         return group.match_used();
     }
 
-    std::int32_t key(int index)
-    {
-        return m_keys[index];
-    }
+    std::int32_t key(int index) { return m_keys[index]; }
 
 private:
     friend class Message_value_view;
 
     absl::container_internal::ctrl_t m_ctrl[k_width];
     Message_value_group_types m_types;
-    Message_value_group_keys m_keys; 
+    Message_value_group_keys m_keys;
     std::int64_t m_value[k_width];
 };
 
@@ -431,12 +402,12 @@ class Message_value_view
 public:
     Message_value_view() = default;
 
-    Message_value_view(Message_chunk const* chunk, std::uint8_t position) 
+    Message_value_view(Message_chunk const* chunk, std::uint8_t position)
         : m_group(const_cast<Message_chunk*>(chunk)), m_position(position)
     {
     }
 
-    Message_value_view(Message_chunk* chunk, std::uint8_t position) 
+    Message_value_view(Message_chunk* chunk, std::uint8_t position)
         : m_group(chunk), m_position(position)
     {
     }
@@ -459,10 +430,7 @@ public:
         m_group->m_value[m_position] = value;
     }
 
-    std::int32_t as_int() const
-    {
-        return m_group->m_value[m_position];
-    }
+    std::int32_t as_int() const { return m_group->m_value[m_position]; }
 
     void set_ctrl(absl::container_internal::ctrl_t h2)
     {
@@ -471,7 +439,7 @@ public:
 
     Message_value_view& wrap(Message_chunk* chunk, std::uint8_t position)
     {
-        m_group = chunk;
+        m_group    = chunk;
         m_position = position;
 
         return *this;
@@ -485,24 +453,14 @@ public:
 
     bool is_empty() const
     {
-        return m_group->m_ctrl[m_position]
-               == absl::container_internal::kEmpty;
+        return m_group->m_ctrl[m_position] == absl::container_internal::kEmpty;
     }
 
-    Field_type type() const
-    {
-        return m_group->m_types[m_position];
-    }
+    Field_type type() const { return m_group->m_types[m_position]; }
 
-    std::int32_t key() const
-    {
-        return m_group->m_keys[m_position];
-    }
+    std::int32_t key() const { return m_group->m_keys[m_position]; }
 
-    std::int64_t get() const
-    {
-        return m_group->m_value[m_position];
-    }
+    std::int64_t get() const { return m_group->m_value[m_position]; }
 
 private:
     Message_chunk* m_group;
@@ -531,7 +489,7 @@ Message_chunk::match_key(std::int32_t key, int mask) const
     return Message_value_view(this, position);
 }
 
-inline Message_value_view 
+inline Message_value_view
 Message_chunk::match_key(std::int32_t key, int mask)
 {
     int position = m_keys.contains(key, mask);
@@ -545,15 +503,12 @@ Message_chunk::get_value_view(std::size_t index) const
     return Message_value_view(this, index);
 }
 
-inline Message_value_view 
-Message_chunk::get_value_view(std::size_t index) 
+inline Message_value_view
+Message_chunk::get_value_view(std::size_t index)
 {
     return Message_value_view(this, index);
 }
 
-
-
-}
-}  // namespace rapid_addition
+}  // namespace routing::engine
 
 #endif
