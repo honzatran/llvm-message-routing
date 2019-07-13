@@ -293,8 +293,7 @@ include_directories(
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
-
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/message)
 
 add_custom_target(copy_compilation_db ALL
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
