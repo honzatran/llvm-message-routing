@@ -80,13 +80,13 @@ public:
               m_execution_session,
               m_object_layer,
               llvm::orc::ConcurrentIRCompiler(std::move(builder))),
+          m_data_layout(std::move(data_layout)),
+          m_mangler(m_execution_session, this->m_data_layout),
+          m_thread_safe_context(llvm::make_unique<llvm::LLVMContext>()),
           m_optimize_layer(
               m_execution_session,
               m_compile_layer,
-              optimize_module),
-          m_data_layout(std::move(data_layout)),
-          m_mangler(m_execution_session, this->m_data_layout),
-          m_thread_safe_context(llvm::make_unique<llvm::LLVMContext>())
+              optimize_module)
     {
         // Load own executable as dynamic library.
         // Required for RTDyldMemoryManager::getSymbolAddressInProcess().

@@ -98,7 +98,11 @@ int main(int argc, char **argv) {
       fatalError(std::move(result));
   }
 
-  auto function_f = jit->lookup("f");
+  std::cout << "LOOK UP" << std::endl;
+
+  std::string functionName = "f";
+
+  auto function_f = jit->lookup(functionName);
 
   if (!function_f) 
   {
