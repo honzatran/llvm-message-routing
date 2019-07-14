@@ -16,6 +16,8 @@
 
 #include <llvm/IR/LegacyPassManager.h>
 
+#include <routing/logger.h>
+
 #include <iostream>
 
 int
@@ -74,12 +76,10 @@ SimpleOrcJit::optimize_module(
     // auto modulePassManager
     //     = builder.buildModuleOptimizationPipeline(llvm::PassBuilder::O3);
     // modulePassManager.run(*tsm.getModule(), analysis_manager);
-    
 
-    llvm::Module &module = *tsm.getModule();
+    llvm::Module& module = *tsm.getModule();
 
     llvm::legacy::FunctionPassManager function_manager(&module);
-    
 
     std::cout << "OPTIMIZATION" << std::endl;
 

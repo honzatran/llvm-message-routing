@@ -8,6 +8,8 @@
 #include <llvm/Support/Error.h>
 
 #include "ClangCC1Driver.h"
+#include "llvm-c/TargetMachine.h"
+#include "routing/engine/optimizer.h"
 
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/ExecutionEngine/JITEventListener.h>
@@ -139,6 +141,9 @@ public:
         // Commit module for compilation to machine code. Actual compilation
         // happens on demand as soon as one of it's symbols is accessed. None of
         // the layers used here issue Errors from this call.
+        //
+        m_optimize_layer.setTransform(
+                routing::engine::LegacyPassManagerOptimizer(3));
 
         return m_optimize_layer.add(
             m_execution_session.getMainJITDylib(),

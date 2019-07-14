@@ -23,12 +23,14 @@ list(APPEND ENGINE_HEADERS
     "include/routing/engine/SimpleOrcJit.h"
     "include/routing/engine/ClangCC1Driver.h"
     "include/routing/engine/ClangCC1Args_${OS_NAME}.h"
+    "include/routing/engine/optimizer.h"
 )
 
 list (APPEND ENGINE_SRC
     # "src/JitFromScratch.cpp"
     "src/ClangCC1Driver.cpp"
     "src/SimpleOrcJit.cpp"
+    "src/optimizer.cpp"
     ${ENGINE_HEADERS}
 )
 
@@ -175,6 +177,7 @@ routing_library(
         clangRewrite
         clangLex
         LLVMDemangle
+        routing::common
     PUBLIC_INCLUDE_DIRS
         "include"
         ${LLVM_INCLUDE_DIRS}

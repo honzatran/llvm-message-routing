@@ -3,33 +3,37 @@
 
 #include <routing/engine/SimpleOrcJit.h>
 
+#include <routing/config.h>
 #include <routing/engine/ClangCC1Driver.h>
+#include <routing/logger.h>
 
 #include <llvm/Support/CommandLine.h>
-#include <llvm/Support/PrettyStackTrace.h>
 #include <llvm/Support/Error.h>
+#include <llvm/Support/PrettyStackTrace.h>
 #include <llvm/Support/Signals.h>
 #include <llvm/Support/TargetSelect.h>
 
 #include <iostream>
 
 // Show the error message and exit.
-LLVM_ATTRIBUTE_NORETURN static void fatalError(llvm::Error E) {
+LLVM_ATTRIBUTE_NORETURN static void
+fatalError(llvm::Error E)
+{
+    llvm::handleAllErrors(std::move(E), [&](const llvm::ErrorInfoBase &EI) {
+        std::cerr << "Fatal Error: ";
+        EI.log(llvm::errs());
+        std::cerr << "\n";
+        std::cerr.flush();
+    });
 
-  llvm::handleAllErrors(std::move(E), [&](const llvm::ErrorInfoBase &EI) {
-    std::cerr << "Fatal Error: ";
-    EI.log(llvm::errs());
-    std::cerr << "\n";
-    std::cerr.flush();
-  });
-
-  exit(1);
+    exit(1);
 }
 
 // Determine the size of a C array at compile-time.
 template <typename T, size_t sizeOfArray>
-constexpr unsigned arrayElements(T (&)[sizeOfArray]) {
-  return sizeOfArray;
+constexpr unsigned arrayElements(T (&)[sizeOfArray])
+{
+    return sizeOfArray;
 }
 
 // This function will be called from JITed code.
@@ -47,73 +51,77 @@ constexpr unsigned arrayElements(T (&)[sizeOfArray]) {
 // }
 //
 
+int
+main(int argc, char **argv)
+{
+    routing::Config config = routing::parse_args(
+        {routing::get_logger_options_description()},
+        argc,
+        argv,
+        "../config/application.properties");
+    routing::init_logger(config);
 
-int main(int argc, char **argv) {
-  using namespace llvm;
+    using namespace llvm;
 
-  sys::PrintStackTraceOnErrorSignal(argv[0]);
-  PrettyStackTraceProgram X(argc, argv);
+    sys::PrintStackTraceOnErrorSignal(argv[0]);
+    PrettyStackTraceProgram X(argc, argv);
 
-  atexit(llvm_shutdown);
+    atexit(llvm_shutdown);
 
-  InitializeNativeTarget();
-  InitializeNativeTargetAsmPrinter();
-  InitializeNativeTargetAsmParser();
+    InitializeNativeTarget();
+    InitializeNativeTargetAsmPrinter();
+    InitializeNativeTargetAsmParser();
 
-  // Parse -debug and -debug-only options.
-  cl::ParseCommandLineOptions(argc, argv, "JitFromScratch example project\n");
+    // Parse -debug and -debug-only options.
+    cl::ParseCommandLineOptions(argc, argv, "JitFromScratch example project\n");
 
-  int x[]{0, 1, 2};
-  int y[]{3, 1, -1};
+    // auto targetMachine = EngineBuilder().selectTarget();
+    // auto jit = std::make_unique<SimpleOrcJit>(*targetMachine);
 
-  // auto targetMachine = EngineBuilder().selectTarget();
-  // auto jit = std::make_unique<SimpleOrcJit>(*targetMachine);
+    // Implementation of the integerDistances function.
+    std::string sourceCode = "extern \"C\" int f() { return 42; } \n";
 
-  // Implementation of the integerDistances function.
-  std::string sourceCode =
-      "extern \"C\" int f() { return 42; } \n";
+    // Compile C++ to bitcode.
+    LLVMContext context;
+    ClangCC1Driver driver;
+    auto module = driver.compileTranslationUnit(sourceCode, context);
+    if (!module)
+    {
+        fatalError(module.takeError());
+    }
 
-  // Compile C++ to bitcode.
-  LLVMContext context;
-  ClangCC1Driver driver;
-  auto module = driver.compileTranslationUnit(sourceCode, context);
-  if (!module)
-  {
-      fatalError(module.takeError());
-  }
+    auto jitExpected = SimpleOrcJit::create();
 
-  auto jitExpected = SimpleOrcJit::create();
+    if (!jitExpected)
+    {
+        fatalError(jitExpected.takeError());
+    }
 
-  if (!jitExpected)
-  {
-      fatalError(jitExpected.takeError());
-  }
+    auto jit = std::move(jitExpected.get());
 
-  auto jit = std::move(jitExpected.get());
+    auto result = jit->add(std::move(*module));
 
-  auto result = jit->add(std::move(*module));
+    if (result)
+    {
+        fatalError(std::move(result));
+    }
 
-  if (result)
-  {
-      fatalError(std::move(result));
-  }
+    std::cout << "LOOK UP" << std::endl;
 
-  std::cout << "LOOK UP" << std::endl;
+    std::string functionName = "f";
 
-  std::string functionName = "f";
+    auto function_f = jit->lookup(functionName);
 
-  auto function_f = jit->lookup(functionName);
+    if (!function_f)
+    {
+        fatalError(function_f.takeError());
+    }
 
-  if (!function_f) 
-  {
-      fatalError(function_f.takeError());
-  }
+    std::cout << "EVALUATING" << std::endl;
 
-  std::cout << "EVALUATING" << std::endl;
+    int (*f)() = (int (*)())(function_f->getAddress());
 
-  int (*f) () = (int (*)()) (function_f->getAddress());
+    std::cout << (*f)() << std::endl;
 
-  std::cout << (*f)() << std::endl;
-
-  return 0;
+    return 0;
 }
