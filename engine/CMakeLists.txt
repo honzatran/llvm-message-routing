@@ -116,7 +116,6 @@ routing_library(
         ${ENGINE_SRC}
     PUBLIC_LIBRARIES
         ${LLVM_LIBS}
-        LLVMAArch64Disassembler
         LLVMX86CodeGen
         LLVMX86AsmPrinter
         LLVMX86AsmParser
