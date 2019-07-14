@@ -15,7 +15,7 @@ jobs:
             command: |
                 mkdir build 
                 cd build 
-                cmake .. -DCMAKE_BUILD_TYPE=RELEASE -G Ninja 
+                cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLLVM_DIR=/llvm-release80-release -G Ninja 
         - run:
             name: build
             command: |
