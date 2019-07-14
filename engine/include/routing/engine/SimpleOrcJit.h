@@ -1,11 +1,11 @@
-#include "/Users/honza/llvm-project/clang/include/clang/Driver/Options.h"
-#include "llvm/ADT/STLExtras.h"
-#include "llvm/ADT/StringRef.h"
-#include "llvm/ExecutionEngine/JITSymbol.h"
-#include "llvm/ExecutionEngine/Orc/ThreadSafeModule.h"
-#include "llvm/IR/DataLayout.h"
-#include "llvm/IR/Module.h"
-#include "llvm/Support/Error.h"
+#include <clang/Driver/Options.h>
+#include <llvm/ADT/STLExtras.h>
+#include <llvm/ADT/StringRef.h>
+#include <llvm/ExecutionEngine/JITSymbol.h>
+#include <llvm/ExecutionEngine/Orc/ThreadSafeModule.h>
+#include <llvm/IR/DataLayout.h>
+#include <llvm/IR/Module.h>
+#include <llvm/Support/Error.h>
 
 #include "ClangCC1Driver.h"
 
