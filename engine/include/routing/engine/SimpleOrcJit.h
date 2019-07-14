@@ -12,21 +12,21 @@
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/ExecutionEngine/JITEventListener.h>
 
-#include <llvm/ExecutionEngine/Orc/Core.h>
 #include <llvm/ExecutionEngine/Orc/CompileUtils.h>
+#include <llvm/ExecutionEngine/Orc/Core.h>
+#include <llvm/ExecutionEngine/Orc/ExecutionUtils.h>
 #include <llvm/ExecutionEngine/Orc/IRCompileLayer.h>
 #include <llvm/ExecutionEngine/Orc/IRTransformLayer.h>
 #include <llvm/ExecutionEngine/Orc/LambdaResolver.h>
 #include <llvm/ExecutionEngine/Orc/OrcError.h>
 #include <llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h>
-#include <llvm/ExecutionEngine/Orc/ExecutionUtils.h>
 #include <llvm/ExecutionEngine/RuntimeDyld.h>
 #include <llvm/ExecutionEngine/SectionMemoryManager.h>
-#include <llvm/IR/Mangler.h>
 #include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/Mangler.h>
+#include <llvm/Passes/PassBuilder.h>
 #include <llvm/Support/Debug.h>
 #include <llvm/Support/DynamicLibrary.h>
-#include <llvm/Passes/PassBuilder.h>
 
 #include <functional>
 #include <iostream>
@@ -44,156 +44,178 @@
 
 #pragma once
 
-class SimpleOrcJit {
-  // struct NotifyObjectLoaded_t {
-  //   NotifyObjectLoaded_t(SimpleOrcJit &jit) : Jit(jit) {}
-  //
-  //   // Called by the ObjectLayer for each emitted object.
-  //   // Forward notification to GDB JIT interface.
-  //   void
-  //   operator()(llvm::orc::RTDyldObjectLinkingLayer::ObjHandleT,
-  //              const llvm::orc::RTDyldObjectLinkingLayerBase::ObjectPtr &obj,
-  //              const llvm::LoadedObjectInfo &info) {
-  //
-  //     // Workaround 5.0 API inconsistency:
-  //     // http://lists.llvm.org/pipermail/llvm-dev/2017-August/116806.html
-  //     const auto &fixedInfo =
-  //         static_cast<const llvm::RuntimeDyld::LoadedObjectInfo &>(info);
-  //
-  //     Jit.GdbEventListener->NotifyObjectEmitted(*obj->getBinary(), fixedInfo);
-  //   }
-  //
-  // private:
-  //   SimpleOrcJit &Jit;
-  // };
+class SimpleOrcJit
+{
+    // struct NotifyObjectLoaded_t {
+    //   NotifyObjectLoaded_t(SimpleOrcJit &jit) : Jit(jit) {}
+    //
+    //   // Called by the ObjectLayer for each emitted object.
+    //   // Forward notification to GDB JIT interface.
+    //   void
+    //   operator()(llvm::orc::RTDyldObjectLinkingLayer::ObjHandleT,
+    //              const llvm::orc::RTDyldObjectLinkingLayerBase::ObjectPtr
+    //              &obj, const llvm::LoadedObjectInfo &info) {
+    //
+    //     // Workaround 5.0 API inconsistency:
+    //     // http://lists.llvm.org/pipermail/llvm-dev/2017-August/116806.html
+    //     const auto &fixedInfo =
+    //         static_cast<const llvm::RuntimeDyld::LoadedObjectInfo &>(info);
+    //
+    //     Jit.GdbEventListener->NotifyObjectEmitted(*obj->getBinary(),
+    //     fixedInfo);
+    //   }
+    //
+    // private:
+    //   SimpleOrcJit &Jit;
+    // };
 
 public:
-  SimpleOrcJit(llvm::orc::JITTargetMachineBuilder builder, llvm::DataLayout data_layout)
-      : m_object_layer(m_execution_session, [] { return llvm::make_unique<llvm::SectionMemoryManager>(); }),
-       m_compile_layer(m_execution_session, m_object_layer, llvm::orc::ConcurrentIRCompiler(std::move(builder))),
-       m_optimize_layer(m_execution_session, m_compile_layer, optimize_module),
-       m_data_layout(std::move(data_layout)),
-       m_mangler(m_execution_session,  this->m_data_layout),
-       m_thread_safe_context(llvm::make_unique<llvm::LLVMContext>())
-  {
-    // Load own executable as dynamic library.
-    // Required for RTDyldMemoryManager::getSymbolAddressInProcess().
-    // llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
-
-    // Internally points to a llvm::ManagedStatic.
-    // No need to free. "create" is a misleading term here.
-    // GdbEventListener = llvm::JITEventListener::createGDBRegistrationListener();
-    //
-    auto system_process_generator = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(m_data_layout);
-
-    if (!system_process_generator) 
+    SimpleOrcJit(
+        llvm::orc::JITTargetMachineBuilder builder,
+        llvm::DataLayout data_layout)
+        : m_object_layer(
+            m_execution_session,
+            [] { return llvm::make_unique<llvm::SectionMemoryManager>(); }),
+          m_compile_layer(
+              m_execution_session,
+              m_object_layer,
+              llvm::orc::ConcurrentIRCompiler(std::move(builder))),
+          m_optimize_layer(
+              m_execution_session,
+              m_compile_layer,
+              optimize_module),
+          m_data_layout(std::move(data_layout)),
+          m_mangler(m_execution_session, this->m_data_layout),
+          m_thread_safe_context(llvm::make_unique<llvm::LLVMContext>())
     {
-        m_execution_session.reportError(system_process_generator.takeError());
-        return;
+        // Load own executable as dynamic library.
+        // Required for RTDyldMemoryManager::getSymbolAddressInProcess().
+        // llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
+
+        // Internally points to a llvm::ManagedStatic.
+        // No need to free. "create" is a misleading term here.
+        // GdbEventListener =
+        // llvm::JITEventListener::createGDBRegistrationListener();
+        //
+        auto system_process_generator
+            = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
+                m_data_layout);
+
+        if (!system_process_generator)
+        {
+            m_execution_session.reportError(
+                system_process_generator.takeError());
+            return;
+        }
+
+        std::cout << "SETTING GENERATOR" << std::endl;
+
+        m_execution_session.getMainJITDylib().setGenerator(
+            std::move(*system_process_generator));
     }
 
-    std::cout << "SETTING GENERATOR" << std::endl;
+    static llvm::Expected<std::unique_ptr<SimpleOrcJit>> create()
+    {
+        auto jtmb = llvm::orc::JITTargetMachineBuilder::detectHost();
 
-    m_execution_session.getMainJITDylib().setGenerator(std::move(*system_process_generator));
-  }
+        if (!jtmb)
+        {
+            return jtmb.takeError();
+        }
 
-  static llvm::Expected<std::unique_ptr<SimpleOrcJit>> create() 
-  {
-      auto jtmb = llvm::orc::JITTargetMachineBuilder::detectHost();
+        auto data_layout = jtmb->getDefaultDataLayoutForTarget();
 
-      if (!jtmb) 
-      {
-          return jtmb.takeError();
-      }
+        if (!data_layout)
+        {
+            return data_layout.takeError();
+        }
 
-      auto data_layout = jtmb->getDefaultDataLayoutForTarget();
+        return llvm::make_unique<SimpleOrcJit>(
+            std::move(*jtmb), std::move(*data_layout));
+    }
 
-      if (!data_layout)
-      {
-          return data_layout.takeError();
-      }
+    llvm::Error add(std::unique_ptr<llvm::Module> module)
+    {
+        // Commit module for compilation to machine code. Actual compilation
+        // happens on demand as soon as one of it's symbols is accessed. None of
+        // the layers used here issue Errors from this call.
 
-      return llvm::make_unique<SimpleOrcJit>(std::move(*jtmb), std::move(*data_layout));
-  }
+        return m_optimize_layer.add(
+            m_execution_session.getMainJITDylib(),
+            llvm::orc::ThreadSafeModule(
+                std::move(module), m_thread_safe_context));
+    }
 
-  llvm::Error add(std::unique_ptr<llvm::Module> module) 
-  {
-    // Commit module for compilation to machine code. Actual compilation
-    // happens on demand as soon as one of it's symbols is accessed. None of
-    // the layers used here issue Errors from this call.
-    
-    return m_optimize_layer.add(
-        m_execution_session.getMainJITDylib(), 
-        llvm::orc::ThreadSafeModule(std::move(module), m_thread_safe_context)
-    );
-  }
+    llvm::Expected<std::unique_ptr<llvm::Module>> compileModuleFromCpp(
+        std::string cppCode,
+        llvm::LLVMContext& context)
+    {
+        return m_clang_driver.compileTranslationUnit(cppCode, context);
+    }
 
-  llvm::Expected<std::unique_ptr<llvm::Module>>
-  compileModuleFromCpp(std::string cppCode, llvm::LLVMContext &context) {
-    return m_clang_driver.compileTranslationUnit(cppCode, context);
-  }
+    llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef name)
+    {
+        return m_execution_session.lookup(
+            {&m_execution_session.getMainJITDylib()}, m_mangler(name.str()));
+    }
 
-  llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef name) {
-      return m_execution_session.lookup({ &m_execution_session.getMainJITDylib() }, m_mangler(name.str()));
-  }
-
-
-  // template <class Signature_t>
-  // llvm::Expected<std::function<Signature_t>> getFunction(std::string name) {
-  //   using namespace llvm;
-  //
-  //   // Find symbol name in committed modules.
-  //   std::string mangledName = mangle(std::move(name));
-  //   JITSymbol sym = findSymbolInJITedCode(mangledName);
-  //   if (!sym)
-  //     return make_error<orc::JITSymbolNotFound>(mangledName);
-  //
-  //   // Access symbol address.
-  //   // Invokes compilation for the respective module if not compiled yet.
-  //   Expected<JITTargetAddress> addr = sym.getAddress();
-  //   if (!addr)
-  //     return addr.takeError();
-  //
-  //   auto typedFunctionPtr = reinterpret_cast<Signature_t *>(*addr);
-  //   return std::function<Signature_t>(typedFunctionPtr);
-  // }
+    // template <class Signature_t>
+    // llvm::Expected<std::function<Signature_t>> getFunction(std::string name)
+    // {
+    //   using namespace llvm;
+    //
+    //   // Find symbol name in committed modules.
+    //   std::string mangledName = mangle(std::move(name));
+    //   JITSymbol sym = findSymbolInJITedCode(mangledName);
+    //   if (!sym)
+    //     return make_error<orc::JITSymbolNotFound>(mangledName);
+    //
+    //   // Access symbol address.
+    //   // Invokes compilation for the respective module if not compiled yet.
+    //   Expected<JITTargetAddress> addr = sym.getAddress();
+    //   if (!addr)
+    //     return addr.takeError();
+    //
+    //   auto typedFunctionPtr = reinterpret_cast<Signature_t *>(*addr);
+    //   return std::function<Signature_t>(typedFunctionPtr);
+    // }
 
 private:
-  llvm::orc::ExecutionSession m_execution_session;
-  llvm::orc::RTDyldObjectLinkingLayer m_object_layer;
-  llvm::orc::IRCompileLayer m_compile_layer;
-  llvm::DataLayout m_data_layout;
-  llvm::orc::MangleAndInterner m_mangler;
-  llvm::orc::ThreadSafeContext m_thread_safe_context;
+    llvm::orc::ExecutionSession m_execution_session;
+    llvm::orc::RTDyldObjectLinkingLayer m_object_layer;
+    llvm::orc::IRCompileLayer m_compile_layer;
+    llvm::DataLayout m_data_layout;
+    llvm::orc::MangleAndInterner m_mangler;
+    llvm::orc::ThreadSafeContext m_thread_safe_context;
 
-  llvm::orc::IRTransformLayer m_optimize_layer;
+    llvm::orc::IRTransformLayer m_optimize_layer;
 
-  ClangCC1Driver m_clang_driver;
+    ClangCC1Driver m_clang_driver;
 
-  static llvm::Expected<llvm::orc::ThreadSafeModule> optimize_module(
-          llvm::orc::ThreadSafeModule tsm, 
-          llvm::orc::MaterializationResponsibility const& materialization_responsibility);
+    static llvm::Expected<llvm::orc::ThreadSafeModule> optimize_module(
+        llvm::orc::ThreadSafeModule tsm,
+        llvm::orc::MaterializationResponsibility const&
+            materialization_responsibility);
 
-
-  // llvm::JITSymbol findSymbolInJITedCode(std::string mangledName) {
-  //   constexpr bool exportedSymbolsOnly = false;
-  //   return CompileLayer.findSymbol(mangledName, exportedSymbolsOnly);
-  // }
-  //
-  // llvm::JITSymbol findSymbolInHostProcess(std::string mangledName) {
-  //   // Lookup function address in the host symbol table.
-  //   if (llvm::JITTargetAddress addr =
-  //           llvm::RTDyldMemoryManager::getSymbolAddressInProcess(mangledName))
-  //     return llvm::JITSymbol(addr, llvm::JITSymbolFlags::Exported);
-  //
-  //   return nullptr;
-  // }
-  //
-  // // System name mangler: may prepend '_' on OSX or '\x1' on Windows
-  // std::string mangle(std::string name) {
-  //   std::string buffer;
-  //   llvm::raw_string_ostream ostream(buffer);
-  //   llvm::Mangler::getNameWithPrefix(ostream, std::move(name), DL);
-  //   return ostream.str();
-  // }
+    // llvm::JITSymbol findSymbolInJITedCode(std::string mangledName) {
+    //   constexpr bool exportedSymbolsOnly = false;
+    //   return CompileLayer.findSymbol(mangledName, exportedSymbolsOnly);
+    // }
+    //
+    // llvm::JITSymbol findSymbolInHostProcess(std::string mangledName) {
+    //   // Lookup function address in the host symbol table.
+    //   if (llvm::JITTargetAddress addr =
+    //           llvm::RTDyldMemoryManager::getSymbolAddressInProcess(mangledName))
+    //     return llvm::JITSymbol(addr, llvm::JITSymbolFlags::Exported);
+    //
+    //   return nullptr;
+    // }
+    //
+    // // System name mangler: may prepend '_' on OSX or '\x1' on Windows
+    // std::string mangle(std::string name) {
+    //   std::string buffer;
+    //   llvm::raw_string_ostream ostream(buffer);
+    //   llvm::Mangler::getNameWithPrefix(ostream, std::move(name), DL);
+    //   return ostream.str();
+    // }
 };
