@@ -1,10 +1,10 @@
 
 
+#include <routing/config.h>
+#include <routing/fatal_signal_handlers.h>
+#include <routing/logger.h>
 #include <routing/portability.h>
 #include <routing/testing.h>
-#include <routing/config.h>
-#include <routing/logger.h>
-#include <routing/fatal_signal_handlers.h>
 
 #include <iostream>
 #include <vector>
@@ -14,11 +14,14 @@
 using namespace std;
 using namespace routing;
 
-ROUTING_ATTR_WEAK int main(int argc, char** argv);
+ROUTING_ATTR_WEAK int
+main(int argc, char** argv);
 
-ROUTING_ATTR_WEAK void init_before_test();
+ROUTING_ATTR_WEAK void
+init_before_test(int argc, char** argv);
 
-void init_before_test()
+void
+init_before_test(int argc, char** argv)
 {
 }
 
@@ -39,7 +42,7 @@ main(int argc, char** argv)
     routing::init_logger(config);
     routing::install_fatal_signal_handler();
 
-    init_before_test();
+    init_before_test(argc, argv);
 
     return RUN_ALL_TESTS();
 }
