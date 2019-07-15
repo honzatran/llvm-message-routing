@@ -15,7 +15,7 @@
 using namespace std;
 using namespace routing;
 
-RA_ATTR_WEAK int main(int argc, char** argv);
+ROUTING_ATTR_WEAK int main(int argc, char** argv);
 
 vector<program_options::options_description>
 get_all_subcomponent_desc()

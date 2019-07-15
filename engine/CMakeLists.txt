@@ -1,9 +1,3 @@
-cmake_minimum_required(VERSION 3.2)
-
-project(JitFromScratch VERSION 1.0 LANGUAGES CXX)
-
-message("")
-message("Dependencies")
 
 if(WIN32)
     set(OS_NAME "Win")
@@ -31,6 +25,12 @@ list (APPEND ENGINE_SRC
     "src/ClangCC1Driver.cpp"
     "src/SimpleOrcJit.cpp"
     "src/optimizer.cpp"
+    ${ENGINE_HEADERS}
+)
+
+list (APPEND ENGINE_TEST_SRC
+    "src/init_test.cpp"
+    "src/orc_jit_test.cpp"
     ${ENGINE_HEADERS}
 )
 
@@ -201,8 +201,19 @@ routing_exe(
         routing::orc
     PRIVATE_COMPILE_FLAGS
         ${DISABLE_RTTI_FLAG}
-
 )
+
+routing_test(
+    TARGET
+        "engine_orc_test"
+    SOURCES
+        ${ENGINE_TEST_SRC}
+    PUBLIC_LIBRARIES
+        routing::orc
+    PRIVATE_COMPILE_FLAGS
+        ${DISABLE_RTTI_FLAG}
+)
+
 
 
 

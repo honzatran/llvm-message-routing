@@ -253,7 +253,7 @@ private:
 
     IDLE_STRATEGY m_idle_strategy;
 
-    RA_DONT_INLINE
+    ROUTING_DONT_INLINE
     void insert_new_pollables()
     {
         int const poll_count = 8;
@@ -279,13 +279,13 @@ private:
         }
     }
 
-    RA_DONT_INLINE
+    ROUTING_DONT_INLINE
     void add_remove(int index)
     {
         m_to_remove.push_back(index);
     }
 
-    RA_DONT_INLINE
+    ROUTING_DONT_INLINE
     void remove_stopped()
     {
         // remove pollables in the reverse order, this way the indices 

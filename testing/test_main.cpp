@@ -14,7 +14,13 @@
 using namespace std;
 using namespace routing;
 
-RA_ATTR_WEAK int main(int argc, char** argv);
+ROUTING_ATTR_WEAK int main(int argc, char** argv);
+
+ROUTING_ATTR_WEAK void init_before_test();
+
+void init_before_test()
+{
+}
 
 vector<program_options::options_description>
 get_all_subcomponent_desc()
@@ -32,6 +38,8 @@ main(int argc, char** argv)
 
     routing::init_logger(config);
     routing::install_fatal_signal_handler();
+
+    init_before_test();
 
     return RUN_ALL_TESTS();
 }

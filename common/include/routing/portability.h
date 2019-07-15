@@ -4,20 +4,20 @@
 #ifndef ROUTING_PORTABILITY_H
 #define ROUTING_PORTABILITY_H
 
-#define RA_ATTR_WEAK __attribute__((__weak__))
+#define ROUTING_ATTR_WEAK __attribute__((__weak__))
 
 /// instruct the compiler not to inline function, usefull when we want 
 /// to remove a function call from a hot path
-#define RA_DONT_INLINE __attribute__((__noinline__))
+#define ROUTING_DONT_INLINE __attribute__((__noinline__))
 
 /**
  * This is copied from folly/likely.h
  */
 
 #if __GNUC__
-#define RA_DETAIL_BUILTIN_EXPECT(b, t) (__builtin_expect(b, t))
+#define ROUTING_DETAIL_BUILTIN_EXPECT(b, t) (__builtin_expect(b, t))
 #else
-#define RA_DETAIL_BUILTIN_EXPECT(b, t) b
+#define ROUTING_DETAIL_BUILTIN_EXPECT(b, t) b
 #endif
 
 ///  Likeliness annotations
@@ -30,7 +30,7 @@
 //  //  overwhelmingly likely.
 //
 
-#define RA_LIKELY(x) RA_DETAIL_BUILTIN_EXPECT((x), 1)
-#define RA_UNLIKELY(x) RA_DETAIL_BUILTIN_EXPECT((x), 0)
+#define ROUTING_LIKELY(x) ROUTING_DETAIL_BUILTIN_EXPECT((x), 1)
+#define ROUTING_UNLIKELY(x) ROUTING_DETAIL_BUILTIN_EXPECT((x), 0)
 
 #endif
