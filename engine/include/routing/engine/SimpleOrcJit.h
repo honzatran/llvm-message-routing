@@ -9,6 +9,7 @@
 
 #include "ClangCC1Driver.h"
 #include "llvm-c/TargetMachine.h"
+#include "llvm/Support/FileSystem.h"
 #include "routing/engine/optimizer.h"
 
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
@@ -143,7 +144,7 @@ public:
         // the layers used here issue Errors from this call.
         //
         m_optimize_layer.setTransform(
-                routing::engine::LegacyPassManagerOptimizer(3));
+            routing::engine::LegacyPassManagerOptimizer(3));
 
         return m_optimize_layer.add(
             m_execution_session.getMainJITDylib(),
@@ -157,6 +158,13 @@ public:
     {
         return m_clang_driver.compileTranslationUnit(cppCode, context);
     }
+
+    /// Creates a module from a single cpp file
+    /// \param file_path path to the cpp source code
+    /// \param context llvm context
+    llvm::Expected<std::unique_ptr<llvm::Module>> compuleModuleFromFile(
+        std::string const& file_path,
+        llvm::LLVMContext& context);
 
     llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef name)
     {

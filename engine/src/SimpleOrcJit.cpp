@@ -1,6 +1,7 @@
 
 
 #include <routing/engine/SimpleOrcJit.h>
+#include <routing/file_util.h>
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/Analysis/LoopAnalysisManager.h"
 #include "llvm/Analysis/LoopInfo.h"
@@ -19,6 +20,7 @@
 #include <routing/logger.h>
 
 #include <iostream>
+#include <memory>
 
 int
 g()
@@ -85,3 +87,16 @@ SimpleOrcJit::optimize_module(
 
     return llvm::Expected<llvm::orc::ThreadSafeModule>(std::move(tsm));
 }
+
+llvm::Expected<std::unique_ptr<llvm::Module>>
+SimpleOrcJit::compuleModuleFromFile(
+    std::string const& file_path,
+    llvm::LLVMContext& context)
+{
+    std::string source_code = routing::read_file(file_path.c_str());
+    return compileModuleFromCpp(source_code, context);
+}
+
+
+
+
