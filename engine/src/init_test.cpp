@@ -9,6 +9,7 @@
 #include <llvm/Support/ManagedStatic.h>
 
 
+/// Runs before the orc unit test is initialized 
 void init_before_test(int argc, char** argv)
 {
     using namespace llvm;

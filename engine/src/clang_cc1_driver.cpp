@@ -1,4 +1,4 @@
-#include <routing/engine/ClangCC1Driver.h>
+#include <routing/engine/clang_cc1_driver.h>
 
 // Hack: cc1 lives in "tools" next to "include"
 #include <../tools/driver/cc1_main.cpp>
@@ -90,7 +90,7 @@ readModuleFromBitcodeFile(llvm::StringRef bc, llvm::LLVMContext &context)
 }  // end namespace
 
 llvm::Expected<std::unique_ptr<llvm::Module>>
-ClangCC1Driver::compileTranslationUnit(
+Clang_cc1_driver::compileTranslationUnit(
     std::string cppCode,
     llvm::LLVMContext &context)
 {
@@ -115,6 +115,28 @@ ClangCC1Driver::compileTranslationUnit(
     }
 
     SoucreFileDeleters.push_back([cpp]() { llvm::sys::fs::remove(cpp); });
+
+    return std::move(*module);
+}
+
+llvm::Expected<std::unique_ptr<llvm::Module>>
+Clang_cc1_driver::compile_source_code(
+    std::string const &source_code_path,
+    llvm::LLVMContext &context)
+{
+    std::string bc  = replaceExtension(source_code_path, "bc");
+
+    llvm::Error err = compileCppToBitcodeFile(getClangCC1Args(source_code_path, bc));
+    if (err)
+        return std::move(err);
+
+    auto module = readModuleFromBitcodeFile(bc, context);
+    llvm::sys::fs::remove(bc);
+
+    if (!module)
+    {
+        return module.takeError();
+    }
 
     return std::move(*module);
 }

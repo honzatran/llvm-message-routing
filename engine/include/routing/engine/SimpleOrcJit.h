@@ -7,7 +7,7 @@
 #include <llvm/IR/Module.h>
 #include <llvm/Support/Error.h>
 
-#include "ClangCC1Driver.h"
+#include "clang_cc1_driver.h"
 #include "llvm-c/TargetMachine.h"
 #include "llvm/Support/FileSystem.h"
 #include "routing/engine/optimizer.h"
@@ -203,7 +203,7 @@ private:
 
     llvm::orc::IRTransformLayer m_optimize_layer;
 
-    ClangCC1Driver m_clang_driver;
+    Clang_cc1_driver m_clang_driver;
 
     static llvm::Expected<llvm::orc::ThreadSafeModule> optimize_module(
         llvm::orc::ThreadSafeModule tsm,

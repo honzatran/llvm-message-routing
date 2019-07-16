@@ -4,7 +4,7 @@
 #include <routing/engine/SimpleOrcJit.h>
 
 #include <routing/config.h>
-#include <routing/engine/ClangCC1Driver.h>
+#include <routing/engine/clang_cc1_driver.h>
 #include <routing/logger.h>
 
 #include <llvm/Support/CommandLine.h>
@@ -83,7 +83,7 @@ main(int argc, char **argv)
 
     // Compile C++ to bitcode.
     LLVMContext context;
-    ClangCC1Driver driver;
+    Clang_cc1_driver driver;
     auto module = driver.compileTranslationUnit(sourceCode, context);
     if (!module)
     {

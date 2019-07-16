@@ -15,14 +15,14 @@ message(STATUS "System: ${OS_NAME}")
 
 list(APPEND ENGINE_HEADERS
     "include/routing/engine/SimpleOrcJit.h"
-    "include/routing/engine/ClangCC1Driver.h"
+    "include/routing/engine/clang_cc1_driver.h"
     "include/routing/engine/ClangCC1Args_${OS_NAME}.h"
     "include/routing/engine/optimizer.h"
 )
 
 list (APPEND ENGINE_SRC
     # "src/JitFromScratch.cpp"
-    "src/ClangCC1Driver.cpp"
+    "src/clang_cc1_driver.cpp"
     "src/SimpleOrcJit.cpp"
     "src/optimizer.cpp"
     ${ENGINE_HEADERS}
