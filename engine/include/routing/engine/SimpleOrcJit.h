@@ -166,11 +166,7 @@ public:
         std::string const& file_path,
         llvm::LLVMContext& context);
 
-    llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef name)
-    {
-        return m_execution_session.lookup(
-            {&m_execution_session.getMainJITDylib()}, m_mangler(name.str()));
-    }
+    llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef name);
 
     // template <class Signature_t>
     // llvm::Expected<std::function<Signature_t>> getFunction(std::string name)

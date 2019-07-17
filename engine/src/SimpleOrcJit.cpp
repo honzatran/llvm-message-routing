@@ -8,11 +8,13 @@
 #include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/TargetTransformInfo.h"
 #include "llvm/ExecutionEngine/Orc/ThreadSafeModule.h"
+#include "llvm/IR/Mangler.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/PassManager.h"
 #include "llvm/PassAnalysisSupport.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Support/Error.h"
+#include "llvm/Support/raw_ostream.h"
 #include "llvm/Transforms/Instrumentation.h"
 
 #include <llvm/IR/LegacyPassManager.h>
@@ -97,6 +99,17 @@ SimpleOrcJit::compuleModuleFromFile(
     return compileModuleFromCpp(source_code, context);
 }
 
+llvm::Expected<llvm::JITEvaluatedSymbol>
+SimpleOrcJit::lookup(llvm::StringRef name)
+{
+    std::string mangled_name;
 
+    llvm::raw_string_ostream output(mangled_name);
 
+    llvm::Mangler::getNameWithPrefix(output, name, m_data_layout);
 
+    auto tmp = m_execution_session.intern(output.str());
+
+    return m_execution_session.lookup(
+        {&m_execution_session.getMainJITDylib()}, tmp);
+}
