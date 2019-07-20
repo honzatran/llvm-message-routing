@@ -78,3 +78,5 @@ RUN cd llvm-release80-release && ninja LLVMAsmPrinter LLVMCodeGen LLVMMCDisassem
 RUN cd llvm-release80-release && ninja LLVMX86AsmPrinter LLVMX86CodeGen LLVMX86Disassembler LLVMX86AsmParser LLVMX86Desc LLVMX86Info LLVMX86Utils
 RUN cd llvm-release80-release && ninja LLVMipo LLVMInstrumentation LLVMVectorize LLVMLinker LLVMIRReader LLVMAsmParser
 RUN cd llvm-release80-release && ninja clang
+
+RUN apt-get install ccache
