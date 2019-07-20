@@ -18,12 +18,15 @@ jobs:
                 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLLVM_DIR=/llvm-release80-release -G Ninja 
         - restore_cache:
             keys: 
-                'ccache- {{ .Branch }}'
+                'ccache-{{ .Branch }}'
         - run:
             name: build
             command: |
                 cd build
-                ninja -j1
+                ninja -j2
+        - save_cache:
+            key: 'ccache-{{ .Branch }}'
+            paths: [ "/root/.ccache" ]
         - run:
             name: test
             environment:
@@ -33,8 +36,5 @@ jobs:
                 ninja test
         - store_test_results:
             path: build/bin
-        - save_cache:
-            key: 'ccache-{{ .Branch }}'
-            paths: [ "/root/.ccache" ]
 
 
