@@ -83,7 +83,7 @@ option(RUN_CLANG_TIDY "ENABLE CLANG TIDY" OFF)
 
 function (routing_test) 
     cmake_parse_arguments(ROUTING_TEST
-        ""
+        "DISABLE_SANITIZER"
         "TARGET"
         "SOURCES;PUBLIC_LIBRARIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS"
         ${ARGN}
@@ -108,7 +108,7 @@ function (routing_test)
         add_test(NAME ${_NAME} COMMAND ${_NAME}_bin  --gtest_output=xml:${ROUTING_TEST_TARGET}_results.xml
              WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-         if (USE_ADDRESS_SANITIZER)
+         if (USE_ADDRESS_SANITIZER AND NOT ROUTING_TEST_DISABLE_SANITIZER)
              link_address_sanitizer(${_NAME}_bin)
          endif()
 

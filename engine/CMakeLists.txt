@@ -204,6 +204,8 @@ routing_exe(
 )
 
 routing_test(
+    DISABLE_SANITIZER
+        TRUE
     TARGET
         "engine_orc_test"
     SOURCES
