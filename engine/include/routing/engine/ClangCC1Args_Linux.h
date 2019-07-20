@@ -10,6 +10,7 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
                                          llvm::StringRef bc) {
   std::vector<std::string> args;
 
+
   args.push_back("-emit-llvm");
   args.push_back("-emit-llvm-bc");
   args.push_back("-emit-llvm-uselists");
@@ -47,6 +48,9 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
 
   args.push_back("-resource-dir");
   args.push_back(STRINGIFY(JIT_FROM_SCRATCH_CLANG_RESOURCE_DIR));
+
+  args.push_back("-resource-dir");
+  args.push_back("/");
   /*
   "-internal-isystem"
   "/usr/lib/gcc/x86_64-linux-gnu/5.4.0/../../../../include/c++/5.4.0"
@@ -59,6 +63,21 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
   "-internal-isystem"
   "/usr/local/include"
   */
+  // TODO: following blocks of include is added to succesfully compile on the docker image
+  {
+      args.push_back("-internal-isystem");
+      args.push_back("/usr/include/c++/7.4.0");
+
+      args.push_back("-internal-isystem");
+      args.push_back("/usr/include/x86_64-linux-gnu/c++/7.4.0");
+
+      args.push_back("-internal-isystem");
+      args.push_back("/usr/include/x86_64-linux-gnu/");
+
+      args.push_back("-internal-isystem");
+      args.push_back("/usr/include");
+  }
+
   args.push_back("-internal-isystem");
   args.push_back(STRINGIFY(JIT_FROM_SCRATCH_CLANG_RESOURCE_DIR) "/include");
   /*
