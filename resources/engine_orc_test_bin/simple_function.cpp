@@ -1,6 +1,4 @@
 
-
-
 int internal_function(int value)
 {
     return value;

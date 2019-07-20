@@ -81,6 +81,7 @@ readModuleFromBitcodeFile(llvm::StringRef bc, llvm::LLVMContext &context)
 {
     llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> buffer
         = llvm::MemoryBuffer::getFile(bc);
+
     if (!buffer)
         return llvm::errorCodeToError(buffer.getError());
 
