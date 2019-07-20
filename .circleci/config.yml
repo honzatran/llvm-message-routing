@@ -16,16 +16,20 @@ jobs:
                 mkdir build 
                 cd build 
                 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLLVM_DIR=/llvm-release80-release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -G Ninja 
+        - run:
+            name: generate_3rd_party_checksum
+            command: |
+                find 3rd-party/ build/googletest-src/ -name *.cpp  -o -name *.h -exec md5sum "{}" + > checksum.tmp
         - restore_cache:
             keys: 
-                - 'ccache-{{ .Branch }}'
+                - 'ccache-{{ .Branch }}-{{ checksum "checksum.tmp" }}'
         - run:
             name: build
             command: |
                 cd build
                 ninja -j2
         - save_cache:
-            key: 'ccache-{{ .Branch }}'
+            key: 'ccache-{{ .Branch }}-{{ checksum "checksum.tmp" }}'
             paths: [ "/root/.ccache" ]
         - run:
             name: test
@@ -36,5 +40,3 @@ jobs:
                 ninja test
         - store_test_results:
             path: build/bin
-
-
