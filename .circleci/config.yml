@@ -18,7 +18,7 @@ jobs:
                 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DLLVM_DIR=/llvm-release80-release -G Ninja 
         - restore_cache:
             keys: 
-                'ccache-{{ .Branch }}'
+                - 'ccache-{{ .Branch }}'
         - run:
             name: build
             command: |
