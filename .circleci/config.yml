@@ -19,7 +19,7 @@ jobs:
         - run:
             name: generate_3rd_party_checksum
             command: |
-                find 3rd-party/ build/googletest-src/ -name *.cpp  -o -name *.h -exec md5sum "{}" + > checksum.tmp
+                sh generate_checksum.sh
         - restore_cache:
             keys: 
                 - 'ccache-{{ .Branch }}-{{ checksum "checksum.tmp" }}'
