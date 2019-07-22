@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include <routing/engine/symbol_export_plugin.h>
+
 #pragma once
 
 class Clang_cc1_driver
@@ -28,7 +30,8 @@ public:
 
     llvm::Expected<std::unique_ptr<llvm::Module>> compile_source_code(
         std::string const& source_code_path,
-        llvm::LLVMContext &context);
+        llvm::LLVMContext &context,
+        std::shared_ptr<routing::engine::File_jit_symbols> const& symbols);
 
 private:
     std::vector<std::function<void()>> SoucreFileDeleters;

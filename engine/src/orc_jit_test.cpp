@@ -25,10 +25,13 @@ public:
 
         m_jit = std::move(*jit);
 
+        m_jit_symbols = std::make_shared<routing::engine::File_jit_symbols>();
+
         auto module = m_clang_driver.compile_source_code(
             fmt::format(
                 "../resources/engine_orc_test_bin/{}", m_source_code_file),
-            m_context);
+            m_context,
+            m_jit_symbols);
 
         if (auto err = module.takeError())
         {
@@ -48,6 +51,8 @@ protected:
     Clang_cc1_driver m_clang_driver;
 
     std::unique_ptr<SimpleOrcJit> m_jit;
+
+    std::shared_ptr<routing::engine::File_jit_symbols> m_jit_symbols;
 };
 
 extern "C" int
@@ -79,6 +84,11 @@ class Simple_function_test : public Base_engine_function_test
 public:
     Simple_function_test() : Base_engine_function_test("simple_function.cpp") {}
 };
+
+TEST_F(Simple_function_test, no_function_exported)
+{
+    ASSERT_EQ(0, m_jit_symbols->get_symbols().size());
+}
 
 TEST_F(Simple_function_test, simple_function_lookup)
 {
@@ -116,7 +126,16 @@ public:
 
 TEST_F(Cpp_function_test, stl_function)
 {
-    auto symbol = m_jit->lookup("test_cpp_function");
+    auto test_cpp_function_symbols
+        = m_jit_symbols->get_symbols("test_cpp_function");
+
+    ASSERT_EQ(1, test_cpp_function_symbols.size());
+
+    auto mangled_name = test_cpp_function_symbols[0].get_mangled_symbol();
+
+    llvm::StringRef symbol_name(&mangled_name[0], mangled_name.size());
+
+    auto symbol = m_jit->lookup(symbol_name);
 
     if (auto err = symbol.takeError())
     {

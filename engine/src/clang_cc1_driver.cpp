@@ -2,6 +2,7 @@
 
 // Hack: cc1 lives in "tools" next to "include"
 #include <../tools/driver/cc1_main.cpp>
+#include "llvm/Object/ObjectFile.h"
 
 #if _WIN32
 #include <routing/engine/ClangCC1Args_Win.h>
@@ -19,6 +20,11 @@
 #include <llvm/Support/MemoryBuffer.h>
 
 #define DEBUG_TYPE "cc1driver"
+
+#include <routing/engine/symbol_export_plugin.h>
+
+static clang::FrontendPluginRegistry::Add<routing::engine::Symbol_export_plugin>
+    symbol_exporter("symbol_exporter", "exports symbols for jit lookup");
 
 namespace
 {
@@ -123,11 +129,16 @@ Clang_cc1_driver::compileTranslationUnit(
 llvm::Expected<std::unique_ptr<llvm::Module>>
 Clang_cc1_driver::compile_source_code(
     std::string const &source_code_path,
-    llvm::LLVMContext &context)
+    llvm::LLVMContext &context,
+    std::shared_ptr<routing::engine::File_jit_symbols> const &symbols)
 {
-    std::string bc  = replaceExtension(source_code_path, "bc");
+    std::string bc = replaceExtension(source_code_path, "bc");
 
-    llvm::Error err = compileCppToBitcodeFile(getClangCC1Args(source_code_path, bc));
+    routing::engine::Symbol_export_plugin::register_jit_symbols(
+        source_code_path, symbols);
+
+    llvm::Error err
+        = compileCppToBitcodeFile(getClangCC1Args(source_code_path, bc));
     if (err)
         return std::move(err);
 

@@ -66,7 +66,7 @@ RUN git clone --depth=1 --branch=release/8.x https://github.com/llvm/llvm-projec
 RUN mkdir llvm-release80-release && \
     cd llvm-release80-release && \
         CC=clang CXX=clang++ \
-                cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=host -DLLVM_INCLUDE_TESTS=OFF \
+                cmake -GNinja -DCMAKE_BUILD_TYPE=DEBUG -DLLVM_TARGETS_TO_BUILD=host -DLLVM_INCLUDE_TESTS=OFF \
                        -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_ENABLE_PROJECTS=clang ../llvm-release80/llvm
 
 RUN cd llvm-release80-release && ninja llvm-config FileCheck
@@ -80,5 +80,3 @@ RUN cd llvm-release80-release && ninja LLVMipo LLVMInstrumentation LLVMVectorize
 RUN cd llvm-release80-release && ninja clang
 
 RUN apt-get install ccache
-RUN echo 'set history save on' >> ~/.gdbinit && chmod 600 ~/.gdbinit
-

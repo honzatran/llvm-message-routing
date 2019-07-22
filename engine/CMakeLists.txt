@@ -18,6 +18,7 @@ list(APPEND ENGINE_HEADERS
     "include/routing/engine/clang_cc1_driver.h"
     "include/routing/engine/ClangCC1Args_${OS_NAME}.h"
     "include/routing/engine/optimizer.h"
+    "include/routing/engine/symbol_export_plugin.h"
 )
 
 list (APPEND ENGINE_SRC
@@ -25,6 +26,7 @@ list (APPEND ENGINE_SRC
     "src/clang_cc1_driver.cpp"
     "src/SimpleOrcJit.cpp"
     "src/optimizer.cpp"
+    "src/symbol_export_plugin.cpp"
     ${ENGINE_HEADERS}
 )
 

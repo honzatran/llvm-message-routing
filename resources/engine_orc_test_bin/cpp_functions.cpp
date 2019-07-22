@@ -17,8 +17,19 @@ generate_vector(std::size_t size)
     return output;
 }
 
-extern "C" int
-test_cpp_function(int init_value, std::size_t value)
+namespace jitted 
+{
+
+__attribute__((annotate("ENGINE")))
+std::vector<int> mangled_cpp_function(int value)
+{
+    return { value, value };
+}
+}
+
+__attribute__((annotate("ENGINE")))
+int
+test_cpp_function(int init_value, std::size_t value) 
 {
     auto output = generate_vector(value);
 
