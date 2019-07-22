@@ -3,13 +3,13 @@
 #ifndef ROUTING_SYS_UTIL_H
 #define ROUTING_SYS_UTIL_H
 
+#include <boost/optional.hpp>
 #include <cstdlib>
 #include <string>
-#include <boost/optional.hpp>
 
 namespace routing
 {
-boost::optional<std::string>
+inline boost::optional<std::string>
 get_env_variable(std::string const& env_name)
 {
     char const* env_var = std::getenv(env_name.c_str());
@@ -21,6 +21,6 @@ get_env_variable(std::string const& env_name)
 
     return {};
 }
-};
+};  // namespace routing
 
 #endif
