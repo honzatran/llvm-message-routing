@@ -13,6 +13,16 @@ else()
 endif()
 message(STATUS "System: ${OS_NAME}")
 
+get_target_property(COMMON_INSTALL_HEADER_DIR routing::common EXPORT_INSTALL_HEADER_DIR)
+get_target_property(COMMON_HEADER_DIR routing::common EXPORT_HEADER_DIR)
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/available_headers.in.cpp" 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/available_headers.cpp"
+    ESCAPE_QUOTES
+    @ONLY)
+
+
 list(APPEND ENGINE_HEADERS
     "include/routing/engine/SimpleOrcJit.h"
     "include/routing/engine/clang_cc1_driver.h"
@@ -27,6 +37,7 @@ list (APPEND ENGINE_SRC
     "src/SimpleOrcJit.cpp"
     "src/optimizer.cpp"
     "src/symbol_export_plugin.cpp"
+    "src/available_headers.cpp"
     ${ENGINE_HEADERS}
 )
 
@@ -219,12 +230,6 @@ routing_test(
 )
 
 
-
-
-
-
-# get_target_property(ALL_INCLUDE_DIRECTORIES JitFromScratch INCLUDE_DIRECTORIES)
-# message(STATUS "Include directories: ${ALL_INCLUDE_DIRECTORIES}")
 #
 # get_target_property(ALL_LINK_LIBRARIES "routing_orc" LINK_LIBRARIES)
 # message(STATUS "Link libraries: ${ALL_LINK_LIBRARIES}")

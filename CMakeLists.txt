@@ -50,7 +50,8 @@ function (install_lib target)
         set_target_properties(${target} PROPERTIES VERSION ${LIB_VERSION})
     endif()
 
-    install(TARGETS ${target} LIBRARY DESTINATION ${LIB_INSTALL})
+    install(TARGETS ${target} 
+            LIBRARY DESTINATION ${LIB_INSTALL})
 endfunction()
 
 function (link_address_sanitizer target)
@@ -63,6 +64,13 @@ endfunction()
 
 function (run_clang_tidy target)
     set_target_properties(${target} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+endfunction()
+
+
+function(install_headers prefix header_dir)
+    install(DIRECTORY ${header_dir}/
+        DESTINATION "include/${prefix}"
+        FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
 endfunction()
 
 enable_testing()
@@ -158,7 +166,7 @@ function(routing_library)
     cmake_parse_arguments(ROUTING_LIB
         "IGNORE_INSTALL"
         "TARGET;EXPORT_NAME"
-        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS;PRIVATE_INCLUDE_DIRS;PRIVATE_COMPILE_DEFINITIONS"
+        "SOURCES;PUBLIC_LIBRARIES;PRIVATE_COMPILE_FLAGS;PUBLIC_INCLUDE_DIRS;PRIVATE_INCLUDE_DIRS;PRIVATE_COMPILE_DEFINITIONS;EXPORT_HEADER_DIRS"
         ${ARGN}
     )
 
@@ -186,6 +194,20 @@ function(routing_library)
 
     if (NOT ROUTING_LIB_IGNORE_INSTALL)
         install_lib(${_NAME})
+    endif()
+
+
+    if (ROUTING_LIB_EXPORT_HEADER_DIRS)
+        foreach (include_dir ${ROUTING_LIB_EXPORT_HEADER_DIRS})
+            install_headers(${ROUTING_LIB_EXPORT_NAME} ${include_dir})
+        endforeach(include_dir)
+
+        message(STATUS "SETTING export_install_header_dir")
+        set_target_properties(${_NAME} PROPERTIES
+            "EXPORT_INSTALL_HEADER_DIR" "../include/${ROUTING_LIB_EXPORT_NAME}")
+
+        set_target_properties(${_NAME} PROPERTIES
+            "EXPORT_HEADER_DIR" "${CMAKE_CURRENT_SOURCE_DIR}/${ROUTING_LIB_PUBLIC_INCLUDE_DIRS}")
     endif()
 
 endfunction()

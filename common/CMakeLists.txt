@@ -124,6 +124,8 @@ routing_library(
         "include"
     PRIVATE_INCLUDE_DIRS 
         "src"
+    EXPORT_HEADER_DIRS
+        "include"
 )
 
 routing_test(
