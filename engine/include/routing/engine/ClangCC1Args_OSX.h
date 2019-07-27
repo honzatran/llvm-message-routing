@@ -3,6 +3,8 @@
 
 #include <llvm/ADT/StringRef.h>
 
+#pragma once
+
 #define STRINGIFY_DETAIL(X) #X
 #define STRINGIFY(X) STRINGIFY_DETAIL(X)
 

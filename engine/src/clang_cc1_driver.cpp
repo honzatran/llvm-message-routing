@@ -1,4 +1,7 @@
 #include <routing/engine/clang_cc1_driver.h>
+#include "available_headers.h"
+
+#include <routing/fmt.h>
 
 // Hack: cc1 lives in "tools" next to "include"
 #include <../tools/driver/cc1_main.cpp>
@@ -96,6 +99,24 @@ readModuleFromBitcodeFile(llvm::StringRef bc, llvm::LLVMContext &context)
 
 }  // end namespace
 
+std::vector<std::string>
+get_clang_args(std::string const &cpp, std::string const &bc)
+{
+    auto cc1_args = getClangCC1Args(cpp, bc);
+
+    auto external_include_paths = routing::engine::get_include_paths();
+
+    for (std::string const& path : external_include_paths)
+    {
+
+        // cc1_args.push_back("-internal-isystem");
+        // cc1_args.push_back(path);
+        cc1_args.push_back(fmt::format("-I{}", path));
+    }
+
+    return cc1_args;
+}
+
 llvm::Expected<std::unique_ptr<llvm::Module>>
 Clang_cc1_driver::compileTranslationUnit(
     std::string cppCode,
@@ -108,9 +129,12 @@ Clang_cc1_driver::compileTranslationUnit(
     std::string cpp = *sourceFileName;
     std::string bc  = replaceExtension(cpp, "bc");
 
-    llvm::Error err = compileCppToBitcodeFile(getClangCC1Args(cpp, bc));
+
+    llvm::Error err = compileCppToBitcodeFile(get_clang_args(cpp, bc));
     if (err)
+    {
         return std::move(err);
+    }
 
     auto module = readModuleFromBitcodeFile(bc, context);
     llvm::sys::fs::remove(bc);
@@ -138,7 +162,7 @@ Clang_cc1_driver::compile_source_code(
         source_code_path, symbols);
 
     llvm::Error err
-        = compileCppToBitcodeFile(getClangCC1Args(source_code_path, bc));
+        = compileCppToBitcodeFile(get_clang_args(source_code_path, bc));
     if (err)
         return std::move(err);
 

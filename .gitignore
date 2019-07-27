@@ -9,3 +9,4 @@ compile_commands.json
 CTestTestfile.cmake
 build/**
 **/*.swp
+engine/src/available_headers.cpp

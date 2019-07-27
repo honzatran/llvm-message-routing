@@ -44,6 +44,7 @@ list (APPEND ENGINE_SRC
 list (APPEND ENGINE_TEST_SRC
     "src/init_test.cpp"
     "src/orc_jit_test.cpp"
+    "src/external_includes_jit_test.cpp"
     ${ENGINE_HEADERS}
 )
 
