@@ -43,7 +43,7 @@ routing::get_logger_options_description()
 
     logger.add_options()(
         k_log_async_option,
-        routing::create_option<bool>(true),
+        routing::create_option<bool>(false),
         "use async logging")(
         k_log_flush_on_info_option,
         routing::create_option<bool>(true),
