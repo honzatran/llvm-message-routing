@@ -109,7 +109,10 @@ private:
     {
         stop();
 
-        m_logger->warn_if(!wait_on_loop_finished(), "Loops not finished");
+        if (!wait_on_loop_finished())
+        {
+            m_logger->warn("Loops not finished");
+        }
     }
 
     bool wait_on_loop_finished()

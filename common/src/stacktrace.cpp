@@ -22,8 +22,6 @@ Symbol_frame::setup(std::uintptr_t offset, char const* symbol)
     m_offset = offset;
     m_symbol.assign(symbol);
     m_symbol_found = true;
-
-    fmt::MemoryWriter writer;
 }
 
 int
