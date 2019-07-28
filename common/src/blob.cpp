@@ -2,9 +2,9 @@
 
 #include <routing/blob.h>
 #include <routing/file_util.h>
+#include <routing/fmt.h>
 
 #include <cstdio>
-#include "/Users/honza/llvm-message-routing/3rd-party/spdlog-1.3.1/include/spdlog/fmt/bundled/format.h"
 
 using namespace routing;
 
