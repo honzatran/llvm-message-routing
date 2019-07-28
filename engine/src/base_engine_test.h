@@ -61,8 +61,7 @@ public:
 
         if (auto err = module.takeError())
         {
-            llvm::report_fatal_error(std::move(err));
-            FAIL();
+            FAIL() << get_error_msg(std::move(err));
         }
 
         auto error = m_jit->add(std::move(*module));
