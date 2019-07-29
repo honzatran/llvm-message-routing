@@ -113,6 +113,13 @@ public:
 
         std::cout << "SETTING GENERATOR" << std::endl;
 
+        auto err = m_overrides.enable(m_execution_session.getMainJITDylib(), m_mangler);
+
+        if (err)
+        {
+            std::move(err);
+        }
+
         m_execution_session.getMainJITDylib().setGenerator(
             std::move(*system_process_generator));
     }
@@ -198,6 +205,9 @@ private:
     llvm::orc::ThreadSafeContext m_thread_safe_context;
 
     llvm::orc::IRTransformLayer m_optimize_layer;
+
+    /// overrides for the C++ runtime
+    llvm::orc::LocalCXXRuntimeOverrides m_overrides;
 
     Clang_cc1_driver m_clang_driver;
 
