@@ -294,7 +294,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(Boost_NO_BOOST_CMAKE ON CACHE BOOL "" FORCE)
 
-find_package(SPDLOG REQUIRED)
 find_package(Boost 1.70 COMPONENTS program_options thread REQUIRED)
 
 init_google_test()
@@ -314,10 +313,7 @@ set (CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/benchmark)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/abseil)
-
-include_directories(
-    ${SPDLOG_INCLUDE_DIRS} 
-    ${Boost_INCLUDE_DIR})
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/spdlog-1.3.1)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
 

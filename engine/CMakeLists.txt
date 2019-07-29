@@ -231,6 +231,10 @@ routing_test(
 )
 
 
+get_target_property(ALL_INCLUDE_DIR spdlog INTERFACE_INCLUDE_DIRECTORIES)
+
+message(STATUS ${ALL_INCLUDE_DIR})
+
 #
 # get_target_property(ALL_LINK_LIBRARIES "routing_orc" LINK_LIBRARIES)
 # message(STATUS "Link libraries: ${ALL_LINK_LIBRARIES}")

@@ -38,6 +38,9 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
   args.push_back("-dwarf-column-info");
   args.push_back("-debugger-tuning=lldb");
 
+  // enable exceptions
+  args.push_back("-fcxx-exceptions");
+
 #if NDEBUG
   args.push_back("-O3");
   args.push_back("-vectorize-loops");

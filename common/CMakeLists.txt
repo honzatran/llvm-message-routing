@@ -118,12 +118,13 @@ routing_library(
         pthread 
         absl::flat_hash_map
         absl::failure_signal_handler
+        spdlog
     PUBLIC_INCLUDE_DIRS
         "include"
     PRIVATE_INCLUDE_DIRS 
         "src"
     EXPORT_HEADER_DIRS
-        "include"
+        "include" 
 )
 
 routing_test(

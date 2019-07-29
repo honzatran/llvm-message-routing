@@ -35,6 +35,8 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
   args.push_back("-dwarf-column-info");
   args.push_back("-debugger-tuning=gdb");
 
+  args.push_back("-fcxx-exceptions");
+
 #if NDEBUG
   args.push_back("-O3");
   args.push_back("-mdisable-fp-elim");
@@ -76,6 +78,9 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
 
       args.push_back("-internal-isystem");
       args.push_back("/usr/include");
+
+      args.push_back("-internal-isystem");
+      args.push_back("/usr/local/include");
   }
 
   args.push_back("-internal-isystem");
