@@ -19,7 +19,7 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
   args.push_back("-main-file-name");
   args.push_back(cpp.data());
 
-  args.push_back("-std=c++14");
+  args.push_back("-std=c++17");
   args.push_back("-disable-free");
   args.push_back("-stack-protector");
   args.push_back("1");

@@ -14,7 +14,10 @@ endif()
 message(STATUS "System: ${OS_NAME}")
 
 get_target_property(COMMON_INSTALL_HEADER_DIR routing::common EXPORT_INSTALL_HEADER_DIR)
+
 get_target_property(COMMON_HEADER_DIR routing::common EXPORT_HEADER_DIR)
+
+set(ENGINE_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/src/available_headers.in.cpp" 
