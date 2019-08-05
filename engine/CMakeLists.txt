@@ -48,6 +48,7 @@ list (APPEND ENGINE_TEST_SRC
     "src/init_test.cpp"
     "src/orc_jit_test.cpp"
     "src/external_includes_jit_test.cpp"
+    "src/routing_message_function_test.cpp"
     ${ENGINE_HEADERS}
 )
 
@@ -195,6 +196,7 @@ routing_library(
         clangLex
         LLVMDemangle
         routing::common
+        routing::message
     PUBLIC_INCLUDE_DIRS
         "include"
         ${LLVM_INCLUDE_DIRS}

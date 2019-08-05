@@ -14,9 +14,9 @@ list (APPEND ROUTING_TEST_SRC
 
 routing_library(
     TARGET 
-        "engine"
+        "message"
     EXPORT_NAME 
-        "engine"
+        "message"
     SOURCES 
         ${ROUTING_SRC}
     PUBLIC_LIBRARIES 
@@ -30,9 +30,9 @@ routing_library(
 
 routing_test(
     TARGET 
-        routing_engine_test
+        routing_message_test
     SOURCES 
         ${ROUTING_TEST_SRC}
     PUBLIC_LIBRARIES 
-        "routing::engine"
+        "routing::message"
 )
