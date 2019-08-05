@@ -4,7 +4,7 @@
 #include <gtest/gtest-param-test.h>
 #include <gtest/gtest.h>
 
-#include <routing/engine/message_key.h>
+#include <routing/message/message_key.h>
 #include <routing/fmt.h>
 
 using namespace routing::engine;

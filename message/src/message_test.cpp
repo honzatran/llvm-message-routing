@@ -1,6 +1,6 @@
 
 
-#include <routing/engine/message.h>
+#include <routing/message/message.h>
 #include <routing/slab_allocator.h>
 #include <routing/stdext.h>
 
