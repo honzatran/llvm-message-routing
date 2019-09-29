@@ -137,7 +137,6 @@ routing_library(
     PUBLIC_LIBRARIES
         ${LLVM_LIBS}
         LLVMX86CodeGen
-        LLVMX86AsmPrinter
         LLVMX86AsmParser
         LLVMX86Desc
         LLVMX86Info

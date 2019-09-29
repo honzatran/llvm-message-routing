@@ -78,6 +78,7 @@ RUN cd llvm-release90-release && ninja LLVMAsmPrinter LLVMCodeGen LLVMMCDisassem
 RUN cd llvm-release90-release && ninja LLVMX86CodeGen LLVMX86Disassembler LLVMX86AsmParser LLVMX86Desc LLVMX86Info LLVMX86Utils
 RUN cd llvm-release90-release && ninja LLVMipo LLVMInstrumentation LLVMVectorize LLVMLinker LLVMIRReader LLVMAsmParser
 RUN cd llvm-release90-release && ninja clang
+RUN cd llvm-release90-release && ninja LLVMJITLink
 
 RUN apt-get install ccache
 RUN echo 'set history save on' >> ~/.gdbinit && chmod 600 ~/.gdbinit
