@@ -75,7 +75,7 @@ RUN cd llvm-release90-release && ninja LLVMRuntimeDyld LLVMObject LLVMMCParser L
 RUN cd llvm-release90-release && ninja LLVMExecutionEngine LLVMTarget LLVMAnalysis LLVMProfileData LLVMOrcJIT LLVMTransformUtils
 RUN cd llvm-release90-release && ninja LLVMGlobalISel LLVMSelectionDAG LLVMScalarOpts LLVMInstCombine LLVMAggressiveInstCombine
 RUN cd llvm-release90-release && ninja LLVMAsmPrinter LLVMCodeGen LLVMMCDisassembler LLVMBitWriter LLVMBinaryFormat
-RUN cd llvm-release90-release && ninja LLVMX86AsmPrinter LLVMX86CodeGen LLVMX86Disassembler LLVMX86AsmParser LLVMX86Desc LLVMX86Info LLVMX86Utils
+RUN cd llvm-release90-release && ninja LLVMX86CodeGen LLVMX86Disassembler LLVMX86AsmParser LLVMX86Desc LLVMX86Info LLVMX86Utils
 RUN cd llvm-release90-release && ninja LLVMipo LLVMInstrumentation LLVMVectorize LLVMLinker LLVMIRReader LLVMAsmParser
 RUN cd llvm-release90-release && ninja clang
 

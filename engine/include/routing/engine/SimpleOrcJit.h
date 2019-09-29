@@ -100,9 +100,10 @@ public:
         // GdbEventListener =
         // llvm::JITEventListener::createGDBRegistrationListener();
         //
+        //
         auto system_process_generator
             = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
-                m_data_layout);
+                '\0');
 
         if (!system_process_generator)
         {
@@ -113,7 +114,8 @@ public:
 
         std::cout << "SETTING GENERATOR" << std::endl;
 
-        auto err = m_overrides.enable(m_execution_session.getMainJITDylib(), m_mangler);
+        auto err = m_overrides.enable(
+            m_execution_session.getMainJITDylib(), m_mangler);
 
         if (err)
         {

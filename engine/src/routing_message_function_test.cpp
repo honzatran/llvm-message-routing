@@ -1,5 +1,4 @@
 
-
 #include <gtest/gtest.h>
 
 #include <routing/message/message.h>
@@ -35,6 +34,7 @@ TEST_F(Routing_message_function_tests, route)
     {
         FAIL() << routing::engine::get_error_msg(std::move(err));
     }
+
 
     auto slab_allocator
         = std::make_unique<Slab_allocator_t>(Malloc_allocator());

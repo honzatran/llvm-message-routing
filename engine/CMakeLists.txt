@@ -63,7 +63,7 @@ list (APPEND ENGINE_TEST_SRC
 # )
 
 # add LLVM libraries, set LLVM_* variables
-find_package(LLVM 8.0 REQUIRED PATHS ${LLVM_DIR})
+find_package(LLVM 9.0 REQUIRED PATHS ${LLVM_DIR})
 message(STATUS "LLVM_DIR: ${LLVM_DIR}")
 message(STATUS "LLVM_PACKAGE_VERSION: ${LLVM_PACKAGE_VERSION}")
 
