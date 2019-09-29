@@ -62,22 +62,22 @@ RUN wget https://apt.llvm.org/llvm-snapshot.gpg.key && \
 
 
 
-RUN git clone --depth=1 --branch=release/8.x https://github.com/llvm/llvm-project.git llvm-release80
-RUN mkdir llvm-release80-release && \
-    cd llvm-release80-release && \
+RUN git clone --depth=1 --branch=release/9.x https://github.com/llvm/llvm-project.git llvm-release90
+RUN mkdir llvm-release90-release && \
+    cd llvm-release90-release && \
         CC=clang CXX=clang++ \
                 cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=host -DLLVM_INCLUDE_TESTS=OFF \
-                       -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_ENABLE_PROJECTS=clang ../llvm-release80/llvm
+                       -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_ENABLE_PROJECTS=clang ../llvm-release90/llvm
 
-RUN cd llvm-release80-release && ninja llvm-config FileCheck
-RUN cd llvm-release80-release && ninja LLVMSupport LLVMDemangle LLVMCore LLVMBinaryFormat
-RUN cd llvm-release80-release && ninja LLVMRuntimeDyld LLVMObject LLVMMCParser LLVMBitReader LLVMMC LLVMDebugInfoCodeView LLVMDebugInfoMSF
-RUN cd llvm-release80-release && ninja LLVMExecutionEngine LLVMTarget LLVMAnalysis LLVMProfileData LLVMOrcJIT LLVMTransformUtils
-RUN cd llvm-release80-release && ninja LLVMGlobalISel LLVMSelectionDAG LLVMScalarOpts LLVMInstCombine LLVMAggressiveInstCombine
-RUN cd llvm-release80-release && ninja LLVMAsmPrinter LLVMCodeGen LLVMMCDisassembler LLVMBitWriter LLVMBinaryFormat
-RUN cd llvm-release80-release && ninja LLVMX86AsmPrinter LLVMX86CodeGen LLVMX86Disassembler LLVMX86AsmParser LLVMX86Desc LLVMX86Info LLVMX86Utils
-RUN cd llvm-release80-release && ninja LLVMipo LLVMInstrumentation LLVMVectorize LLVMLinker LLVMIRReader LLVMAsmParser
-RUN cd llvm-release80-release && ninja clang
+RUN cd llvm-release90-release && ninja llvm-config FileCheck
+RUN cd llvm-release90-release && ninja LLVMSupport LLVMDemangle LLVMCore LLVMBinaryFormat
+RUN cd llvm-release90-release && ninja LLVMRuntimeDyld LLVMObject LLVMMCParser LLVMBitReader LLVMMC LLVMDebugInfoCodeView LLVMDebugInfoMSF
+RUN cd llvm-release90-release && ninja LLVMExecutionEngine LLVMTarget LLVMAnalysis LLVMProfileData LLVMOrcJIT LLVMTransformUtils
+RUN cd llvm-release90-release && ninja LLVMGlobalISel LLVMSelectionDAG LLVMScalarOpts LLVMInstCombine LLVMAggressiveInstCombine
+RUN cd llvm-release90-release && ninja LLVMAsmPrinter LLVMCodeGen LLVMMCDisassembler LLVMBitWriter LLVMBinaryFormat
+RUN cd llvm-release90-release && ninja LLVMX86AsmPrinter LLVMX86CodeGen LLVMX86Disassembler LLVMX86AsmParser LLVMX86Desc LLVMX86Info LLVMX86Utils
+RUN cd llvm-release90-release && ninja LLVMipo LLVMInstrumentation LLVMVectorize LLVMLinker LLVMIRReader LLVMAsmParser
+RUN cd llvm-release90-release && ninja clang
 
 RUN apt-get install ccache
 RUN echo 'set history save on' >> ~/.gdbinit && chmod 600 ~/.gdbinit
