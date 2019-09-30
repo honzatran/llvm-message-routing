@@ -103,7 +103,7 @@ public:
         //
         auto system_process_generator
             = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
-                '\0');
+                '_');
 
         if (!system_process_generator)
         {
