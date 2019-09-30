@@ -101,9 +101,16 @@ public:
         // llvm::JITEventListener::createGDBRegistrationListener();
         //
         //
+
+#ifdef __linux__
+        char global_prefix = '\0';
+#elif __APPLE__
+        char global_prefix = '_';
+#endif
+
         auto system_process_generator
             = llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
-                '_');
+                global_prefix);
 
         if (!system_process_generator)
         {

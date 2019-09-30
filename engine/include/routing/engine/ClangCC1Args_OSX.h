@@ -62,6 +62,9 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
       args.push_back("/usr/local/include");
 
       args.push_back("-internal-isystem");
+      args.push_back("/Users/honza/llvm-project/build/lib/clang/9.0.0/include/");
+
+      args.push_back("-internal-isystem");
       args.push_back("/usr/include");
   }
 
