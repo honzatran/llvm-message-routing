@@ -4,3 +4,6 @@
 [submodule "3rd-party/google/abseil"]
 	path = 3rd-party/google/abseil
 	url = https://github.com/abseil/abseil-cpp
+[submodule "3rd-party/opcm/pcm"]
+	path = 3rd-party/opcm/pcm
+	url = https://github.com/opcm/pcm
