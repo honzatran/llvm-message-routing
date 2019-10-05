@@ -59,7 +59,7 @@ function (link_address_sanitizer target)
         "-fno-omit-frame-pointer" "-fsanitize=address")
 
     set_property(TARGET ${target} APPEND_STRING 
-       PROPERTY LINK_FLAGS "-fno-omit-frame-pointer -fsanitize=address")
+       PROPERTY LINK_FLAGS "-fno-omit-frame-pointer -fsanitize=address -static-libsan")
 endfunction()
 
 function (run_clang_tidy target)
