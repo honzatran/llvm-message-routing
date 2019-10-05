@@ -59,7 +59,7 @@ function (link_address_sanitizer target)
         "-fno-omit-frame-pointer" "-fsanitize=address")
 
     set_property(TARGET ${target} APPEND_STRING 
-       PROPERTY LINK_FLAGS "-fno-omit-frame-pointer -fsanitize=address -static-libsan")
+       PROPERTY LINK_FLAGS "-fno-omit-frame-pointer -fsanitize=address")
 endfunction()
 
 function (run_clang_tidy target)
@@ -112,7 +112,7 @@ function (routing_test)
         target_include_directories(${_NAME}_bin
             PUBLIC ${ROUTING_TEST_PUBLIC_INCLUDE_DIRS})
 
-        add_test(NAME ${_NAME} COMMAND ${_NAME}_bin  --gtest_output=xml:${ROUTING_TEST_TARGET}_results.xml
+        add_test(NAME ${_NAME} COMMAND ${_NAME}_bin  --gtest_output=xml:${ROUTING_TEST_TARGET}/results.xml
              WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
          if (USE_ADDRESS_SANITIZER AND NOT ROUTING_TEST_DISABLE_SANITIZER)

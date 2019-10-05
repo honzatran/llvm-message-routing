@@ -34,7 +34,6 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
 
   args.push_back("-dwarf-column-info");
   args.push_back("-debugger-tuning=gdb");
-  args.push_back("-march=native");
 
   args.push_back("-fcxx-exceptions");
 
