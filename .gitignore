@@ -10,3 +10,7 @@ CTestTestfile.cmake
 build/**
 **/*.swp
 engine/src/available_headers.cpp
+.clangd/*
+logs/**
+build-ubuntu/*
+checksum.tmp
