@@ -76,3 +76,19 @@ TEST_F(Message_test, resize)
     }
 }
 
+TEST_F(Message_test, resize_1000_000)
+{
+    for (int i = 0; i < 1'000'000; i++)
+    {
+        ASSERT_FALSE(m_tested_message.has_int(i)) << i;
+
+        m_tested_message.set_int(i, i);
+
+        ASSERT_TRUE(m_tested_message.has_int(i)) << i;
+
+        ASSERT_EQ(i, m_tested_message.get_int(i));
+
+        ASSERT_EQ(i + 1, m_tested_message.size());
+    }
+}
+

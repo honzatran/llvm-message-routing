@@ -3,22 +3,22 @@
 #ifndef ROUTING_ENGINE_MESSAGE_H
 #define ROUTING_ENGINE_MESSAGE_H
 
-#include <absl/time/time.h>
+#include <absl/container/internal/container_memory.h>
 #include <absl/container/internal/layout.h>
 #include <absl/container/internal/raw_hash_set.h>
-#include <absl/container/internal/container_memory.h>
+#include <absl/time/time.h>
 
 #include "absl/base/internal/bits.h"
 #include "message_key.h"
 
-#include <routing/decimal.h>
-#include <routing/slab_allocator.h>
 #include <routing/buffer.h>
+#include <routing/decimal.h>
 #include <routing/fmt.h>
+#include <routing/slab_allocator.h>
 
 #include <absl/strings/string_view.h>
-#include <absl/types/span.h>
 #include <absl/time/time.h>
+#include <absl/types/span.h>
 #include <atomic>
 #include <cstdint>
 #include <memory>
@@ -39,7 +39,7 @@ public:
     static std::uint32_t compute(std::int32_t key)
     {
         key *= kMul;
-        return (key ^ (key >> 16)); 
+        return (key ^ (key >> 16));
     }
 };
 
@@ -47,23 +47,16 @@ public:
 class Message_view
 {
 public:
-    Message_view(Buffer_view view)
-    {
-    }
+    Message_view(Buffer_view view) {}
 
     std::uint8_t* get_key_location(
         std::int32_t key,
         engine::Field_type field_type)
     {
         std::uint32_t const index = City_hash::compute(key);
-
-
     }
 
-    std::size_t capacity() const
-    {
-        return m_view.as_value<std::int32_t>(0);
-    }
+    std::size_t capacity() const { return m_view.as_value<std::int32_t>(0); }
 
 private:
     Buffer_view m_view;
@@ -73,13 +66,16 @@ inline std::size_t
 next_power_of_2(std::size_t value)
 {
     return (sizeof(size_t) == 8)
-               ? 1 << ((sizeof(size_t) * 8)
-                     - absl::base_internal::CountLeadingZeros64(value - 1))
-               : 1 << ((sizeof(size_t) * 8)
-                     - absl::base_internal::CountLeadingZeros32(value - 1));
+               ? 1
+                     << ((sizeof(size_t) * 8)
+                         - absl::base_internal::CountLeadingZeros64(value - 1))
+               : 1
+                     << ((sizeof(size_t) * 8)
+                         - absl::base_internal::CountLeadingZeros32(value - 1));
 }
 
-inline bool is_power_of2(std::size_t value)
+inline bool
+is_power_of2(std::size_t value)
 {
     return (value & (value - 1)) == 0;
 }
@@ -94,7 +90,7 @@ initial_capacity(std::size_t capacity)
     return std::max(16UL, next_power_of_2(capacity));
 }
 
-/// Returns how many elements can be added to the message, until a regrowth 
+/// Returns how many elements can be added to the message, until a regrowth
 /// and rehash is needed.
 ///
 /// \param the message capacity
@@ -103,7 +99,7 @@ initial_capacity(std::size_t capacity)
 inline std::size_t
 compute_growth_left(std::size_t capacity)
 {
-    return capacity - (capacity/8);
+    return capacity - (capacity / 8);
 }
 
 /// Returns a hash seed.
@@ -119,7 +115,7 @@ hash_seed(const Message_chunk* key_part)
     return reinterpret_cast<uintptr_t>(key_part) >> 12;
 }
 
-/// returns the h1 hash used to address the chunks 
+/// returns the h1 hash used to address the chunks
 inline size_t
 H1(size_t hash, const Message_chunk* key_part)
 {
@@ -148,7 +144,7 @@ public:
     void next()
     {
         ++m_index;
-        m_offset += m_index; 
+        m_offset += m_index;
         m_offset &= m_mask;
     }
     // 0-based probe index. The i-th probe in the probe sequence.
@@ -165,13 +161,12 @@ private:
 class Message
 {
 public:
-
     Message() = default;
     /// Expects an underlying serialized message
     /// @param memory pointer towards the memory
     Message(
         std::unique_ptr<Slab_allocator_t> slab_allocator,
-        std::size_t capacity = 31,
+        std::size_t capacity           = 31,
         std::size_t expected_mem_usage = 0);
 
     void set_int(std::int32_t key, std::int32_t value)
@@ -199,16 +194,11 @@ public:
 
     void set_string(std::int32_t key, absl::string_view value);
 
-    void set_custom_data(
-        std::int32_t key,
-        absl::Span<std::uint8_t> data);
+    void set_custom_data(std::int32_t key, absl::Span<std::uint8_t> data);
 
     void set_message(std::int32_t key, Message const& message);
 
-    bool has_int(std::int32_t key)
-    {
-        return find<Field_type::INT>(key);
-    }
+    bool has_int(std::int32_t key) { return find<Field_type::INT>(key); }
 
     void has_long(std::int32_t key);
 
@@ -218,7 +208,7 @@ public:
 
     void has_time(std::int32_t key);
 
-    void has_date(std::int32_t key); 
+    void has_date(std::int32_t key);
 
     void has_string(std::int32_t key);
 
@@ -241,14 +231,13 @@ public:
 
     absl::Duration get_day_time(std::int32_t key);
 
-    absl::Time get_time(std::int32_t key); 
+    absl::Time get_time(std::int32_t key);
 
     absl::string_view get_string(std::int32_t key);
 
     absl::Span<std::uint8_t> get_custom_data(std::int32_t key);
 
     Message get_message(std::int32_t key);
-
 
     /// Returns the actual size of this map
     std::size_t size() const { return m_size; }
@@ -327,11 +316,11 @@ private:
     Message_value_view find(std::int32_t key) const
     {
         std::size_t hash = detail::City_hash::compute(key);
-        auto probe = create_probe(hash);
+        auto probe       = create_probe(hash);
 
         auto h2_value = detail::H2(hash);
 
-        for (int tries = 0; tries < m_chunks_count; ++tries) 
+        for (int tries = 0; tries < m_chunks_count; ++tries)
         {
             Message_chunk* chunk = &m_chunks[probe.offset()];
 
@@ -339,7 +328,12 @@ private:
 
             if (mask != 0)
             {
-                return chunk->match_key(key, mask);
+                auto value = chunk->match_key(key, mask);
+
+                if (value)
+                {
+                    return value;
+                }
             }
 
             if (chunk->match_empty())
@@ -350,29 +344,27 @@ private:
             probe.next();
         }
 
-        fmt::print("index {}\n", probe.index());
-
         return Message_value_view();
     }
 
-    /// Returns a pair with a view where the first of the pair 
+    /// Returns a pair with a view where the first of the pair
     /// is a view where the element could be inserted, the second
     /// boolean parameter returns whether this key was already associated
     /// with a value
     ///
     /// \param key the key of the field
     /// \tparam field_type type of the key
-    /// \return the pair where first elements allows the insertion, and the 
+    /// \return the pair where first elements allows the insertion, and the
     ///         second is true whether this is a new key within the hashmap
     template <Field_type field_type>
     std::pair<Message_value_view, bool> find_or_prepare_insert(std::int32_t key)
     {
         std::size_t hash = detail::City_hash::compute(key);
-        auto probe = create_probe(hash);
+        auto probe       = create_probe(hash);
 
         auto h2_value = detail::H2(hash);
 
-        for (int tries = 0; tries < m_chunks_count; ++tries) 
+        for (int tries = 0; tries < m_chunks_count; ++tries)
         {
             Message_chunk* chunk = &m_chunks[probe.offset()];
 
@@ -380,7 +372,12 @@ private:
 
             if (mask != 0)
             {
-                return {chunk->match_key(key, mask), true};
+                auto value_view = chunk->match_key(key, mask);
+
+                if (value_view)
+                {
+                    return {chunk->match_key(key, mask), true};
+                }
             }
 
             if (chunk->match_empty())
@@ -427,7 +424,7 @@ private:
     {
         auto probe = create_probe(hash);
 
-        for (int tries = 0; tries < m_chunks_count; ++tries) 
+        for (int tries = 0; tries < m_chunks_count; ++tries)
         {
             Message_chunk* chunk = &m_chunks[probe.offset()];
 
@@ -451,15 +448,14 @@ private:
         if (size() <= detail::compute_growth_left(capacity()) / 2)
         {
             drop_deletes_without_resize();
-        } 
-        else 
+        }
+        else
         {
             resize(2 * m_capacity);
         }
     }
 
     void drop_deletes_without_resize() {}
-
 
     /// Resize the message and rehashes the inserted items
     void resize(std::size_t capacity)
@@ -512,6 +508,6 @@ private:
         reset_ctrl();
     }
 };
-}  // namespace routing
+}  // namespace routing::engine
 
 #endif

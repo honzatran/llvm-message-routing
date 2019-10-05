@@ -486,6 +486,13 @@ inline Message_value_view const
 Message_chunk::match_key(std::int32_t key, int mask) const
 {
     int position = m_keys.contains(key, mask);
+
+
+    if (position < 0)
+    {
+        return Message_value_view();
+    }
+
     return Message_value_view(this, position);
 }
 
@@ -493,6 +500,11 @@ inline Message_value_view
 Message_chunk::match_key(std::int32_t key, int mask)
 {
     int position = m_keys.contains(key, mask);
+
+    if (position < 0)
+    {
+        return Message_value_view();
+    }
 
     return Message_value_view(this, position);
 }
