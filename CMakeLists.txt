@@ -304,6 +304,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/spdlog-1.3.1)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pcm-wrapper)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/message)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
 
