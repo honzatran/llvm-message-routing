@@ -36,3 +36,19 @@ routing_test(
     PUBLIC_LIBRARIES 
         "routing::message"
 )
+
+list (APPEND ROUTING_MESSAGE_BENCHMARK_SRC 
+    "src/message_benchmark.cpp"
+)
+
+
+routing_benchmark(
+    TARGET
+        routing_message_benchmark
+    SOURCES
+        ${ROUTING_MESSAGE_BENCHMARK_SRC}
+    PUBLIC_LIBRARIES
+        "routing::message"
+)
+
+
