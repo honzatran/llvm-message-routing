@@ -76,7 +76,7 @@ TEST_F(Message_test, resize)
     }
 }
 
-TEST_F(Message_test, resize_1000_000)
+TEST_F(Message_test, insert_int_1000_000)
 {
     for (int i = 0; i < 1'000'000; i++)
     {
@@ -87,6 +87,38 @@ TEST_F(Message_test, resize_1000_000)
         ASSERT_TRUE(m_tested_message.has_int(i)) << i;
 
         ASSERT_EQ(i, m_tested_message.get_int(i));
+
+        ASSERT_EQ(i + 1, m_tested_message.size());
+    }
+}
+
+TEST_F(Message_test, insert_long_1000_000)
+{
+    for (std::int64_t i = 0; i < 1'000'000; i++)
+    {
+        ASSERT_FALSE(m_tested_message.has_long(i)) << i;
+
+        m_tested_message.set_long(i, i);
+
+        ASSERT_TRUE(m_tested_message.has_long(i)) << i;
+
+        ASSERT_EQ(i, m_tested_message.get_long(i));
+
+        ASSERT_EQ(i + 1, m_tested_message.size());
+    }
+}
+
+TEST_F(Message_test, insert_double_1000_000)
+{
+    for (std::int64_t i = 0; i < 1'000'000; i++)
+    {
+        ASSERT_FALSE(m_tested_message.has_double(i)) << i;
+
+        m_tested_message.set_double(i, i);
+
+        ASSERT_TRUE(m_tested_message.has_double(i)) << i;
+
+        ASSERT_DOUBLE_EQ(i, m_tested_message.get_double(i));
 
         ASSERT_EQ(i + 1, m_tested_message.size());
     }

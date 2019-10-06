@@ -48,6 +48,56 @@ enum class Field_type : std::uint8_t
     MESSAGE_ARRAY = 8
 };
 
+template <Field_type FIELD_TYPE>
+struct Field_type_policy
+{
+    /// corresponding cpp type
+    // using cpp_type = std::int32_t;
+    //
+    /// conversion from the raw std::int64_t raw_value back to the actual type
+    // static cpp_type convert_back(std::int64_t* raw_value) { return *raw_value; }
+    //
+    //
+    /// conversion from actual type to the raw std::int64_t which is stored inside the hashmap.
+    // static std::int64_t conver_to(cpp_type value) { return value; }
+};
+
+template <>
+struct Field_type_policy<Field_type::INT>
+{
+    using cpp_type = std::int32_t;
+
+    static cpp_type convert_back(std::int64_t* raw_value) { return *raw_value; }
+
+    static std::int64_t convert_to(cpp_type value) { return value; }
+};
+
+template <>
+struct Field_type_policy<Field_type::LONG>
+{
+    using cpp_type = std::int64_t;
+
+    static cpp_type convert_back(std::int64_t* raw_value) { return *raw_value; }
+
+    static std::int64_t convert_to(cpp_type value) { return value; }
+};
+
+template <>
+struct Field_type_policy<Field_type::DOUBLE>
+{
+    using cpp_type = double;
+
+    static cpp_type convert_back(std::int64_t* raw_value)
+    {
+        return static_cast<double>(*raw_value);
+    }
+
+    static std::int64_t convert_to(cpp_type value)
+    {
+        return static_cast<std::int64_t>(value);
+    }
+};
+
 class Message_key
 {
     static constexpr std::int32_t max() { return (1 << detail::key_width()); }
@@ -416,21 +466,29 @@ public:
 
     operator bool() const { return m_group; }
 
-    void set_int(std::int32_t key, std::int32_t value)
-    {
-        m_group->m_types.set_type(m_position, Field_type::INT);
-        m_group->m_keys.set_key(m_position, key);
-        m_group->m_value[m_position] = value;
-    }
-
-    void set(Field_type field_type, std::int32_t key, std::int32_t value)
+    /// Sets the message value view to the type and value, this method is used
+    /// for copying values, when resizing the hashmap.As it accepts the value as
+    /// int64.
+    void set(Field_type field_type, std::int32_t key, std::int64_t value)
     {
         m_group->m_types.set_type(m_position, field_type);
         m_group->m_keys.set_key(m_position, key);
         m_group->m_value[m_position] = value;
     }
 
-    std::int32_t as_int() const { return m_group->m_value[m_position]; }
+    /// Sets the message value view to the type and value, this method is for
+    /// for directly setting the value, when inserting new elements to the map.
+    /// Hence it's templated
+    template <Field_type FIELD_TYPE>
+    void set(
+        std::int32_t key,
+        typename Field_type_policy<FIELD_TYPE>::cpp_type value)
+    {
+        m_group->m_types.set_type(m_position, FIELD_TYPE);
+        m_group->m_keys.set_key(m_position, key);
+        m_group->m_value[m_position]
+            = Field_type_policy<FIELD_TYPE>::convert_to(value);
+    }
 
     void set_ctrl(absl::container_internal::ctrl_t h2)
     {
@@ -462,6 +520,13 @@ public:
 
     std::int64_t get() const { return m_group->m_value[m_position]; }
 
+    template <Field_type FIELD_TYPE>
+    auto as() const -> typename Field_type_policy<FIELD_TYPE>::cpp_type
+    {
+        return Field_type_policy<FIELD_TYPE>::convert_back(
+            &m_group->m_value[m_position]);
+    }
+
 private:
     Message_chunk* m_group;
     std::uint8_t m_position;
@@ -486,7 +551,6 @@ inline Message_value_view const
 Message_chunk::match_key(std::int32_t key, int mask) const
 {
     int position = m_keys.contains(key, mask);
-
 
     if (position < 0)
     {

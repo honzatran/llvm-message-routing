@@ -179,12 +179,34 @@ public:
             m_growth_left--;
         }
 
-        value_view.first.set_int(key, value);
+        value_view.first.set<Field_type::INT>(key, value);
     }
 
-    void set_long(std::int32_t key, std::int64_t value);
+    void set_long(std::int32_t key, std::int64_t value)
+    {
+        auto value_view = find_or_prepare_insert<Field_type::LONG>(key);
 
-    void set_double(std::int32_t key, double value);
+        if (!value_view.second)
+        {
+            m_size++;
+            m_growth_left--;
+        }
+
+        value_view.first.set<Field_type::LONG>(key, value);
+    }
+
+    void set_double(std::int32_t key, double value)
+    {
+        auto value_view = find_or_prepare_insert<Field_type::DOUBLE>(key);
+
+        if (!value_view.second)
+        {
+            m_size++;
+            m_growth_left--;
+        }
+
+        value_view.first.set<Field_type::DOUBLE>(key, value);
+    }
 
     void set_decimal(std::int32_t key, double value);
 
@@ -200,9 +222,9 @@ public:
 
     bool has_int(std::int32_t key) { return find<Field_type::INT>(key); }
 
-    void has_long(std::int32_t key);
+    bool has_long(std::int32_t key) { return find<Field_type::LONG>(key); }
 
-    void has_double(std::int32_t key);
+    bool has_double(std::int32_t key) { return find<Field_type::DOUBLE>(key); }
 
     void has_decimal(std::int32_t key);
 
@@ -220,12 +242,22 @@ public:
     {
         auto value_view = find<Field_type::INT>(key);
 
-        return value_view.as_int();
+        return value_view.as<Field_type::INT>();
     }
 
-    std::int64_t get_long(std::int32_t key);
+    std::int64_t get_long(std::int32_t key)
+    {
+        auto value_view = find<Field_type::LONG>(key);
 
-    double get_double(std::int32_t key);
+        return value_view.as<Field_type::LONG>();
+    }
+
+    double get_double(std::int32_t key)
+    {
+        auto value_view = find<Field_type::DOUBLE>(key);
+
+        return value_view.as<Field_type::DOUBLE>();
+    }
 
     double get_decimal(std::int32_t key);
 
