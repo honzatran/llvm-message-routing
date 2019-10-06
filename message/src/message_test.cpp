@@ -124,3 +124,40 @@ TEST_F(Message_test, insert_double_1000_000)
     }
 }
 
+TEST_F(Message_test, insert_type_mix)
+{
+    for (int i = 0; i < 100'000; i++)
+    {
+        int key = 3 * i;
+
+        ASSERT_FALSE(m_tested_message.has_int(key)) << i;
+        m_tested_message.set_int(key, key);
+        ASSERT_TRUE(m_tested_message.has_int(key)) << i;
+        ASSERT_EQ(key, m_tested_message.get_int(key));
+
+        int key_1 = key + 1;
+
+        ASSERT_FALSE(m_tested_message.has_long(key_1)) << key_1;
+        m_tested_message.set_long(key_1, key_1);
+        ASSERT_TRUE(m_tested_message.has_long(key_1)) << key_1;
+        ASSERT_EQ(key_1, m_tested_message.get_long(key_1));
+
+        int key_2 = key + 2;
+
+        ASSERT_FALSE(m_tested_message.has_double(key_2)) << key_2;
+        m_tested_message.set_double(key_2, (double) key_2);
+        ASSERT_TRUE(m_tested_message.has_double(key_2)) << key_2;
+        ASSERT_DOUBLE_EQ(key_2, m_tested_message.get_double(key_2));
+
+    }
+}
+
+TEST_F(Message_test, insert_double)
+{
+    ASSERT_FALSE(m_tested_message.has_double(1));
+
+    m_tested_message.set_double(1, sqrt(2));
+    ASSERT_TRUE(m_tested_message.has_double(1));
+
+    ASSERT_DOUBLE_EQ(sqrt(2), m_tested_message.get_double(1));
+}

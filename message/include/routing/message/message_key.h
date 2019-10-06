@@ -55,11 +55,12 @@ struct Field_type_policy
     // using cpp_type = std::int32_t;
     //
     /// conversion from the raw std::int64_t raw_value back to the actual type
-    // static cpp_type convert_back(std::int64_t* raw_value) { return *raw_value; }
+    // static cpp_type convert_back(std::int64_t* raw_value) { return
+    // *raw_value; }
     //
     //
-    /// conversion from actual type to the raw std::int64_t which is stored inside the hashmap.
-    // static std::int64_t conver_to(cpp_type value) { return value; }
+    /// Stores the actual type inside the storage of the hashmap.
+    // static void store(cpp_type value, std::int64_t* storage)
 };
 
 template <>
@@ -69,7 +70,10 @@ struct Field_type_policy<Field_type::INT>
 
     static cpp_type convert_back(std::int64_t* raw_value) { return *raw_value; }
 
-    static std::int64_t convert_to(cpp_type value) { return value; }
+    static void store(cpp_type value, std::int64_t* storage)
+    {
+        *(reinterpret_cast<std::int32_t*>(storage)) = value;
+    }
 };
 
 template <>
@@ -79,7 +83,10 @@ struct Field_type_policy<Field_type::LONG>
 
     static cpp_type convert_back(std::int64_t* raw_value) { return *raw_value; }
 
-    static std::int64_t convert_to(cpp_type value) { return value; }
+    static void store(cpp_type value, std::int64_t* storage)
+    {
+        *storage = value;
+    }
 };
 
 template <>
@@ -89,12 +96,12 @@ struct Field_type_policy<Field_type::DOUBLE>
 
     static cpp_type convert_back(std::int64_t* raw_value)
     {
-        return static_cast<double>(*raw_value);
+        return *reinterpret_cast<cpp_type*>(raw_value);
     }
 
-    static std::int64_t convert_to(cpp_type value)
+    static void store(cpp_type value, std::int64_t* storage)
     {
-        return static_cast<std::int64_t>(value);
+        *(reinterpret_cast<cpp_type*>(storage)) = value;
     }
 };
 
@@ -486,8 +493,9 @@ public:
     {
         m_group->m_types.set_type(m_position, FIELD_TYPE);
         m_group->m_keys.set_key(m_position, key);
-        m_group->m_value[m_position]
-            = Field_type_policy<FIELD_TYPE>::convert_to(value);
+
+        Field_type_policy<FIELD_TYPE>::store(
+            value, &m_group->m_value[m_position]);
     }
 
     void set_ctrl(absl::container_internal::ctrl_t h2)
