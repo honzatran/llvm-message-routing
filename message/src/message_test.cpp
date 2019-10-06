@@ -124,6 +124,22 @@ TEST_F(Message_test, insert_double_1000_000)
     }
 }
 
+TEST_F(Message_test, insert_decimal_1000_000)
+{
+    for (std::int64_t i = 0; i < 1'000'000; i++)
+    {
+        ASSERT_FALSE(m_tested_message.has_decimal(i)) << i;
+
+        m_tested_message.set_decimal(i, Decimal(i));
+
+        ASSERT_TRUE(m_tested_message.has_decimal(i)) << i;
+
+        ASSERT_EQ(Decimal(i), m_tested_message.get_decimal(i));
+
+        ASSERT_EQ(i + 1, m_tested_message.size());
+    }
+}
+
 TEST_F(Message_test, insert_type_mix)
 {
     for (int i = 0; i < 100'000; i++)

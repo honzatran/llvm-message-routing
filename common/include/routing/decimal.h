@@ -10,81 +10,79 @@
 
 namespace routing
 {
-
 template <std::int64_t SCALE>
-class Decimal
+class Generic_decimal
 {
 public:
-    Decimal() = default;
+    Generic_decimal() = default;
 
-    explicit Decimal(int64_t value) : m_value(value) {}
+    explicit Generic_decimal(int64_t value) : m_value(value) {}
 
     std::int64_t to_int64() const { return m_value; }
 
-    friend Decimal operator+(Decimal t1, Decimal t2)
+    friend Generic_decimal operator+(Generic_decimal t1, Generic_decimal t2)
     {
-        return Decimal(t1.m_value + t2.m_value);
+        return Generic_decimal(t1.m_value + t2.m_value);
     }
 
-    friend Decimal operator-(Decimal t1, Decimal t2)
+    friend Generic_decimal operator-(Generic_decimal t1, Generic_decimal t2)
     {
-        return Decimal(t1.m_value - t2.m_value);
+        return Generic_decimal(t1.m_value - t2.m_value);
     }
 
-    friend Decimal operator*(Decimal t1, Decimal t2)
+    friend Generic_decimal operator*(Generic_decimal t1, Generic_decimal t2)
     {
-        return Decimal((t1.m_value / ((double)(SCALE))) * t2.m_value);
+        return Generic_decimal((t1.m_value / ((double)(SCALE))) * t2.m_value);
     }
 
-    friend Decimal operator/(Decimal t1, Decimal t2)
+    friend Generic_decimal operator/(Generic_decimal t1, Generic_decimal t2)
     {
-        return Decimal(t1.m_value / t2.m_value);
+        return Generic_decimal(t1.m_value / t2.m_value);
     }
 
-    friend bool operator<(Decimal t1, Decimal t2)
+    friend bool operator<(Generic_decimal t1, Generic_decimal t2)
     {
         return t1.m_value < t2.m_value;
     }
 
-    friend bool operator<=(Decimal t1, Decimal t2)
+    friend bool operator<=(Generic_decimal t1, Generic_decimal t2)
     {
         return t1.m_value <= t2.m_value;
     }
 
-    friend bool operator>=(Decimal t1, Decimal t2)
+    friend bool operator>=(Generic_decimal t1, Generic_decimal t2)
     {
         return t1.m_value >= t2.m_value;
     }
 
-    friend bool operator>(Decimal t1, Decimal t2)
+    friend bool operator>(Generic_decimal t1, Generic_decimal t2)
     {
         return t1.m_value > t2.m_value;
     }
 
-    friend bool operator==(Decimal t1, Decimal t2)
+    friend bool operator==(Generic_decimal t1, Generic_decimal t2)
     {
         return t1.m_value == t2.m_value;
     }
 
-    friend Decimal& operator+=(Decimal& t1, Decimal t2)
+    friend Generic_decimal& operator+=(Generic_decimal& t1, Generic_decimal t2)
     {
         t1.m_value += t2.m_value;
 
         return t1;
     }
 
-    friend Decimal operator*(int quantity, Decimal t1)
+    friend Generic_decimal operator*(int quantity, Generic_decimal t1)
     {
-        return Decimal(quantity * t1.m_value);
+        return Generic_decimal(quantity * t1.m_value);
     }
 
-    friend inline Decimal
-    abs(Decimal t)
+    friend inline Generic_decimal abs(Generic_decimal t)
     {
-        return Decimal(std::abs(t.m_value));
+        return Generic_decimal(std::abs(t.m_value));
     }
 
-    friend std::ostream& operator<<(std::ostream& os, Decimal t)
+    friend std::ostream& operator<<(std::ostream& os, Generic_decimal t)
     {
         double value           = (double)t.m_value / SCALE;
         std::int64_t int_value = static_cast<std::int64_t>(value);
@@ -101,7 +99,7 @@ public:
         return os;
     }
 
-    friend std::istream& operator>>(std::istream& is, Decimal& t)
+    friend std::istream& operator>>(std::istream& is, Generic_decimal& t)
     {
         float f;
         is >> f;
@@ -111,19 +109,19 @@ public:
         return is;
     }
 
-    static Decimal from(std::int64_t decimal_value)
+    static Generic_decimal from(std::int64_t decimal_value)
     {
-        return Decimal(decimal_value);
+        return Generic_decimal(decimal_value);
     }
 
-    static Decimal from_int64(std::int64_t value)
+    static Generic_decimal from_int64(std::int64_t value)
     {
-        return Decimal(value* SCALE);
+        return Generic_decimal(value * SCALE);
     }
 
-    static Decimal max()
+    static Generic_decimal max()
     {
-        return Decimal(std::numeric_limits<std::int64_t>::max());
+        return Generic_decimal(std::numeric_limits<std::int64_t>::max());
     }
 
     std::int64_t get_underlying_value() const { return m_value; }
@@ -133,17 +131,26 @@ private:
 };
 
 template <std::int64_t SCALE>
-Decimal<SCALE> convert_from(std::int64_t value)
+Generic_decimal<SCALE>
+convert_from(std::int64_t value)
 {
-    return Decimal<SCALE>(value * SCALE);
+    return Generic_decimal<SCALE>(value * SCALE);
 }
 
 template <std::int64_t SCALE>
-Decimal<SCALE> convert_from(double value)
+Generic_decimal<SCALE>
+convert_from(double value)
 {
-    return Decimal<SCALE>(value * SCALE);
+    return Generic_decimal<SCALE>(value * SCALE);
 }
 
+class Decimal : public Generic_decimal<100'000'000>
+{
+public:
+    Decimal(std::int64_t value) : Generic_decimal<100'000'000>(value) {}
+
+private:
+};
 
 }  // namespace routing
 

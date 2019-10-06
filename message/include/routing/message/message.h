@@ -171,44 +171,23 @@ public:
 
     void set_int(std::int32_t key, std::int32_t value)
     {
-        auto value_view = find_or_prepare_insert<Field_type::INT>(key);
-
-        if (!value_view.second)
-        {
-            m_size++;
-            m_growth_left--;
-        }
-
-        value_view.first.set<Field_type::INT>(key, value);
+        insert<Field_type::INT>(key, value);
     }
 
     void set_long(std::int32_t key, std::int64_t value)
     {
-        auto value_view = find_or_prepare_insert<Field_type::LONG>(key);
-
-        if (!value_view.second)
-        {
-            m_size++;
-            m_growth_left--;
-        }
-
-        value_view.first.set<Field_type::LONG>(key, value);
+        insert<Field_type::LONG>(key, value);
     }
 
     void set_double(std::int32_t key, double value)
     {
-        auto value_view = find_or_prepare_insert<Field_type::DOUBLE>(key);
-
-        if (!value_view.second)
-        {
-            m_size++;
-            m_growth_left--;
-        }
-
-        value_view.first.set<Field_type::DOUBLE>(key, value);
+        insert<Field_type::DOUBLE>(key, value);
     }
 
-    void set_decimal(std::int32_t key, double value);
+    void set_decimal(std::int32_t key, routing::Decimal value)
+    {
+        insert<Field_type::DECIMAL>(key, value);
+    }
 
     void set_time(std::int32_t key, absl::Duration day_time);
 
@@ -220,13 +199,17 @@ public:
 
     void set_message(std::int32_t key, Message const& message);
 
+
     bool has_int(std::int32_t key) { return find<Field_type::INT>(key); }
 
     bool has_long(std::int32_t key) { return find<Field_type::LONG>(key); }
 
     bool has_double(std::int32_t key) { return find<Field_type::DOUBLE>(key); }
 
-    void has_decimal(std::int32_t key);
+    bool has_decimal(std::int32_t key)
+    {
+        return find<Field_type::DECIMAL>(key);
+    }
 
     void has_time(std::int32_t key);
 
@@ -241,25 +224,26 @@ public:
     std::int32_t get_int(std::int32_t key)
     {
         auto value_view = find<Field_type::INT>(key);
-
         return value_view.as<Field_type::INT>();
     }
 
     std::int64_t get_long(std::int32_t key)
     {
         auto value_view = find<Field_type::LONG>(key);
-
         return value_view.as<Field_type::LONG>();
     }
 
     double get_double(std::int32_t key)
     {
         auto value_view = find<Field_type::DOUBLE>(key);
-
         return value_view.as<Field_type::DOUBLE>();
     }
 
-    double get_decimal(std::int32_t key);
+    Decimal get_decimal(std::int32_t key)
+    {
+        auto value_view = find<Field_type::DECIMAL>(key);
+        return value_view.as<Field_type::DECIMAL>();
+    }
 
     absl::Duration get_day_time(std::int32_t key);
 
@@ -338,6 +322,24 @@ private:
     {
         return detail::quadratic_probe(
             detail::H1(hash, m_chunks), m_chunks_count - 1);
+    }
+
+    /// Inserts the element into a hashmap
+    /// Finds an empty slot within the hashmap and sets that slot to new element.
+    template <Field_type FIELD_TYPE>
+    void insert(
+        std::int32_t key,
+        typename Field_type_policy<FIELD_TYPE>::cpp_type value)
+    {
+        auto value_view = find_or_prepare_insert<FIELD_TYPE>(key);
+
+        if (!value_view.second)
+        {
+            m_size++;
+            m_growth_left--;
+        }
+
+        value_view.first.template set<FIELD_TYPE>(key, value);
     }
 
     /// Finds if a key exists within the message

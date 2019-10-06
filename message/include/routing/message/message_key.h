@@ -14,6 +14,8 @@
 #include <absl/meta/type_traits.h>
 #include "have_intrinsics.h"
 
+#include <routing/decimal.h>
+
 namespace routing::engine
 {
 namespace detail
@@ -102,6 +104,22 @@ struct Field_type_policy<Field_type::DOUBLE>
     static void store(cpp_type value, std::int64_t* storage)
     {
         *(reinterpret_cast<cpp_type*>(storage)) = value;
+    }
+};
+
+template <>
+struct Field_type_policy<Field_type::DECIMAL>
+{
+    using cpp_type = routing::Decimal;
+
+    static cpp_type convert_back(std::int64_t* raw_value)
+    {
+        return routing::Decimal(*raw_value);
+    }
+
+    static void store(cpp_type value, std::int64_t* storage)
+    {
+        *storage = value.to_int64();
     }
 };
 
