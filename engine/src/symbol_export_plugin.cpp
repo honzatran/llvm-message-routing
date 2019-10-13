@@ -48,7 +48,7 @@ has_annotation(clang::Decl* decl, absl::string_view annotation_text)
     if (decl->hasAttr<clang::AnnotateAttr>())
     {
         auto* annotateAttribute = decl->getAttr<clang::AnnotateAttr>();
-        
+
         llvm::StringRef tmp(annotation_text.begin(), annotation_text.length());
 
         if (annotateAttribute)
@@ -63,7 +63,9 @@ has_annotation(clang::Decl* decl, absl::string_view annotation_text)
 class Symbol_visitor : public clang::RecursiveASTVisitor<Symbol_visitor>
 {
 public:
-    Symbol_visitor(clang::MangleContext* context, File_jit_symbols* exported_symbols)
+    Symbol_visitor(
+        clang::MangleContext* context,
+        File_jit_symbols* exported_symbols)
         : m_context(context), m_exported_symbols(exported_symbols)
     {
         m_logger = routing::get_default_logger("Symbol_exporter");
@@ -94,20 +96,17 @@ public:
             return true;
         }
 
-        std::string tmp;
-        llvm::raw_string_ostream oss(tmp);
-        m_context->mangleName(function_decl, oss);
-        oss.flush();
+        std::string mangled_name = mangle_name(function_decl);
 
         m_logger->info(
             "Visiting function {} mangled to {} ",
             function_decl->getNameAsString(),
-            oss.str());
+            mangled_name);
 
         if (m_exported_symbols)
         {
             m_exported_symbols->add_symbol(
-                Jit_symbol(function_decl->getNameAsString(), oss.str()));
+                Jit_symbol(function_decl->getNameAsString(), mangled_name));
         }
 
         return true;
@@ -117,21 +116,56 @@ public:
     {
         if (has_annotation(class_record, router_annotation()))
         {
-            m_logger->info("Annotated class {}", class_record->getNameAsString());
+            m_logger->info(
+                "Annotated class {}", class_record->getNameAsString());
 
-            return true;
+            m_exported_symbols->add_router_class(
+                class_record->getNameAsString());
         }
-
-
-        return true;;
-    }
-
-    bool VisitCXXMethodDecl(clang::CXXMethodDecl* method_decl) 
-    {
 
         return true;
     }
 
+    bool VisitCXXMethodDecl(clang::CXXMethodDecl* method_decl)
+    {
+        std::string class_name = method_decl->getParent()->getNameAsString();
+
+        if (method_decl->isStatic()
+            && has_annotation(method_decl, router_factory_annotation()))
+        {
+            std::string mangled_name = mangle_name(method_decl);
+
+            m_logger->info(
+                "class name {} Factory method {} mangled to {}",
+                class_name,
+                method_decl->getNameAsString(),
+                mangled_name);
+
+            m_exported_symbols->add_automaton_factory(
+                class_name,
+                Jit_symbol(
+                    method_decl->getQualifiedNameAsString(), mangled_name));
+        }
+        else if (
+            method_decl->isInstance()
+            && has_annotation(method_decl, router_entrance_annotation()))
+        {
+            std::string mangled_name = mangle_name(method_decl);
+
+            m_logger->info(
+                "Class name {} Entrance method {} mangled to {}",
+                class_name,
+                method_decl->getNameAsString(),
+                mangle_name(method_decl));
+
+            m_exported_symbols->add_automaton_entrance(
+                class_name,
+                Jit_symbol(
+                    method_decl->getQualifiedNameAsString(), mangled_name));
+        }
+
+        return true;
+    }
 
 private:
     clang::MangleContext* m_context;
@@ -139,6 +173,22 @@ private:
     File_jit_symbols* m_exported_symbols;
 
     routing::Logger_t m_logger;
+
+    std::string mangle_name(clang::NamedDecl* decl)
+    {
+        if (m_context->shouldMangleDeclName(decl))
+        {
+            std::string tmp;
+
+            llvm::raw_string_ostream oss(tmp);
+            m_context->mangleName(decl, oss);
+            oss.flush();
+
+            return oss.str();
+        }
+
+        return decl->getQualifiedNameAsString();
+    }
 };
 
 class Symbol_exporter : public clang::ASTConsumer
@@ -178,7 +228,7 @@ Symbol_export_plugin::register_jit_symbols(
 {
     auto registered_file_symbols_lock = g_registered_file_symbols.lock();
 
-    registered_file_symbols_lock->insert(std::pair(file_name, symbols));
+    registered_file_symbols_lock->insert_or_assign(file_name, symbols);
 }
 
 std::unique_ptr<clang::ASTConsumer>

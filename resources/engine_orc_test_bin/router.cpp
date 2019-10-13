@@ -9,7 +9,7 @@ class ENGINE_ROUTER Automaton
 public:
 
     ENGINE_FACTORY
-    Automaton create();
+    static Automaton create();
 
     ENGINE_ENTRANCE
     void enter(routing::engine::Message &m);
