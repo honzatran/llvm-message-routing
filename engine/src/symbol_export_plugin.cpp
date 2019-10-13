@@ -17,6 +17,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include <routing/engine/annotation.h>
+
 using namespace routing::engine;
 
 routing::Synchronized<
@@ -41,31 +43,17 @@ File_jit_symbols::get_symbols(std::string_view symbol_name) const
 }
 
 bool
-has_engine_annotation(clang::Decl* decl)
+has_annotation(clang::Decl* decl, absl::string_view annotation_text)
 {
     if (decl->hasAttr<clang::AnnotateAttr>())
     {
         auto* annotateAttribute = decl->getAttr<clang::AnnotateAttr>();
+        
+        llvm::StringRef tmp(annotation_text.begin(), annotation_text.length());
 
         if (annotateAttribute)
         {
-            return annotateAttribute->getAnnotation() == "ENGINE";
-        }
-    }
-
-    return false;
-}
-
-bool 
-has_engine_router_annotation(clang::CXXRecordDecl* decl)
-{
-    if (decl->hasAttr<clang::AnnotateAttr>())
-    {
-        auto* annotateAttribute = decl->getAttr<clang::AnnotateAttr>();
-
-        if (annotateAttribute)
-        {
-            return annotateAttribute->getAnnotation() == "ENGINE_ROUTER";
+            return annotateAttribute->getAnnotation() == tmp;
         }
     }
 
@@ -83,7 +71,7 @@ public:
 
     bool VisitFunctionDecl(clang::FunctionDecl* function_decl)
     {
-        if (!has_engine_annotation(function_decl))
+        if (!has_annotation(function_decl, function_annotation()))
         {
             return true;
         }
@@ -127,7 +115,7 @@ public:
 
     bool VisitCXXRecordDecl(clang::CXXRecordDecl* class_record)
     {
-        if (has_engine_router_annotation(class_record))
+        if (has_annotation(class_record, router_annotation()))
         {
             m_logger->info("Annotated class {}", class_record->getNameAsString());
 
