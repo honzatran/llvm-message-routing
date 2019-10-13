@@ -56,6 +56,22 @@ has_engine_annotation(clang::Decl* decl)
     return false;
 }
 
+bool 
+has_engine_router_annotation(clang::CXXRecordDecl* decl)
+{
+    if (decl->hasAttr<clang::AnnotateAttr>())
+    {
+        auto* annotateAttribute = decl->getAttr<clang::AnnotateAttr>();
+
+        if (annotateAttribute)
+        {
+            return annotateAttribute->getAnnotation() == "ENGINE_ROUTER";
+        }
+    }
+
+    return false;
+}
+
 class Symbol_visitor : public clang::RecursiveASTVisitor<Symbol_visitor>
 {
 public:
@@ -108,6 +124,26 @@ public:
 
         return true;
     }
+
+    bool VisitCXXRecordDecl(clang::CXXRecordDecl* class_record)
+    {
+        if (has_engine_router_annotation(class_record))
+        {
+            m_logger->info("Annotated class {}", class_record->getNameAsString());
+
+            return true;
+        }
+
+
+        return true;;
+    }
+
+    bool VisitCXXMethodDecl(clang::CXXMethodDecl* method_decl) 
+    {
+
+        return true;
+    }
+
 
 private:
     clang::MangleContext* m_context;

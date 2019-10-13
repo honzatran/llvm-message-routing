@@ -49,6 +49,8 @@ list (APPEND ENGINE_TEST_SRC
     "src/orc_jit_test.cpp"
     "src/external_includes_jit_test.cpp"
     "src/routing_message_function_test.cpp"
+    "src/base_engine_test.h"
+    "src/router_test.cpp"
     ${ENGINE_HEADERS}
 )
 

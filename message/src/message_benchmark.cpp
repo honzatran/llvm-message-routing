@@ -13,11 +13,15 @@ BM_message_get_int(benchmark::State& state)
 
     routing::engine::Message message(std::move(slab_allocator));
 
-    message.set_int(32, 1);
-
-    for (auto _ : state)
+    for (int i = 0; i < 33; i++)
     {
-        message.get_int(32);
+        message.set_int(i, 1);
+    }
+
+
+    for (auto s : state)
+    {
+        benchmark::DoNotOptimize(message.get_int(32));
     }
 }
 
