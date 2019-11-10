@@ -6,7 +6,6 @@
 #include "absl/container/inlined_vector.h"
 #include "absl/types/span.h"
 
-
 #include <memory>
 
 namespace routing
@@ -123,6 +122,10 @@ public:
         std::string const& file_name,
         std::shared_ptr<File_jit_symbols> const& jit_symbols);
 
+    /// Register a jit sybols for the given file
+    static std::unique_ptr<llvm::Module> get_generated_module(
+        std::string const& file_name);
+
     auto ParseArgs(
         const clang::CompilerInstance& CI,
         const std::vector<std::string>& arg) -> bool override
@@ -135,7 +138,7 @@ public:
 
     auto getActionType() -> ActionType override
     {
-        return ActionType::AddAfterMainAction;
+        return ActionType::AddBeforeMainAction;
     }
 
 private:

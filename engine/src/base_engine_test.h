@@ -64,6 +64,7 @@ public:
             FAIL() << get_error_msg(std::move(err));
         }
 
+
         auto error = m_jit->add(std::move(*module));
 
         ASSERT_FALSE(!!error) << "compilation not succeeded";
