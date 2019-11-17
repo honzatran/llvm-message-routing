@@ -1,17 +1,12 @@
 
 
-#include <routing/message/message.h>
 #include <routing/engine/annotation.h>
+#include <routing/message/message.h>
 
-
-
-class ENGINE_ROUTER Automaton 
+class ENGINE_ROUTER Automaton
 {
 public:
-    Automaton(int val)
-        : m_val(val)
-    {
-    }
+    Automaton() : m_val(42) {}
 
     ENGINE_FACTORY
     static Automaton create();
@@ -24,9 +19,10 @@ private:
 };
 
 ENGINE_FACTORY
-Automaton create_test_automaton()
+Automaton
+create_test_automaton()
 {
     fmt::print("Creating automaton 222\n");
 
-    return Automaton(42);
+    return Automaton();
 }

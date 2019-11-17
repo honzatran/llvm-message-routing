@@ -167,20 +167,26 @@ public:
                 = codegen_module.getTypes().ConvertRecordDeclType(class_record);
 
             auto global_var = codegen_module.CreateOrReplaceCXXRuntimeVariable(
-                "GLOBAL", struct_type, llvm::GlobalValue::ExternalLinkage, 0);
+                "GLOBAL_AAA",
+                struct_type,
+                llvm::GlobalValue::ExternalLinkage,
+                0);
 
-            // clang::VarDecl* var_decl = clang::VarDecl::Create(
-            //     class_record->getASTContext(),
-            //     class_record,
-            //     clang::SourceLocation(),
-            //     clang::SourceLocation(),
-            //     &identifier,
-            //     qual_type,
-            //     class_record->getASTContext().getTrivialTypeSourceInfo(
-            //         qual_type),
-            //     clang::StorageClass::SC_Extern);
+            clang::VarDecl* var_decl = clang::VarDecl::Create(
+                class_record->getASTContext(),
+                class_record,
+                clang::SourceLocation(),
+                clang::SourceLocation(),
+                &identifier,
+                qual_type,
+                class_record->getASTContext().getTrivialTypeSourceInfo(
+                    qual_type),
+                clang::StorageClass::SC_Extern);
 
-            // clang::CodeGen::CodeGenFunction
+            create_init_function(class_record, var_decl, global_var);
+
+            // codegen_module.EmitCXXGlobalVarDeclInitFunc(var_decl, global_var,
+            // true); clang::CodeGen::CodeGenFunction
             // code_gen_function(codegen_module);
 
             // m_logger->info("Adding initializer");
@@ -257,6 +263,52 @@ private:
 
         return decl->getQualifiedNameAsString();
     }
+
+    void create_init_function(
+        clang::CXXRecordDecl* cxx_record,
+        clang::VarDecl* decl,
+        llvm::GlobalVariable* global_var)
+    {
+        auto& CGM = m_code_generator->CGM();
+
+        llvm::FunctionType* fn_type
+            = llvm::FunctionType::get(CGM.VoidTy, false);
+
+        auto default_constructor = get_default_constructor(cxx_record);
+
+        llvm::SmallString<256> fn_name;
+        {
+            llvm::raw_svector_ostream stream_name(fn_name);
+            CGM.getCXXABI().getMangleContext().mangleCXXCtor(
+                default_constructor,
+                clang::CXXCtorType::Ctor_Complete,
+                stream_name);
+        }
+
+        clang::CodeGen::CGFunctionInfo const& function_info
+            = CGM.getTypes().arrangeNullaryFunction();
+
+        auto fn = CGM.CreateGlobalInitOrDestructFunction(
+            fn_type, fn_name.str(), function_info);
+
+        clang::CodeGen::CodeGenFunction CGF(CGM);
+
+        CGF.GenerateCXXGlobalVarDeclInitFunc(fn, decl, global_var, true);
+    }
+
+    clang::CXXConstructorDecl* get_default_constructor(
+        clang::CXXRecordDecl* cxx_record)
+    {
+        for (auto constructor : cxx_record->ctors())
+        {
+            if (constructor->isDefaultConstructor())
+            {
+                return constructor;
+            }
+        }
+
+        return nullptr;
+    }
 };
 
 class Symbol_exporter : public clang::ASTConsumer
@@ -328,7 +380,7 @@ public:
             m_code_generator->ReleaseModule());
 
         auto locked_modules = g_generated_modules.lock();
-        auto& module_ptr    = (*locked_modules)[generated_module->getName().str()];
+        auto& module_ptr = (*locked_modules)[generated_module->getName().str()];
 
         module_ptr = std::move(generated_module);
     }
@@ -447,7 +499,6 @@ Symbol_export_plugin::get_generated_module(std::string const& file_name)
 
     return module;
 }
-
 
 std::unique_ptr<clang::ASTConsumer>
 Symbol_export_plugin::CreateASTConsumer(

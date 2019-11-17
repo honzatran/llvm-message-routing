@@ -106,9 +106,8 @@ get_clang_args(std::string const &cpp, std::string const &bc)
 
     auto external_include_paths = routing::engine::get_include_paths();
 
-    for (std::string const& path : external_include_paths)
+    for (std::string const &path : external_include_paths)
     {
-
         // cc1_args.push_back("-internal-isystem");
         // cc1_args.push_back(path);
         cc1_args.push_back(fmt::format("-I{}", path));
@@ -128,7 +127,6 @@ Clang_cc1_driver::compileTranslationUnit(
 
     std::string cpp = *sourceFileName;
     std::string bc  = replaceExtension(cpp, "bc");
-
 
     llvm::Error err = compileCppToBitcodeFile(get_clang_args(cpp, bc));
     if (err)
@@ -174,5 +172,9 @@ Clang_cc1_driver::compile_source_code(
         return module.takeError();
     }
 
-    return std::move(*module);
+    auto codegen_module
+        = routing::engine::Symbol_export_plugin::get_generated_module(
+            source_code_path);
+
+    return {std::move(codegen_module)};
 }
