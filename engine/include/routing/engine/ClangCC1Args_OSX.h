@@ -55,8 +55,10 @@ std::vector<std::string> getClangCC1Args(llvm::StringRef cpp,
   args.push_back(STRINGIFY(JIT_FROM_SCRATCH_CLANG_RESOURCE_DIR));
 
   {
+      // hack for osx catalina
       args.push_back("-internal-isystem");
-      args.push_back("/usr/include/c++/v1");
+      args.push_back("/usr/local/include/c++/v1");
+
 
       args.push_back("-internal-isystem");
       args.push_back(STRINGIFY(JIT_FROM_SCRATCH_CLANG_RESOURCE_DIR) "/include");
