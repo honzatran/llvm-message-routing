@@ -6,7 +6,7 @@
 class ENGINE_ROUTER Automaton
 {
 public:
-    Automaton() : m_val(42) {}
+    Automaton() : m_val(42) { fmt::print("Creating automaton {}\n", m_val); }
 
     ENGINE_FACTORY
     static Automaton create();
@@ -18,11 +18,8 @@ private:
     int m_val;
 };
 
-ENGINE_FACTORY
-Automaton
+ENGINE_FUNCTION
+void
 create_test_automaton()
 {
-    fmt::print("Creating automaton 222\n");
-
-    return Automaton();
 }

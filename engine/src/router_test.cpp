@@ -19,15 +19,19 @@ TEST_F(Router_test, entrance_method_detected)
 
 TEST_F(Router_test, factory_method_detected)
 {
-    auto factory_symbol = m_jit_symbols->get_factory("Automaton");
+    auto factory_symbol = m_jit_symbols->get_symbols("create_test_automaton");
 
-    ASSERT_TRUE(factory_symbol);
+    // ASSERT_TRUE(factory_symbol);
 
-    llvm::StringRef mangled_name(
-        factory_symbol->get_mangled_symbol().begin(),
-        factory_symbol->get_mangled_symbol().length());
+    // llvm::StringRef mangled_name(
+    //     factory_symbol->get_mangled_symbol().begin(),
+    //     factory_symbol->get_mangled_symbol().length());
+    //
+    auto mangled_name = factory_symbol[0].get_mangled_symbol();
 
-    auto evaluated_factory = m_jit->lookup(mangled_name);
+    llvm::StringRef symbol_name(&mangled_name[0], mangled_name.size());
+
+    auto evaluated_factory = m_jit->lookup(symbol_name);
 
     if (auto err = evaluated_factory.takeError())
     {
@@ -37,6 +41,4 @@ TEST_F(Router_test, factory_method_detected)
     void (*factory)() = (void (*)(void))(evaluated_factory->getAddress());
 
     factory();
-
-    fmt::print("AA\n");
 }

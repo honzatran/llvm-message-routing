@@ -1,6 +1,14 @@
 
 
 #include <algorithm>
+
+#include "clang/AST/Decl.h"
+#include "clang/AST/GlobalDecl.h"
+#include "clang/Basic/LangOptions.h"
+#include "clang/Basic/Specifiers.h"
+#include "clang/Basic/TypeTraits.h"
+#include "clang/Sema/Ownership.h"
+#include "llvm/ADT/ArrayRef.h"
 #include "llvm/IR/GlobalValue.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/Support/Casting.h"
@@ -21,6 +29,7 @@
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/CodeGen/ModuleBuilder.h>
 #include <clang/Frontend/CompilerInstance.h>
+#include <clang/Sema/Sema.h>
 
 #include <memory>
 #include <unordered_map>
@@ -79,9 +88,13 @@ class Symbol_visitor : public clang::RecursiveASTVisitor<Symbol_visitor>
 public:
     Symbol_visitor(
         clang::MangleContext* context,
+        clang::Sema& sema,
         File_jit_symbols* exported_symbols,
-        clang::CodeGenerator* code_generator)
+        clang::CodeGenerator* code_generator,
+        clang::TranslationUnitDecl* translation_unit_decl)
         : m_context(context),
+          m_sema(sema),
+          m_translation_unit_decl(translation_unit_decl),
           m_exported_symbols(exported_symbols),
           m_code_generator(code_generator)
     {
@@ -108,12 +121,12 @@ public:
         }
 
         auto namespace_info = function_decl->getNameInfo();
-        m_logger->info("Namespace {}", namespace_info.getName().getAsString());
+        m_logger->debug("Namespace {}", namespace_info.getName().getAsString());
 
         if (llvm::isa<clang::CXXConstructorDecl>(function_decl)
             || llvm::isa<clang::CXXDestructorDecl>(function_decl))
         {
-            m_logger->info(
+            m_logger->debug(
                 "Visiting structor function {}",
                 function_decl->getNameAsString());
             return true;
@@ -121,7 +134,7 @@ public:
 
         std::string mangled_name = mangle_name(function_decl);
 
-        m_logger->info(
+        m_logger->debug(
             "Visiting function {} mangled to {} ",
             function_decl->getNameAsString(),
             mangled_name);
@@ -148,33 +161,24 @@ public:
     {
         if (has_annotation(class_record, router_annotation()))
         {
-            m_logger->info(
+            m_logger->debug(
                 "Annotated class {}", class_record->getNameAsString());
 
             m_exported_symbols->add_router_class(
                 class_record->getNameAsString());
 
-            auto& identifier
-                = m_context->getASTContext().Idents.getOwn("GLOBAL");
+            auto& identifier = m_context->getASTContext().Idents.getOwn(
+                "G_GENERATED_GLOBAL");
 
             auto qual_type = clang::QualType(
                 class_record->getTypeForDecl(), clang::Qualifiers::Const);
 
-            m_logger->info("IDENTIFIER {}", identifier.getName().str());
+            m_logger->debug("IDENTIFIER {}", identifier.getName().str());
             auto& codegen_module = m_code_generator->CGM();
-
-            auto struct_type
-                = codegen_module.getTypes().ConvertRecordDeclType(class_record);
-
-            auto global_var = codegen_module.CreateOrReplaceCXXRuntimeVariable(
-                "GLOBAL_AAA",
-                struct_type,
-                llvm::GlobalValue::ExternalLinkage,
-                0);
 
             clang::VarDecl* var_decl = clang::VarDecl::Create(
                 class_record->getASTContext(),
-                class_record,
+                m_translation_unit_decl,
                 clang::SourceLocation(),
                 clang::SourceLocation(),
                 &identifier,
@@ -183,16 +187,22 @@ public:
                     qual_type),
                 clang::StorageClass::SC_Extern);
 
-            create_init_function(class_record, var_decl, global_var);
+            clang::GlobalDecl global_decl(var_decl);
 
-            // codegen_module.EmitCXXGlobalVarDeclInitFunc(var_decl, global_var,
-            // true); clang::CodeGen::CodeGenFunction
-            // code_gen_function(codegen_module);
+            clang::DeclGroupRef decl_group_ref(var_decl);
 
-            // m_logger->info("Adding initializer");
-            //
-            // code_gen_function.AddInitializerToStaticVarDecl(
-            //     *var_decl, global_var);
+            if (var_decl->getDeclContext()->getParent())
+            {
+                m_logger->debug(
+                    "has parent");
+            } 
+            else 
+            {
+                m_logger->debug(
+                    "no parent");
+            }
+
+            m_code_generator->HandleTopLevelDecl(decl_group_ref);
         }
 
         return true;
@@ -207,7 +217,7 @@ public:
         {
             std::string mangled_name = mangle_name(method_decl);
 
-            m_logger->info(
+            m_logger->debug(
                 "class name {} Factory method {} mangled to {}",
                 class_name,
                 method_decl->getNameAsString(),
@@ -224,7 +234,7 @@ public:
         {
             std::string mangled_name = mangle_name(method_decl);
 
-            m_logger->info(
+            m_logger->debug(
                 "Class name {} Entrance method {} mangled to {}",
                 class_name,
                 method_decl->getNameAsString(),
@@ -241,6 +251,8 @@ public:
 
 private:
     clang::MangleContext* m_context;
+    clang::Sema& m_sema;
+    clang::TranslationUnitDecl* m_translation_unit_decl;
 
     File_jit_symbols* m_exported_symbols;
 
@@ -296,7 +308,7 @@ private:
         CGF.GenerateCXXGlobalVarDeclInitFunc(fn, decl, global_var, true);
     }
 
-    clang::CXXConstructorDecl* get_default_constructor(
+    static clang::CXXConstructorDecl* get_default_constructor(
         clang::CXXRecordDecl* cxx_record)
     {
         for (auto constructor : cxx_record->ctors())
@@ -334,6 +346,9 @@ public:
     void Initialize(clang::ASTContext& Context) override
     {
         m_code_generator->Initialize(Context);
+
+        m_compiler_instance.createSema(
+            clang::TranslationUnitKind::TU_Complete, nullptr);
     }
 
     /// HandleTopLevelDecl - Handle the specified top-level declaration.  This
@@ -372,7 +387,11 @@ public:
                 Ctx, m_compiler_instance.getDiagnostics()));
 
         Symbol_visitor visitor(
-            mangle_context.get(), m_symbols, m_code_generator.get());
+            mangle_context.get(),
+            m_compiler_instance.getSema(),
+            m_symbols,
+            m_code_generator.get(),
+            Ctx.getTranslationUnitDecl());
 
         visitor.TraverseDecl(Ctx.getTranslationUnitDecl());
 
@@ -529,5 +548,6 @@ Symbol_export_plugin::CreateASTConsumer(
         nullptr));
 
     logger->info("Processing file {}", inFile.str());
+
     return std::make_unique<Symbol_exporter>(clang, ptr, std::move(generator));
 }
