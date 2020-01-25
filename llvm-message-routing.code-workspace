@@ -7,7 +7,8 @@
 	"settings": {
 		"files.associations": {
 			"__config": "cpp",
-			"memory": "cpp"
+			"memory": "cpp",
+			"*.inc": "cpp"
 		}
 	}
 }
