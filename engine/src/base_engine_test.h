@@ -6,14 +6,35 @@
 #include <routing/engine/clang_cc1_driver.h>
 #include <routing/fmt.h>
 #include <memory>
+#include <string_view>
 #include "llvm/Support/Error.h"
 #include "llvm/Support/raw_ostream.h"
 #include "routing/engine/SimpleOrcJit.h"
 
 #include <gtest/gtest.h>
 
-namespace routing::engine 
+namespace routing::engine
 {
+namespace detail
+{
+class Base_engine_common : public ::testing::Test
+{
+public:
+    Base_engine_common(std::string_view file);
+
+protected:
+    std::string m_source_code_file;
+
+    std::unique_ptr<SimpleOrcJit> m_jit;
+
+    llvm::LLVMContext m_context;
+    Clang_cc1_driver m_clang_driver;
+
+    std::shared_ptr<routing::engine::File_jit_symbols> m_jit_symbols;
+
+    void init_jit();
+};
+}  // namespace detail
 
 /// Gets an error from the llvm::error
 inline std::string
@@ -35,49 +56,16 @@ get_error_msg(llvm::Error error)
 }
 
 /// Base class for engine tests
-class Base_engine_function_test : public ::testing::Test
+class Base_engine_function_test : public detail::Base_engine_common
 {
 public:
     Base_engine_function_test(std::string_view source_code_file)
-        : m_source_code_file(source_code_file)
+        : detail::Base_engine_common(source_code_file)
     {
     }
 
-    void SetUp() override
-    {
-        auto jit = SimpleOrcJit::create();
-
-        ASSERT_TRUE(!!jit) << "Jit not created";
-
-        m_jit = std::move(*jit);
-
-        m_jit_symbols = std::make_shared<routing::engine::File_jit_symbols>();
-
-        auto module = m_clang_driver.compile_source_code(
-            fmt::format(
-                "../resources/engine_orc_test_bin/{}", m_source_code_file),
-            m_context,
-            m_jit_symbols);
-
-        if (auto err = module.takeError())
-        {
-            FAIL() << get_error_msg(std::move(err));
-        }
-
-
-        auto error = m_jit->add(std::move(*module));
-
-        ASSERT_FALSE(!!error) << "compilation not succeeded";
-    }
+    void SetUp() override;
 
 protected:
-    std::string m_source_code_file;
-
-    llvm::LLVMContext m_context;
-    Clang_cc1_driver m_clang_driver;
-
-    std::unique_ptr<SimpleOrcJit> m_jit;
-
-    std::shared_ptr<routing::engine::File_jit_symbols> m_jit_symbols;
 };
-}
+}  // namespace routing::engine
