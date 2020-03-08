@@ -26,12 +26,16 @@ public:
 
     llvm::Expected<std::unique_ptr<llvm::Module>> compileTranslationUnit(
         std::string cppCode,
-        llvm::LLVMContext &context);
+        llvm::LLVMContext& context);
 
     llvm::Expected<std::unique_ptr<llvm::Module>> compile_source_code(
         std::string const& source_code_path,
-        llvm::LLVMContext &context,
+        llvm::LLVMContext& context,
         std::shared_ptr<routing::engine::File_jit_symbols> const& symbols);
+
+    llvm::Expected<std::string> tranform_source_code(
+        std::string const& source_code_path,
+        llvm::LLVMContext& context);
 
 private:
     std::vector<std::function<void()>> SoucreFileDeleters;

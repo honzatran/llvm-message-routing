@@ -5,6 +5,7 @@
 
 #include <routing/buffer.h>
 #include <string>
+#include <string_view>
 #include <cstdio>
 
 namespace routing
@@ -79,6 +80,9 @@ public:
 private:
     Open_file m_file; 
 };
+
+std::string
+replace_extension(std::string_view name, std::string_view ext);
 
 }
 

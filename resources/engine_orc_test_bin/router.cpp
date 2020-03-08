@@ -12,7 +12,7 @@ public:
     static Automaton create();
 
     ENGINE_ENTRANCE
-    void enter(routing::engine::Message &m);
+    void enter(routing::engine::Message const& m);
 
 private:
     int m_val;

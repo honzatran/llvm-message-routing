@@ -136,9 +136,9 @@ public:
     auto CreateASTConsumer(clang::CompilerInstance& CI, llvm::StringRef InFile)
         -> std::unique_ptr<clang::ASTConsumer> override;
 
-    auto getActionType() -> ActionType override
+    ActionType getActionType() override
     {
-        return ActionType::AddBeforeMainAction;
+        return AddBeforeMainAction;
     }
 
 private:

@@ -51,6 +51,7 @@ list (APPEND ENGINE_TEST_SRC
     "src/routing_message_function_test.cpp"
     "src/base_engine_test.h"
     "src/router_test.cpp"
+    "src/code_transform_test.cpp"
     ${ENGINE_HEADERS}
 )
 

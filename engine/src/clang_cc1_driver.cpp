@@ -5,6 +5,8 @@
 
 // Hack: cc1 lives in "tools" next to "include"
 #include <../tools/driver/cc1_main.cpp>
+#include "llvm/ADT/Twine.h"
+#include "llvm/IR/LLVMContext.h"
 #include "llvm/Object/ObjectFile.h"
 
 #if _WIN32
@@ -25,6 +27,7 @@
 #define DEBUG_TYPE "cc1driver"
 
 #include <routing/engine/symbol_export_plugin.h>
+#include <routing/file_util.h>
 
 static clang::FrontendPluginRegistry::Add<routing::engine::Symbol_export_plugin>
     symbol_exporter("symbol_exporter", "exports symbols for jit lookup");
@@ -54,12 +57,6 @@ saveSourceFile(std::string content)
     os << content;
 
     return name.str();
-}
-
-std::string
-replaceExtension(llvm::StringRef name, llvm::StringRef ext)
-{
-    return name.substr(0, name.find_last_of('.') + 1).str() + ext.str();
 }
 
 llvm::Error
@@ -126,7 +123,7 @@ Clang_cc1_driver::compileTranslationUnit(
         return sourceFileName.takeError();
 
     std::string cpp = *sourceFileName;
-    std::string bc  = replaceExtension(cpp, "bc");
+    std::string bc  = routing::replace_extension(cpp, "bc");
 
     llvm::Error err = compileCppToBitcodeFile(get_clang_args(cpp, bc));
     if (err)
@@ -154,7 +151,7 @@ Clang_cc1_driver::compile_source_code(
     llvm::LLVMContext &context,
     std::shared_ptr<routing::engine::File_jit_symbols> const &symbols)
 {
-    std::string bc = replaceExtension(source_code_path, "bc");
+    std::string bc = routing::replace_extension(source_code_path, "bc");
 
     routing::engine::Symbol_export_plugin::register_jit_symbols(
         source_code_path, symbols);
@@ -177,4 +174,37 @@ Clang_cc1_driver::compile_source_code(
             source_code_path);
 
     return {std::move(codegen_module)};
+}
+
+llvm::Expected<std::string>
+Clang_cc1_driver::tranform_source_code(
+    std::string const &source_code_path,
+    llvm::LLVMContext &context)
+{
+    std::string bc = routing::replace_extension(source_code_path, "bc");
+
+    std::string generated_file
+        = routing::replace_extension(source_code_path, "transform.h");
+
+    llvm::Twine target(source_code_path);
+    llvm::Twine dst(generated_file);
+
+    auto copy_err = llvm::sys::fs::copy_file(target, dst);
+
+    if (copy_err)
+    {
+        // return std::move(copy_err);
+    }
+
+    llvm::Error err
+        = compileCppToBitcodeFile(get_clang_args(generated_file, bc));
+
+    if (err)
+    {
+        return std::move(err);
+    }
+
+    llvm::sys::fs::remove(bc);
+
+    return {routing::replace_extension(generated_file, "cpp")};
 }

@@ -6,21 +6,21 @@
 
 #include <fstream>
 #include <string>
-
+#include <string_view>
 
 using namespace routing;
 using namespace std;
 
-Buffer 
+Buffer
 routing::read_whole_file_into_buffer(char const* filename)
 {
-    std::ifstream ifs(filename, std::ios::binary| ios::ate);
+    std::ifstream ifs(filename, std::ios::binary | ios::ate);
 
     if (!ifs)
     {
         return Buffer(0);
     }
-    
+
     auto size = ifs.tellg();
 
     Buffer buffer(size);
@@ -32,7 +32,7 @@ routing::read_whole_file_into_buffer(char const* filename)
     return buffer;
 }
 
-Buffer 
+Buffer
 routing::read_whole_file_into_buffer(std::string const& filename)
 {
     return read_whole_file_into_buffer(filename.c_str());
@@ -44,7 +44,15 @@ routing::read_file(char const* filename)
     std::ifstream ifs(filename);
 
     return std::string(
-        (std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+        (std::istreambuf_iterator<char>(ifs)),
+        std::istreambuf_iterator<char>());
+}
+
+std::string
+routing::replace_extension(std::string_view name, std::string_view ext)
+{
+    std::string tmp(name.substr(0, name.find_last_of('.') + 1));
+    return tmp.append(ext);
 }
 
 Open_file::~Open_file()
