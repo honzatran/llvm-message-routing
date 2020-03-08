@@ -68,4 +68,17 @@ public:
 
 protected:
 };
+
+class Base_engine_full_compile_test : public detail::Base_engine_common
+{
+public:
+    Base_engine_full_compile_test(std::string_view source_code_file)
+        : detail::Base_engine_common(source_code_file)
+    {
+    }
+
+    void SetUp() override;
+
+protected:
+};
 }  // namespace routing::engine

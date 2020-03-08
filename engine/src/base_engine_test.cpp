@@ -38,3 +38,31 @@ routing::engine::Base_engine_function_test::SetUp()
 
     ASSERT_FALSE(!!error) << "compilation not succeeded";
 }
+
+void 
+routing::engine::Base_engine_full_compile_test::SetUp()
+{
+    init_jit();
+
+    auto path = m_clang_driver.tranform_source_code(
+        fmt::format("../resources/engine_orc_test_bin/{}", m_source_code_file),
+        m_context);
+
+    if (auto err = path.takeError())
+    {
+        FAIL() << get_error_msg(std::move(err));
+    }
+
+    auto module = m_clang_driver.compile_source_code(
+        *path,
+        m_context,
+        m_jit_symbols);
+
+    if (auto err = module.takeError())
+    {
+        FAIL() << get_error_msg(std::move(err));
+    }
+
+    auto error = m_jit->add(std::move(*module));
+
+}

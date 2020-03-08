@@ -298,6 +298,9 @@ set(BENCHMARK_ENABLE_TESTING
 
 set (CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 
+set(absl_gtest_src_dir ${CMAKE_BINARY_DIR}/googletest-src)
+set(absl_gtest_build_dir ${CMAKE_BINARY_DIR}/googletest-build)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/benchmark)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/abseil)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/spdlog-1.3.1)
