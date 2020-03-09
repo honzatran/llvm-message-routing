@@ -65,4 +65,5 @@ routing::engine::Base_engine_full_compile_test::SetUp()
 
     auto error = m_jit->add(std::move(*module));
 
+    ASSERT_FALSE(!!error) << "compilation not succeeded";
 }
