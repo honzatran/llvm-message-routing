@@ -1,41 +1,6 @@
 
 project(MESSAGE_ROUTING)
 
-function (init_google_test)
-    configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
-    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-        RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
-    if(result)
-        message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-    endif()
-    execute_process(COMMAND ${CMAKE_COMMAND} --build .
-        RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
-    if(result)
-        message(FATAL_ERROR "Build step for googletest failed: ${result}")
-    endif()
-
-# Prevent overriding the parent project's compiler/linker
-# settings on Windows
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-# Add googletest directly to our build. This defines
-# the gtest and gtest_main targets.
-    add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
-        ${CMAKE_BINARY_DIR}/googletest-build
-        EXCLUDE_FROM_ALL)
-
-    if (CMAKE_VERSION VERSION_LESS 2.8.11)
-        include_directories(BEFORE SYSTEM
-        "${gtest_SOURCE_DIR}/include" "${gmock_SOURCE_DIR}/include")
-    else()
-        # target_include_directories(gmock_main SYSTEM BEFORE INTERFACE
-        #     "${gtest_SOURCE_DIR}/include" "${gmock_SOURCE_DIR}/include")
-    endif()
-
-endfunction()
-
 set(LIB_INSTALL "lib")
 set(BIN_INSTALL "bin")
 
@@ -283,8 +248,6 @@ set(Boost_NO_BOOST_CMAKE ON CACHE BOOL "" FORCE)
 
 find_package(Boost 1.70 COMPONENTS program_options thread REQUIRED)
 
-init_google_test()
-
 # configure_file(
 #     ${CMAKE_CURRENT_SOURCE_DIR}/src/configuration.h.in 
 #     ${CMAKE_CURRENT_SOURCE_DIR}/src/configuration.h
@@ -296,10 +259,17 @@ set(BENCHMARK_ENABLE_TESTING
     "Supressing google benchmark test" 
     FORCE)
 
+set(ABSL_RUN_TESTS
+    "OFF"
+    CACHE BOOL 
+    "Disable absl tests"
+    FORCE)
+
+set (ABSL_USE_GOOGLETEST_HEAD "ON" CACHE BOOL "NN" FORCE)
+
 set (CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 
-set(absl_gtest_src_dir ${CMAKE_BINARY_DIR}/googletest-src)
-set(absl_gtest_build_dir ${CMAKE_BINARY_DIR}/googletest-build)
+message(${ABSL_RUN_TESTS})
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/benchmark)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/abseil)
