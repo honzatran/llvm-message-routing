@@ -283,7 +283,7 @@ using Message_value_group_types = Message_value_group_sse_types;
 class Message_chunk_properties_portability;
 class Message_value_group_portability;
 
-using Mesage_chunk_properties   = Message_chunk_properties_portability;
+using Message_chunk_properties  = Message_chunk_properties_portability;
 using Message_value_group_types = Message_value_group_portability;
 #endif
 
