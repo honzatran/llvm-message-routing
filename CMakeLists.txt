@@ -203,7 +203,7 @@ endfunction()
 file(MAKE_DIRECTORY logs)
 file(MAKE_DIRECTORY config)
 
-set(CMAKE_CXX_FLAGS "-g -Wall")
+set(CMAKE_CXX_FLAGS "-g -Wall -march=native")
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
