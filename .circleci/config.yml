@@ -1,7 +1,6 @@
 version: 2
 jobs:
   build:
-    machine: true
     docker:
       - image: honzatran/llvm-message-routing:latest
     steps:
