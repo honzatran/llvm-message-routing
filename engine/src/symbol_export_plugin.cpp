@@ -5,6 +5,7 @@
 #include <clang/AST/Decl.h>
 #include <clang/Rewrite/Core/Rewriter.h>
 #include "absl/types/span.h"
+#include "clang/AST/Expr.h"
 #include "clang/AST/GlobalDecl.h"
 #include "clang/Basic/LangOptions.h"
 #include "clang/Basic/Specifiers.h"
@@ -566,6 +567,71 @@ private:
     std::map<std::string, std::string> m_parameters_type;
 };
 
+/**
+ * Stores information about output.
+ */
+class Output_info
+{
+public:
+    Output_info(std::string const& name) : m_name(name) {}
+
+    /// Adds a new parameter to the method info
+    void add_parameter(
+        std::string const& name,
+        std::string const& qualified_type)
+    {
+        m_parameters_type[name] = qualified_type;
+    }
+
+    std::string get_global_decleration() const
+    {
+        fmt::memory_buffer buffer;
+
+        put_type(buffer);
+
+        fmt::format_to(buffer, "g_generated_{}", m_name);
+
+        return std::string(buffer.begin(), buffer.end());
+    }
+
+    std::string get_setter() const
+    {
+        fmt::memory_buffer buffer;
+
+        fmt::format_to(buffer, "ENGINE_FUNCTION void set_{}(", m_name);
+
+        put_type(buffer);
+
+        fmt::format_to(buffer, "{0}) {{ g_generated_{0} = {0}; }}", m_name);
+
+        return std::string(buffer.begin(), buffer.end());
+    }
+
+private:
+    // name of the output
+    std::string m_name;
+
+    // mapping between the parameter name and it types
+    std::map<std::string, std::string> m_parameters_type;
+
+    void put_type(fmt::memory_buffer& buffer) const
+    {
+        fmt::format_to(buffer, "routing::Function_ref<void(");
+
+        for (const auto& [name, type] : m_parameters_type)
+        {
+            fmt::format_to(buffer, "{},", type);
+        }
+
+        if (!m_parameters_type.empty())
+        {
+            buffer.resize(buffer.size() - 1);
+        }
+
+        fmt::format_to(buffer, ")>");
+    }
+};
+
 /// Holds data about the automaton class info
 class Automaton_class_info
 {
@@ -637,6 +703,12 @@ public:
             }
         }
 
+        if (has_annotation(class_record, router_output_annotation()))
+        {
+            m_logger->info(
+                "OUTPUT {}", class_record->getQualifiedNameAsString());
+        }
+
         return true;
     }
 
@@ -684,9 +756,62 @@ public:
         return true;
     }
 
+    bool VisitCallExpr(clang::CallExpr* call_expr)
+    {
+        clang::QualType qual_type = call_expr->getType();
+        clang::Type const* type   = qual_type.getTypePtrOrNull();
+
+        if (type != nullptr)
+        {
+            auto func = call_expr->getDirectCallee();
+            if (func != nullptr)
+            {
+                std::string function_name = func->getNameAsString();
+
+                if (function_name == "f")
+                {
+                    m_logger->info("Function f args {}", func->getNumParams());
+
+                    auto output_name_expr = call_expr->getArg(0);
+                    auto output_name = try_get_output_name(output_name_expr);
+
+                    if (output_name)
+                    {
+                        Output_info info(output_name.value());
+                        for (std::size_t i = 1; i < func->getNumParams(); ++i)
+                        {
+                            clang::ParmVarDecl* param_decl
+                                = func->getParamDecl(i);
+                            clang::QualType param_type = param_decl->getType();
+
+                            m_logger->info(
+                                "{}, {}",
+                                param_decl->getQualifiedNameAsString(),
+                                param_type.getAsString());
+
+                            info.add_parameter(
+                                param_decl->getQualifiedNameAsString(),
+                                param_type.getAsString());
+                        }
+
+                        m_outputs.insert(std::pair(*output_name, info));
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     std::map<std::string, Automaton_class_info> const& get_classes_to_generate()
+        const
     {
         return m_automaton_classes;
+    }
+
+    std::map<std::string, Output_info> const& get_automaton_outputs() const
+    {
+        return m_outputs;
     }
 
 private:
@@ -695,6 +820,26 @@ private:
     absl::InlinedVector<std::string, 4> m_globals_types;
 
     std::map<std::string, Automaton_class_info> m_automaton_classes;
+
+    std::map<std::string, Output_info> m_outputs;
+
+    std::optional<std::string> try_get_output_name(clang::Expr* name_expr)
+    {
+        if (auto* output_name_cast
+            = clang::dyn_cast<clang::ImplicitCastExpr>(name_expr))
+        {
+            if (auto* output_name = clang::dyn_cast<clang::StringLiteral>(
+                    output_name_cast->getSubExprAsWritten()))
+            {
+                m_logger->info(
+                    "Function name {}", output_name->getString().str());
+
+                return {output_name->getString()};
+            }
+        }
+
+        return {};
+    }
 };
 
 ///
@@ -718,8 +863,8 @@ public:
 
         visitor.TraverseDecl(translation_unit);
 
-        std::string generated_code
-            = generate_code(visitor.get_classes_to_generate());
+        std::string generated_code = generate_code(
+            visitor.get_classes_to_generate(), visitor.get_automaton_outputs());
 
         m_logger->info("Generated code {}", generated_code);
 
@@ -734,11 +879,23 @@ private:
     routing::Logger_t m_logger;
 
     std::string generate_code(
-        std::map<std::string, Automaton_class_info> const& generated_classes)
+        std::map<std::string, Automaton_class_info> const& generated_classes,
+        std::map<std::string, Output_info> const& automaton_outputs)
     {
         std::string output = "\n";
 
         fmt::memory_buffer buffer;
+
+        fmt::format_to(
+            buffer,
+            "#include <routing/stdext.h>\n#include "
+            "<routing/message/message.h>\n");
+
+        for (auto const& [name, output_info] : automaton_outputs)
+        {
+            fmt::format_to(
+                buffer, "{};\n", output_info.get_global_decleration());
+        }
 
         fmt::format_to(
             buffer,
@@ -761,6 +918,12 @@ private:
             }
         }
 
+        for (auto const& [name, output_info] : automaton_outputs)
+        {
+            fmt::format_to(
+                buffer, "{};\n", output_info.get_setter());
+        }
+
         return output.append(buffer.data(), buffer.size());
     }
 
@@ -773,7 +936,7 @@ private:
         {
             fmt::format_to(
                 buffer,
-                "{} {}(",
+                "ENGINE_FUNCTION\n {} {}(",
                 method_info.get_return_type(),
                 method_info.get_method_name());
 

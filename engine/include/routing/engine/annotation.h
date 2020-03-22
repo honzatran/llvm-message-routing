@@ -12,6 +12,8 @@
 
 #define ENGINE_ENTRANCE __attribute__((annotate("ENGINE_ENTRANCE")))
 
+#define ENGINE_OUTPUT __attribute__((annotate("ENGINE_OUTPUT")))
+
 namespace routing::engine
 {
 constexpr absl::string_view
@@ -36,5 +38,11 @@ constexpr absl::string_view
 router_entrance_annotation()
 {
     return "ENGINE_ENTRANCE";
+}
+
+constexpr absl::string_view
+router_output_annotation()
+{
+    return "ENGINE_OUTPUT";
 }
 }  // namespace routing::engine

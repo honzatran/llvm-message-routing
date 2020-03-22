@@ -1,4 +1,5 @@
 #include <routing/engine/clang_cc1_driver.h>
+#include "absl/types/span.h"
 #include "available_headers.h"
 
 #include <routing/fmt.h>
@@ -97,7 +98,10 @@ readModuleFromBitcodeFile(llvm::StringRef bc, llvm::LLVMContext &context)
 }  // end namespace
 
 std::vector<std::string>
-get_clang_args(std::string const &cpp, std::string const &bc)
+get_clang_args(
+    std::string const &cpp,
+    std::string const &bc,
+    absl::Span<std::string> additinal_options)
 {
     auto cc1_args = getClangCC1Args(cpp, bc);
 
@@ -110,7 +114,18 @@ get_clang_args(std::string const &cpp, std::string const &bc)
         cc1_args.push_back(fmt::format("-I{}", path));
     }
 
+    for (std::string const &option : additinal_options)
+    {
+        cc1_args.push_back(option);
+    }
+
     return cc1_args;
+}
+
+std::vector<std::string>
+get_clang_args(std::string const &cpp, std::string const &bc)
+{
+    return get_clang_args(cpp, bc, absl::Span<std::string>());
 }
 
 llvm::Expected<std::unique_ptr<llvm::Module>>
@@ -196,8 +211,11 @@ Clang_cc1_driver::tranform_source_code(
         // return std::move(copy_err);
     }
 
-    llvm::Error err
-        = compileCppToBitcodeFile(get_clang_args(generated_file, bc));
+    std::vector<std::string> additional_args
+        = {"-fsyntax-only", "-DENGINE_TRANSFORM"};
+
+    llvm::Error err = compileCppToBitcodeFile(
+        get_clang_args(generated_file, bc, absl::MakeSpan(additional_args)));
 
     if (err)
     {
