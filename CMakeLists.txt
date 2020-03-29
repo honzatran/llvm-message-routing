@@ -200,6 +200,34 @@ function(routing_exe)
 
 endfunction()
 
+function(grpc_setup)
+    message(STATUS "Using gRPC via add_subdirectory (FetchContent).")
+    include(FetchContent)
+    FetchContent_Declare(
+        grpc
+        GIT_REPOSITORY https://github.com/grpc/grpc.git
+        # when using gRPC, you will actually set this to an existing tag, such as
+        # v1.25.0, v1.26.0 etc..
+        # For the purpose of testing, we override the tag used to the commit
+        # that's currently under test.
+        GIT_TAG        v1.26.0)
+    FetchContent_MakeAvailable(grpc)
+
+    # Since FetchContent uses add_subdirectory under the hood, we can use
+    # the grpc targets directly from this build.
+    set(_PROTOBUF_LIBPROTOBUF libprotobuf)
+    set(_REFLECTION grpc++_reflection)
+    set(_PROTOBUF_PROTOC $<TARGET_FILE:protoc>)
+    set(_GRPC_GRPCPP grpc++)
+
+    if(CMAKE_CROSSCOMPILING)
+        find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
+    else()
+        set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:grpc_cpp_plugin>)
+    endif()
+
+endfunction()
+
 file(MAKE_DIRECTORY logs)
 file(MAKE_DIRECTORY config)
 
@@ -275,12 +303,17 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/benchmark)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/google/abseil)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rd-party/spdlog-1.3.1)
 
+grpc_setup()
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pcm-wrapper)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/message)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine-protos)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine-server)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine-client)
 
 add_custom_target(copy_compilation_db ALL
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
