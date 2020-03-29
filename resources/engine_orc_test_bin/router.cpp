@@ -5,25 +5,6 @@
 #include <tuple>
 #include "routing/stdext.h"
 
-template <typename... ARGS>
-void
-f(char const* s, ARGS&&... args)
-{
-}
-
-#ifdef ENGINE_TRANSFORM 
-#define ENGINE_OUTPUT_CODE(NAME, ...) \
-    do                          \
-    {                           \
-        f(NAME, __VA_ARGS__);         \
-    } while (false);
-#else
-#define ENGINE_OUTPUT_CODE(NAME, ...) \
-    do                          \
-    {                           \
-        g_generated_OUT(__VA_ARGS__);         \
-    } while (false);
-#endif
 
 class ENGINE_ROUTER Automaton
 {

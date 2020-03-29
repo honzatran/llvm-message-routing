@@ -45,4 +45,25 @@ router_output_annotation()
 {
     return "ENGINE_OUTPUT";
 }
+
+template <typename... ARGS>
+void
+stub_function(char const* s, ARGS&&... args)
+{
+}
+
 }  // namespace routing::engine
+
+#ifdef ENGINE_TRANSFORM
+#define ENGINE_OUTPUT_CODE(NAME, ...)                      \
+    do                                                     \
+    {                                                      \
+        routing::engine::stub_function(NAME, __VA_ARGS__); \
+    } while (false);
+#else
+#define ENGINE_OUTPUT_CODE(NAME, ...) \
+    do                                \
+    {                                 \
+        g_generated_OUT(__VA_ARGS__); \
+    } while (false);
+#endif

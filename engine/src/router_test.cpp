@@ -70,4 +70,10 @@ TEST_F(Router_test, factory_method_detected)
 
     routing::engine::Message m;
     factory(m);
+
+    auto tmp1
+        = [](routing::engine::Message &m) -> void { fmt::print("OUTPUT1\n"); };
+
+    output_setter_ref(tmp1);
+    factory(m);
 }

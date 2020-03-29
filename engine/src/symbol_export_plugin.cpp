@@ -589,7 +589,7 @@ public:
 
         put_type(buffer);
 
-        fmt::format_to(buffer, "g_generated_{}", m_name);
+        fmt::format_to(buffer, " g_generated_{}", m_name);
 
         return std::string(buffer.begin(), buffer.end());
     }
@@ -768,7 +768,7 @@ public:
             {
                 std::string function_name = func->getNameAsString();
 
-                if (function_name == "f")
+                if (function_name == "stub_function")
                 {
                     m_logger->info("Function f args {}", func->getNumParams());
 
@@ -920,8 +920,7 @@ private:
 
         for (auto const& [name, output_info] : automaton_outputs)
         {
-            fmt::format_to(
-                buffer, "{};\n", output_info.get_setter());
+            fmt::format_to(buffer, "{};\n", output_info.get_setter());
         }
 
         return output.append(buffer.data(), buffer.size());
