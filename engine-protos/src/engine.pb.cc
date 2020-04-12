@@ -16,42 +16,42 @@
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 namespace engine {
-class HelloRequestDefaultTypeInternal {
+class TemplateRegisterRequestDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<HelloRequest> _instance;
-} _HelloRequest_default_instance_;
-class HelloReplyDefaultTypeInternal {
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<TemplateRegisterRequest> _instance;
+} _TemplateRegisterRequest_default_instance_;
+class TemplateRegisterReplyDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<HelloReply> _instance;
-} _HelloReply_default_instance_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<TemplateRegisterReply> _instance;
+} _TemplateRegisterReply_default_instance_;
 }  // namespace engine
-static void InitDefaultsscc_info_HelloReply_engine_2eproto() {
+static void InitDefaultsscc_info_TemplateRegisterReply_engine_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::engine::_HelloReply_default_instance_;
-    new (ptr) ::engine::HelloReply();
+    void* ptr = &::engine::_TemplateRegisterReply_default_instance_;
+    new (ptr) ::engine::TemplateRegisterReply();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::engine::HelloReply::InitAsDefaultInstance();
+  ::engine::TemplateRegisterReply::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_HelloReply_engine_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsscc_info_HelloReply_engine_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_TemplateRegisterReply_engine_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsscc_info_TemplateRegisterReply_engine_2eproto}, {}};
 
-static void InitDefaultsscc_info_HelloRequest_engine_2eproto() {
+static void InitDefaultsscc_info_TemplateRegisterRequest_engine_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::engine::_HelloRequest_default_instance_;
-    new (ptr) ::engine::HelloRequest();
+    void* ptr = &::engine::_TemplateRegisterRequest_default_instance_;
+    new (ptr) ::engine::TemplateRegisterRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::engine::HelloRequest::InitAsDefaultInstance();
+  ::engine::TemplateRegisterRequest::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_HelloRequest_engine_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsscc_info_HelloRequest_engine_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_TemplateRegisterRequest_engine_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsscc_info_TemplateRegisterRequest_engine_2eproto}, {}};
 
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_engine_2eproto[2];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_engine_2eproto = nullptr;
@@ -59,45 +59,49 @@ static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_s
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_engine_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::engine::HelloRequest, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::engine::TemplateRegisterRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::engine::HelloRequest, name_),
+  PROTOBUF_FIELD_OFFSET(::engine::TemplateRegisterRequest, name_),
+  PROTOBUF_FIELD_OFFSET(::engine::TemplateRegisterRequest, source_),
+  PROTOBUF_FIELD_OFFSET(::engine::TemplateRegisterRequest, source_package_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::engine::HelloReply, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::engine::TemplateRegisterReply, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::engine::HelloReply, message_),
+  PROTOBUF_FIELD_OFFSET(::engine::TemplateRegisterReply, result_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::engine::HelloRequest)},
-  { 6, -1, sizeof(::engine::HelloReply)},
+  { 0, -1, sizeof(::engine::TemplateRegisterRequest)},
+  { 8, -1, sizeof(::engine::TemplateRegisterReply)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::engine::_HelloRequest_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::engine::_HelloReply_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::engine::_TemplateRegisterRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::engine::_TemplateRegisterReply_default_instance_),
 };
 
 const char descriptor_table_protodef_engine_2eproto[] =
-  "\n\014engine.proto\022\006engine\"\034\n\014HelloRequest\022\014"
-  "\n\004name\030\001 \001(\t\"\035\n\nHelloReply\022\017\n\007message\030\001 "
-  "\001(\t2G\n\rEngineService\0226\n\010SayHello\022\024.engin"
-  "e.HelloRequest\032\022.engine.HelloReply\"\000b\006pr"
-  "oto3"
+  "\n\014engine.proto\022\006engine\"O\n\027TemplateRegist"
+  "erRequest\022\014\n\004name\030\001 \001(\t\022\016\n\006source\030\002 \003(\t\022"
+  "\026\n\016source_package\030\003 \001(\014\"\'\n\025TemplateRegis"
+  "terReply\022\016\n\006result\030\001 \001(\0102e\n\rEngineServic"
+  "e\022T\n\020RegisterTemplate\022\037.engine.TemplateR"
+  "egisterRequest\032\035.engine.TemplateRegister"
+  "Reply\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_engine_2eproto_deps[1] = {
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_engine_2eproto_sccs[2] = {
-  &scc_info_HelloReply_engine_2eproto.base,
-  &scc_info_HelloRequest_engine_2eproto.base,
+  &scc_info_TemplateRegisterReply_engine_2eproto.base,
+  &scc_info_TemplateRegisterRequest_engine_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_engine_2eproto_once;
 static bool descriptor_table_engine_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_engine_2eproto = {
-  &descriptor_table_engine_2eproto_initialized, descriptor_table_protodef_engine_2eproto, "engine.proto", 164,
+  &descriptor_table_engine_2eproto_initialized, descriptor_table_protodef_engine_2eproto, "engine.proto", 255,
   &descriptor_table_engine_2eproto_once, descriptor_table_engine_2eproto_sccs, descriptor_table_engine_2eproto_deps, 2, 0,
   schemas, file_default_instances, TableStruct_engine_2eproto::offsets,
   file_level_metadata_engine_2eproto, 2, file_level_enum_descriptors_engine_2eproto, file_level_service_descriptors_engine_2eproto,
@@ -109,67 +113,78 @@ namespace engine {
 
 // ===================================================================
 
-void HelloRequest::InitAsDefaultInstance() {
+void TemplateRegisterRequest::InitAsDefaultInstance() {
 }
-class HelloRequest::HasBitSetters {
+class TemplateRegisterRequest::HasBitSetters {
  public:
 };
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int HelloRequest::kNameFieldNumber;
+const int TemplateRegisterRequest::kNameFieldNumber;
+const int TemplateRegisterRequest::kSourceFieldNumber;
+const int TemplateRegisterRequest::kSourcePackageFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-HelloRequest::HelloRequest()
+TemplateRegisterRequest::TemplateRegisterRequest()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:engine.HelloRequest)
+  // @@protoc_insertion_point(constructor:engine.TemplateRegisterRequest)
 }
-HelloRequest::HelloRequest(const HelloRequest& from)
+TemplateRegisterRequest::TemplateRegisterRequest(const TemplateRegisterRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _internal_metadata_(nullptr) {
+      _internal_metadata_(nullptr),
+      source_(from.source_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (from.name().size() > 0) {
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  // @@protoc_insertion_point(copy_constructor:engine.HelloRequest)
+  source_package_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (from.source_package().size() > 0) {
+    source_package_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.source_package_);
+  }
+  // @@protoc_insertion_point(copy_constructor:engine.TemplateRegisterRequest)
 }
 
-void HelloRequest::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_HelloRequest_engine_2eproto.base);
+void TemplateRegisterRequest::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_TemplateRegisterRequest_engine_2eproto.base);
   name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  source_package_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-HelloRequest::~HelloRequest() {
-  // @@protoc_insertion_point(destructor:engine.HelloRequest)
+TemplateRegisterRequest::~TemplateRegisterRequest() {
+  // @@protoc_insertion_point(destructor:engine.TemplateRegisterRequest)
   SharedDtor();
 }
 
-void HelloRequest::SharedDtor() {
+void TemplateRegisterRequest::SharedDtor() {
   name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  source_package_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void HelloRequest::SetCachedSize(int size) const {
+void TemplateRegisterRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const HelloRequest& HelloRequest::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_HelloRequest_engine_2eproto.base);
+const TemplateRegisterRequest& TemplateRegisterRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_TemplateRegisterRequest_engine_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void HelloRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:engine.HelloRequest)
+void TemplateRegisterRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:engine.TemplateRegisterRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  source_.Clear();
   name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  source_package_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-const char* HelloRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* TemplateRegisterRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -179,7 +194,26 @@ const char* HelloRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
       // string name = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(mutable_name(), ptr, ctx, "engine.HelloRequest.name");
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(mutable_name(), ptr, ctx, "engine.TemplateRegisterRequest.name");
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated string source = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(add_source(), ptr, ctx, "engine.TemplateRegisterRequest.source");
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<::PROTOBUF_NAMESPACE_ID::uint8>(ptr) == 18);
+        } else goto handle_unusual;
+        continue;
+      // bytes source_package = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(mutable_source_package(), ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -203,11 +237,11 @@ failure:
 #undef CHK_
 }
 #else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-bool HelloRequest::MergePartialFromCodedStream(
+bool TemplateRegisterRequest::MergePartialFromCodedStream(
     ::PROTOBUF_NAMESPACE_ID::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!PROTOBUF_PREDICT_TRUE(EXPRESSION)) goto failure
   ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-  // @@protoc_insertion_point(parse_start:engine.HelloRequest)
+  // @@protoc_insertion_point(parse_start:engine.TemplateRegisterRequest)
   for (;;) {
     ::std::pair<::PROTOBUF_NAMESPACE_ID::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -221,7 +255,34 @@ bool HelloRequest::MergePartialFromCodedStream(
           DO_(::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
             this->name().data(), static_cast<int>(this->name().length()),
             ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::PARSE,
-            "engine.HelloRequest.name"));
+            "engine.TemplateRegisterRequest.name"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated string source = 2;
+      case 2: {
+        if (static_cast< ::PROTOBUF_NAMESPACE_ID::uint8>(tag) == (18 & 0xFF)) {
+          DO_(::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::ReadString(
+                input, this->add_source()));
+          DO_(::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+            this->source(this->source_size() - 1).data(),
+            static_cast<int>(this->source(this->source_size() - 1).length()),
+            ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::PARSE,
+            "engine.TemplateRegisterRequest.source"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bytes source_package = 3;
+      case 3: {
+        if (static_cast< ::PROTOBUF_NAMESPACE_ID::uint8>(tag) == (26 & 0xFF)) {
+          DO_(::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_source_package()));
         } else {
           goto handle_unusual;
         }
@@ -240,18 +301,18 @@ bool HelloRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:engine.HelloRequest)
+  // @@protoc_insertion_point(parse_success:engine.TemplateRegisterRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:engine.HelloRequest)
+  // @@protoc_insertion_point(parse_failure:engine.TemplateRegisterRequest)
   return false;
 #undef DO_
 }
 #endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
 
-void HelloRequest::SerializeWithCachedSizes(
+void TemplateRegisterRequest::SerializeWithCachedSizes(
     ::PROTOBUF_NAMESPACE_ID::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:engine.HelloRequest)
+  // @@protoc_insertion_point(serialize_start:engine.TemplateRegisterRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -260,21 +321,37 @@ void HelloRequest::SerializeWithCachedSizes(
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "engine.HelloRequest.name");
+      "engine.TemplateRegisterRequest.name");
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
+  }
+
+  // repeated string source = 2;
+  for (int i = 0, n = this->source_size(); i < n; i++) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->source(i).data(), static_cast<int>(this->source(i).length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "engine.TemplateRegisterRequest.source");
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteString(
+      2, this->source(i), output);
+  }
+
+  // bytes source_package = 3;
+  if (this->source_package().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBytesMaybeAliased(
+      3, this->source_package(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:engine.HelloRequest)
+  // @@protoc_insertion_point(serialize_end:engine.TemplateRegisterRequest)
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* HelloRequest::InternalSerializeWithCachedSizesToArray(
+::PROTOBUF_NAMESPACE_ID::uint8* TemplateRegisterRequest::InternalSerializeWithCachedSizesToArray(
     ::PROTOBUF_NAMESPACE_ID::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:engine.HelloRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:engine.TemplateRegisterRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -283,22 +360,39 @@ void HelloRequest::SerializeWithCachedSizes(
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "engine.HelloRequest.name");
+      "engine.TemplateRegisterRequest.name");
     target =
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
+  }
+
+  // repeated string source = 2;
+  for (int i = 0, n = this->source_size(); i < n; i++) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->source(i).data(), static_cast<int>(this->source(i).length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "engine.TemplateRegisterRequest.source");
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      WriteStringToArray(2, this->source(i), target);
+  }
+
+  // bytes source_package = 3;
+  if (this->source_package().size() > 0) {
+    target =
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBytesToArray(
+        3, this->source_package(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:engine.HelloRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:engine.TemplateRegisterRequest)
   return target;
 }
 
-size_t HelloRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:engine.HelloRequest)
+size_t TemplateRegisterRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:engine.TemplateRegisterRequest)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -310,6 +404,14 @@ size_t HelloRequest::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  // repeated string source = 2;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->source_size());
+  for (int i = 0, n = this->source_size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      this->source(i));
+  }
+
   // string name = 1;
   if (this->name().size() > 0) {
     total_size += 1 +
@@ -317,146 +419,156 @@ size_t HelloRequest::ByteSizeLong() const {
         this->name());
   }
 
+  // bytes source_package = 3;
+  if (this->source_package().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->source_package());
+  }
+
   int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
-void HelloRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:engine.HelloRequest)
+void TemplateRegisterRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:engine.TemplateRegisterRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const HelloRequest* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<HelloRequest>(
+  const TemplateRegisterRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<TemplateRegisterRequest>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:engine.HelloRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:engine.TemplateRegisterRequest)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:engine.HelloRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:engine.TemplateRegisterRequest)
     MergeFrom(*source);
   }
 }
 
-void HelloRequest::MergeFrom(const HelloRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:engine.HelloRequest)
+void TemplateRegisterRequest::MergeFrom(const TemplateRegisterRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:engine.TemplateRegisterRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  source_.MergeFrom(from.source_);
   if (from.name().size() > 0) {
 
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
+  if (from.source_package().size() > 0) {
+
+    source_package_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.source_package_);
+  }
 }
 
-void HelloRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:engine.HelloRequest)
+void TemplateRegisterRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:engine.TemplateRegisterRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void HelloRequest::CopyFrom(const HelloRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:engine.HelloRequest)
+void TemplateRegisterRequest::CopyFrom(const TemplateRegisterRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:engine.TemplateRegisterRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool HelloRequest::IsInitialized() const {
+bool TemplateRegisterRequest::IsInitialized() const {
   return true;
 }
 
-void HelloRequest::Swap(HelloRequest* other) {
+void TemplateRegisterRequest::Swap(TemplateRegisterRequest* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void HelloRequest::InternalSwap(HelloRequest* other) {
+void TemplateRegisterRequest::InternalSwap(TemplateRegisterRequest* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
+  source_.InternalSwap(CastToBase(&other->source_));
   name_.Swap(&other->name_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  source_package_.Swap(&other->source_package_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata HelloRequest::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata TemplateRegisterRequest::GetMetadata() const {
   return GetMetadataStatic();
 }
 
 
 // ===================================================================
 
-void HelloReply::InitAsDefaultInstance() {
+void TemplateRegisterReply::InitAsDefaultInstance() {
 }
-class HelloReply::HasBitSetters {
+class TemplateRegisterReply::HasBitSetters {
  public:
 };
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int HelloReply::kMessageFieldNumber;
+const int TemplateRegisterReply::kResultFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-HelloReply::HelloReply()
+TemplateRegisterReply::TemplateRegisterReply()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:engine.HelloReply)
+  // @@protoc_insertion_point(constructor:engine.TemplateRegisterReply)
 }
-HelloReply::HelloReply(const HelloReply& from)
+TemplateRegisterReply::TemplateRegisterReply(const TemplateRegisterReply& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (from.message().size() > 0) {
-    message_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.message_);
-  }
-  // @@protoc_insertion_point(copy_constructor:engine.HelloReply)
+  result_ = from.result_;
+  // @@protoc_insertion_point(copy_constructor:engine.TemplateRegisterReply)
 }
 
-void HelloReply::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_HelloReply_engine_2eproto.base);
-  message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+void TemplateRegisterReply::SharedCtor() {
+  result_ = false;
 }
 
-HelloReply::~HelloReply() {
-  // @@protoc_insertion_point(destructor:engine.HelloReply)
+TemplateRegisterReply::~TemplateRegisterReply() {
+  // @@protoc_insertion_point(destructor:engine.TemplateRegisterReply)
   SharedDtor();
 }
 
-void HelloReply::SharedDtor() {
-  message_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+void TemplateRegisterReply::SharedDtor() {
 }
 
-void HelloReply::SetCachedSize(int size) const {
+void TemplateRegisterReply::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const HelloReply& HelloReply::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_HelloReply_engine_2eproto.base);
+const TemplateRegisterReply& TemplateRegisterReply::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_TemplateRegisterReply_engine_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void HelloReply::Clear() {
-// @@protoc_insertion_point(message_clear_start:engine.HelloReply)
+void TemplateRegisterReply::Clear() {
+// @@protoc_insertion_point(message_clear_start:engine.TemplateRegisterReply)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  message_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  result_ = false;
   _internal_metadata_.Clear();
 }
 
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-const char* HelloReply::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* TemplateRegisterReply::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
     switch (tag >> 3) {
-      // string message = 1;
+      // bool result = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParserUTF8(mutable_message(), ptr, ctx, "engine.HelloReply.message");
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          result_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -480,25 +592,23 @@ failure:
 #undef CHK_
 }
 #else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-bool HelloReply::MergePartialFromCodedStream(
+bool TemplateRegisterReply::MergePartialFromCodedStream(
     ::PROTOBUF_NAMESPACE_ID::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!PROTOBUF_PREDICT_TRUE(EXPRESSION)) goto failure
   ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-  // @@protoc_insertion_point(parse_start:engine.HelloReply)
+  // @@protoc_insertion_point(parse_start:engine.TemplateRegisterReply)
   for (;;) {
     ::std::pair<::PROTOBUF_NAMESPACE_ID::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // string message = 1;
+      // bool result = 1;
       case 1: {
-        if (static_cast< ::PROTOBUF_NAMESPACE_ID::uint8>(tag) == (10 & 0xFF)) {
-          DO_(::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::ReadString(
-                input, this->mutable_message()));
-          DO_(::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-            this->message().data(), static_cast<int>(this->message().length()),
-            ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::PARSE,
-            "engine.HelloReply.message"));
+        if (static_cast< ::PROTOBUF_NAMESPACE_ID::uint8>(tag) == (8 & 0xFF)) {
+
+          DO_((::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &result_)));
         } else {
           goto handle_unusual;
         }
@@ -517,65 +627,54 @@ bool HelloReply::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:engine.HelloReply)
+  // @@protoc_insertion_point(parse_success:engine.TemplateRegisterReply)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:engine.HelloReply)
+  // @@protoc_insertion_point(parse_failure:engine.TemplateRegisterReply)
   return false;
 #undef DO_
 }
 #endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
 
-void HelloReply::SerializeWithCachedSizes(
+void TemplateRegisterReply::SerializeWithCachedSizes(
     ::PROTOBUF_NAMESPACE_ID::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:engine.HelloReply)
+  // @@protoc_insertion_point(serialize_start:engine.TemplateRegisterReply)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string message = 1;
-  if (this->message().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->message().data(), static_cast<int>(this->message().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "engine.HelloReply.message");
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->message(), output);
+  // bool result = 1;
+  if (this->result() != 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBool(1, this->result(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:engine.HelloReply)
+  // @@protoc_insertion_point(serialize_end:engine.TemplateRegisterReply)
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* HelloReply::InternalSerializeWithCachedSizesToArray(
+::PROTOBUF_NAMESPACE_ID::uint8* TemplateRegisterReply::InternalSerializeWithCachedSizesToArray(
     ::PROTOBUF_NAMESPACE_ID::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:engine.HelloReply)
+  // @@protoc_insertion_point(serialize_to_array_start:engine.TemplateRegisterReply)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string message = 1;
-  if (this->message().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->message().data(), static_cast<int>(this->message().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "engine.HelloReply.message");
-    target =
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteStringToArray(
-        1, this->message(), target);
+  // bool result = 1;
+  if (this->result() != 0) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->result(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:engine.HelloReply)
+  // @@protoc_insertion_point(serialize_to_array_end:engine.TemplateRegisterReply)
   return target;
 }
 
-size_t HelloReply::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:engine.HelloReply)
+size_t TemplateRegisterReply::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:engine.TemplateRegisterReply)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -587,11 +686,9 @@ size_t HelloReply::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string message = 1;
-  if (this->message().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->message());
+  // bool result = 1;
+  if (this->result() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
@@ -599,64 +696,62 @@ size_t HelloReply::ByteSizeLong() const {
   return total_size;
 }
 
-void HelloReply::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:engine.HelloReply)
+void TemplateRegisterReply::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:engine.TemplateRegisterReply)
   GOOGLE_DCHECK_NE(&from, this);
-  const HelloReply* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<HelloReply>(
+  const TemplateRegisterReply* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<TemplateRegisterReply>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:engine.HelloReply)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:engine.TemplateRegisterReply)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:engine.HelloReply)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:engine.TemplateRegisterReply)
     MergeFrom(*source);
   }
 }
 
-void HelloReply::MergeFrom(const HelloReply& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:engine.HelloReply)
+void TemplateRegisterReply::MergeFrom(const TemplateRegisterReply& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:engine.TemplateRegisterReply)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.message().size() > 0) {
-
-    message_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.message_);
+  if (from.result() != 0) {
+    set_result(from.result());
   }
 }
 
-void HelloReply::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:engine.HelloReply)
+void TemplateRegisterReply::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:engine.TemplateRegisterReply)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void HelloReply::CopyFrom(const HelloReply& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:engine.HelloReply)
+void TemplateRegisterReply::CopyFrom(const TemplateRegisterReply& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:engine.TemplateRegisterReply)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool HelloReply::IsInitialized() const {
+bool TemplateRegisterReply::IsInitialized() const {
   return true;
 }
 
-void HelloReply::Swap(HelloReply* other) {
+void TemplateRegisterReply::Swap(TemplateRegisterReply* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void HelloReply::InternalSwap(HelloReply* other) {
+void TemplateRegisterReply::InternalSwap(TemplateRegisterReply* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  message_.Swap(&other->message_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
+  swap(result_, other->result_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata HelloReply::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata TemplateRegisterReply::GetMetadata() const {
   return GetMetadataStatic();
 }
 
@@ -664,11 +759,11 @@ void HelloReply::InternalSwap(HelloReply* other) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace engine
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::engine::HelloRequest* Arena::CreateMaybeMessage< ::engine::HelloRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::engine::HelloRequest >(arena);
+template<> PROTOBUF_NOINLINE ::engine::TemplateRegisterRequest* Arena::CreateMaybeMessage< ::engine::TemplateRegisterRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::engine::TemplateRegisterRequest >(arena);
 }
-template<> PROTOBUF_NOINLINE ::engine::HelloReply* Arena::CreateMaybeMessage< ::engine::HelloReply >(Arena* arena) {
-  return Arena::CreateInternal< ::engine::HelloReply >(arena);
+template<> PROTOBUF_NOINLINE ::engine::TemplateRegisterReply* Arena::CreateMaybeMessage< ::engine::TemplateRegisterReply >(Arena* arena) {
+  return Arena::CreateInternal< ::engine::TemplateRegisterReply >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

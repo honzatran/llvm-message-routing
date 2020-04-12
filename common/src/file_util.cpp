@@ -4,9 +4,14 @@
 #include <routing/fmt.h>
 #include <boost/algorithm/string/trim.hpp>
 
+#include <cstdint>
+#include <filesystem>
 #include <fstream>
+#include <streambuf>
 #include <string>
 #include <string_view>
+#include "absl/types/span.h"
+#include "routing/buffer.h"
 
 using namespace routing;
 using namespace std;
@@ -87,4 +92,106 @@ Text_file_writer::new_line()
 {
     fmt::print(m_file, "{}\n");
     return *this;
+}
+
+void
+append_string(routing::Buffer& buffer, std::string& text)
+{
+    auto buffer_view = routing::make_buffer_view(absl::MakeSpan(text));
+
+    std::uint64_t length     = text.length();
+    std::size_t added_length = sizeof(std::uint64_t) + buffer_view.get_length();
+
+    if (buffer.remaining() < added_length)
+    {
+        buffer.resize(buffer.capacity() + added_length);
+    }
+
+    std::size_t dst_index = buffer.get_position();
+
+    fmt::print(
+        "Position {} {} {}\n",
+        buffer.get_position(),
+        buffer.capacity(),
+        added_length);
+
+    buffer.set(length, dst_index);
+    buffer.copy_from(dst_index + sizeof(std::uint64_t), buffer_view);
+
+    buffer.set_position(dst_index + added_length);
+}
+
+std::vector<std::uint8_t>
+routing::compress_directory(std::filesystem::path directory_path)
+{
+    routing::Buffer buffer;
+
+    if (std::filesystem::is_directory(directory_path))
+    {
+        auto dir_content
+            = std::filesystem::recursive_directory_iterator(directory_path);
+
+        for (auto const& entry : dir_content)
+        {
+            if (entry.is_regular_file())
+            {
+                fmt::print("Entry {}\n", entry.path());
+                std::string path_str
+                    = entry.path().lexically_relative(directory_path).string();
+                std::string content = read_file(entry.path().c_str());
+
+                append_string(buffer, path_str);
+                append_string(buffer, content);
+
+                fmt::print("Position {}\n", buffer.get_position());
+            }
+        }
+    }
+
+    std::size_t size = buffer.get_position();
+    std::vector<std::uint8_t> result;
+
+    buffer.swap(result);
+    result.resize(size);
+
+    return result;
+}
+
+void
+routing::decode_directory(
+    std::filesystem::path const& output,
+    absl::Span<std::uint8_t> data)
+{
+    std::size_t i = 0;
+
+    Buffer_view view = routing::make_buffer_view(data);
+
+    fmt::print("data {}\n", data.length());
+
+    while (i < data.size())
+    {
+        auto size = view.as_value<std::uint64_t>(i);
+        auto path = std::filesystem::path(
+            std::string_view(view.as<char>(i + sizeof(std::uint64_t)), size));
+
+        auto dst_path = output / path;
+
+        if (path.has_parent_path())
+        {
+            std::filesystem::create_directories(dst_path.parent_path());
+        }
+
+        auto content_size
+            = view.as_value<std::uint64_t>(i + sizeof(std::uint64_t) + size);
+
+        auto content = std::string_view(
+            view.as<char>(i + 2 * sizeof(std::uint64_t) + size), content_size);
+
+        {
+            Open_file open_file(dst_path.c_str(), "w+");
+            fmt::print(open_file.get_file(), "{}", content);
+        }
+
+        i += 2 * sizeof(std::uint64_t) + size + content_size;
+    }
 }

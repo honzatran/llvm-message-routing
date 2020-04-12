@@ -4,19 +4,21 @@
 #define ROUTING_FILE_UTIL_H
 
 #include <routing/buffer.h>
+#include <cstdio>
+#include <filesystem>
 #include <string>
 #include <string_view>
-#include <cstdio>
 
 namespace routing
 {
-
-Buffer read_whole_file_into_buffer(char const* filename);
-Buffer read_whole_file_into_buffer(std::string const& filename);
-
+Buffer
+read_whole_file_into_buffer(char const* filename);
+Buffer
+read_whole_file_into_buffer(std::string const& filename);
 
 /// Reads the whole content of the file into the string
-std::string read_file(char const* filename);
+std::string
+read_file(char const* filename);
 
 /// RAII wrapper around FILE* for IO
 class Open_file
@@ -30,23 +32,17 @@ public:
     Open_file(Open_file const& other) = delete;
     Open_file& operator=(Open_file const& other) = delete;
 
-    Open_file(Open_file && other) = default;
+    Open_file(Open_file&& other) = default;
     Open_file& operator=(Open_file&& other) = default;
 
     ~Open_file();
 
-    FILE* get_file()
-    {
-        return m_file;
-    }
+    FILE* get_file() { return m_file; }
 
-    operator FILE*()
-    {
-        return get_file();
-    }
+    operator FILE*() { return get_file(); }
 
 private:
-    FILE *m_file;
+    FILE* m_file;
 };
 
 /// Write tag for Text formatter to a file
@@ -78,12 +74,20 @@ public:
     Text_file_writer& new_line();
 
 private:
-    Open_file m_file; 
+    Open_file m_file;
 };
 
 std::string
 replace_extension(std::string_view name, std::string_view ext);
 
-}
+std::vector<std::uint8_t>
+compress_directory(std::filesystem::path directory_path);
+
+void
+decode_directory(
+    std::filesystem::path const& output,
+    absl::Span<std::uint8_t> data);
+
+}  // namespace routing
 
 #endif

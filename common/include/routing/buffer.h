@@ -3,14 +3,28 @@
 #ifndef ROUTING_BUFFER_H
 #define ROUTING_BUFFER_H
 
+#include <routing/stdext.h>
 #include <cstdint>
 #include <cstring>
-#include <vector>
+#include <iterator>
 #include <type_traits>
-#include <routing/stdext.h>
+#include <vector>
+#include "absl/types/span.h"
 
 namespace routing
 {
+namespace detail
+{
+template <typename OTHER_CATEGORY>
+void guard_random_access(OTHER_CATEGORY)
+{
+    static_assert(
+        std::is_same<OTHER_CATEGORY, std::random_access_iterator_tag>::value,
+        "Not an random access iterator");
+}
+
+}  // namespace detail
+
 class Buffer_view
 {
 public:
@@ -26,7 +40,7 @@ public:
     using size_type              = std::size_t;
     using difference_type        = std::ptrdiff_t;
 
-    Buffer_view()  = default;
+    Buffer_view() = default;
 
     Buffer_view(std::uint8_t* data, std::size_t length)
         : m_data(data), m_length(length)
@@ -74,6 +88,13 @@ public:
         return Buffer_view{&m_data[offset], length};
     }
 
+    template <typename T>
+    absl::Span<T const> slice_to_span(std::size_t offset, std::size_t length)
+        const
+    {
+        return absl::Span(as<T>(offset), length);
+    }
+
     template <typename CONSUMER, typename SENTINEL>
     std::size_t accept(CONSUMER consumer, SENTINEL sentinel)
     {
@@ -114,7 +135,7 @@ public:
     const_reverse_iterator crbegin() const noexcept { return rbegin(); }
     const_reverse_iterator crend() const noexcept { return rend(); }
 
-    std::uint8_t const& operator[] (std::size_t offset) const noexcept
+    std::uint8_t const& operator[](std::size_t offset) const noexcept
     {
         return m_data[offset];
     }
@@ -122,15 +143,36 @@ public:
 private:
     friend class Mut_buffer_view;
 
-
     std::uint8_t* m_data{nullptr};
     std::size_t m_length{0};
 };
 
 template <std::size_t SIZE>
-inline Buffer_view make_buffer_view(std::array<std::uint8_t, SIZE> const& data)
+inline Buffer_view
+make_buffer_view(std::array<std::uint8_t, SIZE> const& data)
 {
     return Buffer_view(&data[0], SIZE);
+}
+
+template <typename IT>
+inline Buffer_view
+make_buffer_view(IT const& begin, IT const& end)
+{
+    auto cat = typename std::iterator_traits<IT>::iterator_category{};
+
+    detail::guard_random_access(cat);
+
+    const typename IT::pointer start          = &(*begin);
+    const typename IT::difference_type length = std::distance(begin, end);
+
+    return Buffer_view(start, length);
+}
+
+template <typename T>
+inline Buffer_view
+make_buffer_view(absl::Span<T> span)
+{
+    return Buffer_view(span.begin(), sizeof(T) * span.length());
 }
 
 class Mut_buffer_view
@@ -158,7 +200,6 @@ public:
     {
     }
 
-
     template <typename T>
     void set(T value, std::size_t offset)
     {
@@ -167,7 +208,9 @@ public:
     }
 
     void copy_from(
-        std::size_t dst_position, std::uint8_t const* src, std::size_t size)
+        std::size_t dst_position,
+        std::uint8_t const* src,
+        std::size_t size)
     {
         std::memcpy(
             reinterpret_cast<void*>(m_data + dst_position),
@@ -189,7 +232,8 @@ public:
     void reset(std::size_t pos, std::size_t length)
     {
         std::memset(
-            reinterpret_cast<void*>(m_data + pos), 0,
+            reinterpret_cast<void*>(m_data + pos),
+            0,
             length * sizeof(std::uint8_t));
     }
 
@@ -200,7 +244,7 @@ public:
     }
 
     template <typename T>
-    T* as()   
+    T* as()
     {
         return reinterpret_cast<T*>(&m_data[0]);
     }
@@ -218,21 +262,14 @@ public:
     iterator cbegin() const noexcept { return begin(); }
     iterator cend() const noexcept { return end(); }
 
-    reverse_iterator rbegin() const noexcept
-    {
-        return reverse_iterator(end());
-    }
+    reverse_iterator rbegin() const noexcept { return reverse_iterator(end()); }
 
-    reverse_iterator rend() const noexcept
-    {
-        return reverse_iterator(begin());
-    }
+    reverse_iterator rend() const noexcept { return reverse_iterator(begin()); }
 
     reverse_iterator crbegin() const noexcept { return rbegin(); }
     reverse_iterator crend() const noexcept { return rend(); }
 
-
-    std::uint8_t& operator[] (std::size_t offset) noexcept
+    std::uint8_t& operator[](std::size_t offset) noexcept
     {
         return m_data[offset];
     }
@@ -251,11 +288,10 @@ make_mut_buffer_view(std::array<std::uint8_t, SIZE>& data)
     return Mut_buffer_view(&data[0], SIZE);
 }
 
-
 class Buffer
 {
 public:
-    Buffer()  = default;
+    Buffer() = default;
     Buffer(std::size_t capacity)
         : m_buffer(std::vector<uint8_t>(capacity, 0)), m_position(0)
     {
@@ -324,8 +360,15 @@ public:
     {
         std::uint8_t const* src_ptr = src.as<std::uint8_t>();
         std::copy(
-            src_ptr, src_ptr + src.get_length(),
+            src_ptr,
+            src_ptr + src.get_length(),
             m_buffer.begin() + dst_position);
+    }
+
+    template <typename T>
+    void copy_from(std::size_t dst_position, absl::Span<T> span)
+    {
+        copy_from(dst_position, make_buffer_view(span));
     }
 
     void append(Buffer_view to_append)
@@ -340,6 +383,10 @@ public:
     }
 
     std::size_t capacity() const { return m_buffer.capacity(); };
+
+    void resize(std::size_t capacity) { m_buffer.resize(capacity); }
+
+    void swap(std::vector<std::uint8_t>& other) { m_buffer.swap(other); }
 
 private:
     std::vector<std::uint8_t> m_buffer;

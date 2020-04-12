@@ -22,7 +22,7 @@
 namespace engine {
 
 static const char* EngineService_method_names[] = {
-  "/engine.EngineService/SayHello",
+  "/engine.EngineService/RegisterTemplate",
 };
 
 std::unique_ptr< EngineService::Stub> EngineService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -32,49 +32,49 @@ std::unique_ptr< EngineService::Stub> EngineService::NewStub(const std::shared_p
 }
 
 EngineService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_SayHello_(EngineService_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  : channel_(channel), rpcmethod_RegisterTemplate_(EngineService_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::Status EngineService::Stub::SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::engine::HelloReply* response) {
-  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SayHello_, context, request, response);
+::grpc::Status EngineService::Stub::RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::engine::TemplateRegisterReply* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_RegisterTemplate_, context, request, response);
 }
 
-void EngineService::Stub::experimental_async::SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SayHello_, context, request, response, std::move(f));
+void EngineService::Stub::experimental_async::RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_RegisterTemplate_, context, request, response, std::move(f));
 }
 
-void EngineService::Stub::experimental_async::SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SayHello_, context, request, response, std::move(f));
+void EngineService::Stub::experimental_async::RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_RegisterTemplate_, context, request, response, std::move(f));
 }
 
-void EngineService::Stub::experimental_async::SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SayHello_, context, request, response, reactor);
+void EngineService::Stub::experimental_async::RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_RegisterTemplate_, context, request, response, reactor);
 }
 
-void EngineService::Stub::experimental_async::SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SayHello_, context, request, response, reactor);
+void EngineService::Stub::experimental_async::RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_RegisterTemplate_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::engine::HelloReply>* EngineService::Stub::AsyncSayHelloRaw(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::engine::HelloReply>::Create(channel_.get(), cq, rpcmethod_SayHello_, context, request, true);
+::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>* EngineService::Stub::AsyncRegisterTemplateRaw(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::engine::TemplateRegisterReply>::Create(channel_.get(), cq, rpcmethod_RegisterTemplate_, context, request, true);
 }
 
-::grpc::ClientAsyncResponseReader< ::engine::HelloReply>* EngineService::Stub::PrepareAsyncSayHelloRaw(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::engine::HelloReply>::Create(channel_.get(), cq, rpcmethod_SayHello_, context, request, false);
+::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>* EngineService::Stub::PrepareAsyncRegisterTemplateRaw(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::engine::TemplateRegisterReply>::Create(channel_.get(), cq, rpcmethod_RegisterTemplate_, context, request, false);
 }
 
 EngineService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       EngineService_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< EngineService::Service, ::engine::HelloRequest, ::engine::HelloReply>(
-          std::mem_fn(&EngineService::Service::SayHello), this)));
+      new ::grpc::internal::RpcMethodHandler< EngineService::Service, ::engine::TemplateRegisterRequest, ::engine::TemplateRegisterReply>(
+          std::mem_fn(&EngineService::Service::RegisterTemplate), this)));
 }
 
 EngineService::Service::~Service() {
 }
 
-::grpc::Status EngineService::Service::SayHello(::grpc::ServerContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response) {
+::grpc::Status EngineService::Service::RegisterTemplate(::grpc::ServerContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response) {
   (void) context;
   (void) request;
   (void) response;

@@ -55,38 +55,38 @@ struct TableStruct_engine_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_engine_2eproto;
 namespace engine {
-class HelloReply;
-class HelloReplyDefaultTypeInternal;
-extern HelloReplyDefaultTypeInternal _HelloReply_default_instance_;
-class HelloRequest;
-class HelloRequestDefaultTypeInternal;
-extern HelloRequestDefaultTypeInternal _HelloRequest_default_instance_;
+class TemplateRegisterReply;
+class TemplateRegisterReplyDefaultTypeInternal;
+extern TemplateRegisterReplyDefaultTypeInternal _TemplateRegisterReply_default_instance_;
+class TemplateRegisterRequest;
+class TemplateRegisterRequestDefaultTypeInternal;
+extern TemplateRegisterRequestDefaultTypeInternal _TemplateRegisterRequest_default_instance_;
 }  // namespace engine
 PROTOBUF_NAMESPACE_OPEN
-template<> ::engine::HelloReply* Arena::CreateMaybeMessage<::engine::HelloReply>(Arena*);
-template<> ::engine::HelloRequest* Arena::CreateMaybeMessage<::engine::HelloRequest>(Arena*);
+template<> ::engine::TemplateRegisterReply* Arena::CreateMaybeMessage<::engine::TemplateRegisterReply>(Arena*);
+template<> ::engine::TemplateRegisterRequest* Arena::CreateMaybeMessage<::engine::TemplateRegisterRequest>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace engine {
 
 // ===================================================================
 
-class HelloRequest :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:engine.HelloRequest) */ {
+class TemplateRegisterRequest :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:engine.TemplateRegisterRequest) */ {
  public:
-  HelloRequest();
-  virtual ~HelloRequest();
+  TemplateRegisterRequest();
+  virtual ~TemplateRegisterRequest();
 
-  HelloRequest(const HelloRequest& from);
-  HelloRequest(HelloRequest&& from) noexcept
-    : HelloRequest() {
+  TemplateRegisterRequest(const TemplateRegisterRequest& from);
+  TemplateRegisterRequest(TemplateRegisterRequest&& from) noexcept
+    : TemplateRegisterRequest() {
     *this = ::std::move(from);
   }
 
-  inline HelloRequest& operator=(const HelloRequest& from) {
+  inline TemplateRegisterRequest& operator=(const TemplateRegisterRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline HelloRequest& operator=(HelloRequest&& from) noexcept {
+  inline TemplateRegisterRequest& operator=(TemplateRegisterRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -104,34 +104,34 @@ class HelloRequest :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const HelloRequest& default_instance();
+  static const TemplateRegisterRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const HelloRequest* internal_default_instance() {
-    return reinterpret_cast<const HelloRequest*>(
-               &_HelloRequest_default_instance_);
+  static inline const TemplateRegisterRequest* internal_default_instance() {
+    return reinterpret_cast<const TemplateRegisterRequest*>(
+               &_TemplateRegisterRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  void Swap(HelloRequest* other);
-  friend void swap(HelloRequest& a, HelloRequest& b) {
+  void Swap(TemplateRegisterRequest* other);
+  friend void swap(TemplateRegisterRequest& a, TemplateRegisterRequest& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline HelloRequest* New() const final {
-    return CreateMaybeMessage<HelloRequest>(nullptr);
+  inline TemplateRegisterRequest* New() const final {
+    return CreateMaybeMessage<TemplateRegisterRequest>(nullptr);
   }
 
-  HelloRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<HelloRequest>(arena);
+  TemplateRegisterRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TemplateRegisterRequest>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const HelloRequest& from);
-  void MergeFrom(const HelloRequest& from);
+  void CopyFrom(const TemplateRegisterRequest& from);
+  void MergeFrom(const TemplateRegisterRequest& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -152,10 +152,10 @@ class HelloRequest :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(HelloRequest* other);
+  void InternalSwap(TemplateRegisterRequest* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "engine.HelloRequest";
+    return "engine.TemplateRegisterRequest";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -178,6 +178,24 @@ class HelloRequest :
   // nested types ----------------------------------------------------
 
   // accessors -------------------------------------------------------
+
+  // repeated string source = 2;
+  int source_size() const;
+  void clear_source();
+  static const int kSourceFieldNumber = 2;
+  const std::string& source(int index) const;
+  std::string* mutable_source(int index);
+  void set_source(int index, const std::string& value);
+  void set_source(int index, std::string&& value);
+  void set_source(int index, const char* value);
+  void set_source(int index, const char* value, size_t size);
+  std::string* add_source();
+  void add_source(const std::string& value);
+  void add_source(std::string&& value);
+  void add_source(const char* value);
+  void add_source(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& source() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_source();
 
   // string name = 1;
   void clear_name();
@@ -191,34 +209,48 @@ class HelloRequest :
   std::string* release_name();
   void set_allocated_name(std::string* name);
 
-  // @@protoc_insertion_point(class_scope:engine.HelloRequest)
+  // bytes source_package = 3;
+  void clear_source_package();
+  static const int kSourcePackageFieldNumber = 3;
+  const std::string& source_package() const;
+  void set_source_package(const std::string& value);
+  void set_source_package(std::string&& value);
+  void set_source_package(const char* value);
+  void set_source_package(const void* value, size_t size);
+  std::string* mutable_source_package();
+  std::string* release_source_package();
+  void set_allocated_source_package(std::string* source_package);
+
+  // @@protoc_insertion_point(class_scope:engine.TemplateRegisterRequest)
  private:
   class HasBitSetters;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> source_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr source_package_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_engine_2eproto;
 };
 // -------------------------------------------------------------------
 
-class HelloReply :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:engine.HelloReply) */ {
+class TemplateRegisterReply :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:engine.TemplateRegisterReply) */ {
  public:
-  HelloReply();
-  virtual ~HelloReply();
+  TemplateRegisterReply();
+  virtual ~TemplateRegisterReply();
 
-  HelloReply(const HelloReply& from);
-  HelloReply(HelloReply&& from) noexcept
-    : HelloReply() {
+  TemplateRegisterReply(const TemplateRegisterReply& from);
+  TemplateRegisterReply(TemplateRegisterReply&& from) noexcept
+    : TemplateRegisterReply() {
     *this = ::std::move(from);
   }
 
-  inline HelloReply& operator=(const HelloReply& from) {
+  inline TemplateRegisterReply& operator=(const TemplateRegisterReply& from) {
     CopyFrom(from);
     return *this;
   }
-  inline HelloReply& operator=(HelloReply&& from) noexcept {
+  inline TemplateRegisterReply& operator=(TemplateRegisterReply&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -236,34 +268,34 @@ class HelloReply :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const HelloReply& default_instance();
+  static const TemplateRegisterReply& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const HelloReply* internal_default_instance() {
-    return reinterpret_cast<const HelloReply*>(
-               &_HelloReply_default_instance_);
+  static inline const TemplateRegisterReply* internal_default_instance() {
+    return reinterpret_cast<const TemplateRegisterReply*>(
+               &_TemplateRegisterReply_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     1;
 
-  void Swap(HelloReply* other);
-  friend void swap(HelloReply& a, HelloReply& b) {
+  void Swap(TemplateRegisterReply* other);
+  friend void swap(TemplateRegisterReply& a, TemplateRegisterReply& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline HelloReply* New() const final {
-    return CreateMaybeMessage<HelloReply>(nullptr);
+  inline TemplateRegisterReply* New() const final {
+    return CreateMaybeMessage<TemplateRegisterReply>(nullptr);
   }
 
-  HelloReply* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<HelloReply>(arena);
+  TemplateRegisterReply* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TemplateRegisterReply>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const HelloReply& from);
-  void MergeFrom(const HelloReply& from);
+  void CopyFrom(const TemplateRegisterReply& from);
+  void MergeFrom(const TemplateRegisterReply& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -284,10 +316,10 @@ class HelloReply :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(HelloReply* other);
+  void InternalSwap(TemplateRegisterReply* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "engine.HelloReply";
+    return "engine.TemplateRegisterReply";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -311,24 +343,18 @@ class HelloReply :
 
   // accessors -------------------------------------------------------
 
-  // string message = 1;
-  void clear_message();
-  static const int kMessageFieldNumber = 1;
-  const std::string& message() const;
-  void set_message(const std::string& value);
-  void set_message(std::string&& value);
-  void set_message(const char* value);
-  void set_message(const char* value, size_t size);
-  std::string* mutable_message();
-  std::string* release_message();
-  void set_allocated_message(std::string* message);
+  // bool result = 1;
+  void clear_result();
+  static const int kResultFieldNumber = 1;
+  bool result() const;
+  void set_result(bool value);
 
-  // @@protoc_insertion_point(class_scope:engine.HelloReply)
+  // @@protoc_insertion_point(class_scope:engine.TemplateRegisterReply)
  private:
   class HasBitSetters;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
+  bool result_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_engine_2eproto;
 };
@@ -341,112 +367,191 @@ class HelloReply :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// HelloRequest
+// TemplateRegisterRequest
 
 // string name = 1;
-inline void HelloRequest::clear_name() {
+inline void TemplateRegisterRequest::clear_name() {
   name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& HelloRequest::name() const {
-  // @@protoc_insertion_point(field_get:engine.HelloRequest.name)
+inline const std::string& TemplateRegisterRequest::name() const {
+  // @@protoc_insertion_point(field_get:engine.TemplateRegisterRequest.name)
   return name_.GetNoArena();
 }
-inline void HelloRequest::set_name(const std::string& value) {
+inline void TemplateRegisterRequest::set_name(const std::string& value) {
   
   name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:engine.HelloRequest.name)
+  // @@protoc_insertion_point(field_set:engine.TemplateRegisterRequest.name)
 }
-inline void HelloRequest::set_name(std::string&& value) {
+inline void TemplateRegisterRequest::set_name(std::string&& value) {
   
   name_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:engine.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_rvalue:engine.TemplateRegisterRequest.name)
 }
-inline void HelloRequest::set_name(const char* value) {
+inline void TemplateRegisterRequest::set_name(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:engine.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_char:engine.TemplateRegisterRequest.name)
 }
-inline void HelloRequest::set_name(const char* value, size_t size) {
+inline void TemplateRegisterRequest::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:engine.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_pointer:engine.TemplateRegisterRequest.name)
 }
-inline std::string* HelloRequest::mutable_name() {
+inline std::string* TemplateRegisterRequest::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:engine.HelloRequest.name)
+  // @@protoc_insertion_point(field_mutable:engine.TemplateRegisterRequest.name)
   return name_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* HelloRequest::release_name() {
-  // @@protoc_insertion_point(field_release:engine.HelloRequest.name)
+inline std::string* TemplateRegisterRequest::release_name() {
+  // @@protoc_insertion_point(field_release:engine.TemplateRegisterRequest.name)
   
   return name_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void HelloRequest::set_allocated_name(std::string* name) {
+inline void TemplateRegisterRequest::set_allocated_name(std::string* name) {
   if (name != nullptr) {
     
   } else {
     
   }
   name_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:engine.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_allocated:engine.TemplateRegisterRequest.name)
 }
 
-// -------------------------------------------------------------------
-
-// HelloReply
-
-// string message = 1;
-inline void HelloReply::clear_message() {
-  message_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+// repeated string source = 2;
+inline int TemplateRegisterRequest::source_size() const {
+  return source_.size();
 }
-inline const std::string& HelloReply::message() const {
-  // @@protoc_insertion_point(field_get:engine.HelloReply.message)
-  return message_.GetNoArena();
+inline void TemplateRegisterRequest::clear_source() {
+  source_.Clear();
 }
-inline void HelloReply::set_message(const std::string& value) {
+inline const std::string& TemplateRegisterRequest::source(int index) const {
+  // @@protoc_insertion_point(field_get:engine.TemplateRegisterRequest.source)
+  return source_.Get(index);
+}
+inline std::string* TemplateRegisterRequest::mutable_source(int index) {
+  // @@protoc_insertion_point(field_mutable:engine.TemplateRegisterRequest.source)
+  return source_.Mutable(index);
+}
+inline void TemplateRegisterRequest::set_source(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:engine.TemplateRegisterRequest.source)
+  source_.Mutable(index)->assign(value);
+}
+inline void TemplateRegisterRequest::set_source(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:engine.TemplateRegisterRequest.source)
+  source_.Mutable(index)->assign(std::move(value));
+}
+inline void TemplateRegisterRequest::set_source(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  source_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:engine.TemplateRegisterRequest.source)
+}
+inline void TemplateRegisterRequest::set_source(int index, const char* value, size_t size) {
+  source_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:engine.TemplateRegisterRequest.source)
+}
+inline std::string* TemplateRegisterRequest::add_source() {
+  // @@protoc_insertion_point(field_add_mutable:engine.TemplateRegisterRequest.source)
+  return source_.Add();
+}
+inline void TemplateRegisterRequest::add_source(const std::string& value) {
+  source_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:engine.TemplateRegisterRequest.source)
+}
+inline void TemplateRegisterRequest::add_source(std::string&& value) {
+  source_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:engine.TemplateRegisterRequest.source)
+}
+inline void TemplateRegisterRequest::add_source(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  source_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:engine.TemplateRegisterRequest.source)
+}
+inline void TemplateRegisterRequest::add_source(const char* value, size_t size) {
+  source_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:engine.TemplateRegisterRequest.source)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+TemplateRegisterRequest::source() const {
+  // @@protoc_insertion_point(field_list:engine.TemplateRegisterRequest.source)
+  return source_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+TemplateRegisterRequest::mutable_source() {
+  // @@protoc_insertion_point(field_mutable_list:engine.TemplateRegisterRequest.source)
+  return &source_;
+}
+
+// bytes source_package = 3;
+inline void TemplateRegisterRequest::clear_source_package() {
+  source_package_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& TemplateRegisterRequest::source_package() const {
+  // @@protoc_insertion_point(field_get:engine.TemplateRegisterRequest.source_package)
+  return source_package_.GetNoArena();
+}
+inline void TemplateRegisterRequest::set_source_package(const std::string& value) {
   
-  message_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:engine.HelloReply.message)
+  source_package_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:engine.TemplateRegisterRequest.source_package)
 }
-inline void HelloReply::set_message(std::string&& value) {
+inline void TemplateRegisterRequest::set_source_package(std::string&& value) {
   
-  message_.SetNoArena(
+  source_package_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:engine.HelloReply.message)
+  // @@protoc_insertion_point(field_set_rvalue:engine.TemplateRegisterRequest.source_package)
 }
-inline void HelloReply::set_message(const char* value) {
+inline void TemplateRegisterRequest::set_source_package(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  message_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:engine.HelloReply.message)
+  source_package_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:engine.TemplateRegisterRequest.source_package)
 }
-inline void HelloReply::set_message(const char* value, size_t size) {
+inline void TemplateRegisterRequest::set_source_package(const void* value, size_t size) {
   
-  message_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  source_package_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:engine.HelloReply.message)
+  // @@protoc_insertion_point(field_set_pointer:engine.TemplateRegisterRequest.source_package)
 }
-inline std::string* HelloReply::mutable_message() {
+inline std::string* TemplateRegisterRequest::mutable_source_package() {
   
-  // @@protoc_insertion_point(field_mutable:engine.HelloReply.message)
-  return message_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  // @@protoc_insertion_point(field_mutable:engine.TemplateRegisterRequest.source_package)
+  return source_package_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* HelloReply::release_message() {
-  // @@protoc_insertion_point(field_release:engine.HelloReply.message)
+inline std::string* TemplateRegisterRequest::release_source_package() {
+  // @@protoc_insertion_point(field_release:engine.TemplateRegisterRequest.source_package)
   
-  return message_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return source_package_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void HelloReply::set_allocated_message(std::string* message) {
-  if (message != nullptr) {
+inline void TemplateRegisterRequest::set_allocated_source_package(std::string* source_package) {
+  if (source_package != nullptr) {
     
   } else {
     
   }
-  message_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), message);
-  // @@protoc_insertion_point(field_set_allocated:engine.HelloReply.message)
+  source_package_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), source_package);
+  // @@protoc_insertion_point(field_set_allocated:engine.TemplateRegisterRequest.source_package)
+}
+
+// -------------------------------------------------------------------
+
+// TemplateRegisterReply
+
+// bool result = 1;
+inline void TemplateRegisterReply::clear_result() {
+  result_ = false;
+}
+inline bool TemplateRegisterReply::result() const {
+  // @@protoc_insertion_point(field_get:engine.TemplateRegisterReply.result)
+  return result_;
+}
+inline void TemplateRegisterReply::set_result(bool value) {
+  
+  result_ = value;
+  // @@protoc_insertion_point(field_set:engine.TemplateRegisterReply.result)
 }
 
 #ifdef __GNUC__

@@ -38,28 +38,28 @@ class EngineService final {
    public:
     virtual ~StubInterface() {}
     // Sends a greeting
-    virtual ::grpc::Status SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::engine::HelloReply* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::HelloReply>> AsyncSayHello(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::HelloReply>>(AsyncSayHelloRaw(context, request, cq));
+    virtual ::grpc::Status RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::engine::TemplateRegisterReply* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::TemplateRegisterReply>> AsyncRegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::TemplateRegisterReply>>(AsyncRegisterTemplateRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::HelloReply>> PrepareAsyncSayHello(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::HelloReply>>(PrepareAsyncSayHelloRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::TemplateRegisterReply>> PrepareAsyncRegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::engine::TemplateRegisterReply>>(PrepareAsyncRegisterTemplateRaw(context, request, cq));
     }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
       // Sends a greeting
-      virtual void SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -70,33 +70,33 @@ class EngineService final {
     #endif
     virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::engine::HelloReply>* AsyncSayHelloRaw(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::engine::HelloReply>* PrepareAsyncSayHelloRaw(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::engine::TemplateRegisterReply>* AsyncRegisterTemplateRaw(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::engine::TemplateRegisterReply>* PrepareAsyncRegisterTemplateRaw(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
-    ::grpc::Status SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::engine::HelloReply* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::HelloReply>> AsyncSayHello(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::HelloReply>>(AsyncSayHelloRaw(context, request, cq));
+    ::grpc::Status RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::engine::TemplateRegisterReply* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>> AsyncRegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>>(AsyncRegisterTemplateRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::HelloReply>> PrepareAsyncSayHello(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::HelloReply>>(PrepareAsyncSayHelloRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>> PrepareAsyncRegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>>(PrepareAsyncRegisterTemplateRaw(context, request, cq));
     }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
-      void SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, std::function<void(::grpc::Status)>) override;
-      void SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, std::function<void(::grpc::Status)>) override;
+      void RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, std::function<void(::grpc::Status)>) override;
+      void RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void SayHello(::grpc::ClientContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void RegisterTemplate(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void SayHello(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::HelloReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void RegisterTemplate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::engine::TemplateRegisterReply* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
      private:
       friend class Stub;
@@ -109,9 +109,9 @@ class EngineService final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class experimental_async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::engine::HelloReply>* AsyncSayHelloRaw(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::engine::HelloReply>* PrepareAsyncSayHelloRaw(::grpc::ClientContext* context, const ::engine::HelloRequest& request, ::grpc::CompletionQueue* cq) override;
-    const ::grpc::internal::RpcMethod rpcmethod_SayHello_;
+    ::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>* AsyncRegisterTemplateRaw(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::engine::TemplateRegisterReply>* PrepareAsyncRegisterTemplateRaw(::grpc::ClientContext* context, const ::engine::TemplateRegisterRequest& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_RegisterTemplate_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -120,124 +120,124 @@ class EngineService final {
     Service();
     virtual ~Service();
     // Sends a greeting
-    virtual ::grpc::Status SayHello(::grpc::ServerContext* context, const ::engine::HelloRequest* request, ::engine::HelloReply* response);
+    virtual ::grpc::Status RegisterTemplate(::grpc::ServerContext* context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response);
   };
   template <class BaseClass>
-  class WithAsyncMethod_SayHello : public BaseClass {
+  class WithAsyncMethod_RegisterTemplate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithAsyncMethod_SayHello() {
+    WithAsyncMethod_RegisterTemplate() {
       ::grpc::Service::MarkMethodAsync(0);
     }
-    ~WithAsyncMethod_SayHello() override {
+    ~WithAsyncMethod_RegisterTemplate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SayHello(::grpc::ServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/) override {
+    ::grpc::Status RegisterTemplate(::grpc::ServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestSayHello(::grpc::ServerContext* context, ::engine::HelloRequest* request, ::grpc::ServerAsyncResponseWriter< ::engine::HelloReply>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestRegisterTemplate(::grpc::ServerContext* context, ::engine::TemplateRegisterRequest* request, ::grpc::ServerAsyncResponseWriter< ::engine::TemplateRegisterReply>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_SayHello<Service > AsyncService;
+  typedef WithAsyncMethod_RegisterTemplate<Service > AsyncService;
   template <class BaseClass>
-  class ExperimentalWithCallbackMethod_SayHello : public BaseClass {
+  class ExperimentalWithCallbackMethod_RegisterTemplate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    ExperimentalWithCallbackMethod_SayHello() {
+    ExperimentalWithCallbackMethod_RegisterTemplate() {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::Service::
     #else
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(0,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::engine::HelloRequest, ::engine::HelloReply>(
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::engine::TemplateRegisterRequest, ::engine::TemplateRegisterReply>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
     #else
                    ::grpc::experimental::CallbackServerContext*
     #endif
-                     context, const ::engine::HelloRequest* request, ::engine::HelloReply* response) { return this->SayHello(context, request, response); }));}
-    void SetMessageAllocatorFor_SayHello(
-        ::grpc::experimental::MessageAllocator< ::engine::HelloRequest, ::engine::HelloReply>* allocator) {
+                     context, const ::engine::TemplateRegisterRequest* request, ::engine::TemplateRegisterReply* response) { return this->RegisterTemplate(context, request, response); }));}
+    void SetMessageAllocatorFor_RegisterTemplate(
+        ::grpc::experimental::MessageAllocator< ::engine::TemplateRegisterRequest, ::engine::TemplateRegisterReply>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::engine::HelloRequest, ::engine::HelloReply>*>(handler)
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::engine::TemplateRegisterRequest, ::engine::TemplateRegisterReply>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~ExperimentalWithCallbackMethod_SayHello() override {
+    ~ExperimentalWithCallbackMethod_RegisterTemplate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SayHello(::grpc::ServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/) override {
+    ::grpc::Status RegisterTemplate(::grpc::ServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* SayHello(
-      ::grpc::CallbackServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/)
+    virtual ::grpc::ServerUnaryReactor* RegisterTemplate(
+      ::grpc::CallbackServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/)
     #else
-    virtual ::grpc::experimental::ServerUnaryReactor* SayHello(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/)
+    virtual ::grpc::experimental::ServerUnaryReactor* RegisterTemplate(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/)
     #endif
       { return nullptr; }
   };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_SayHello<Service > CallbackService;
+  typedef ExperimentalWithCallbackMethod_RegisterTemplate<Service > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_SayHello<Service > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_RegisterTemplate<Service > ExperimentalCallbackService;
   template <class BaseClass>
-  class WithGenericMethod_SayHello : public BaseClass {
+  class WithGenericMethod_RegisterTemplate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithGenericMethod_SayHello() {
+    WithGenericMethod_RegisterTemplate() {
       ::grpc::Service::MarkMethodGeneric(0);
     }
-    ~WithGenericMethod_SayHello() override {
+    ~WithGenericMethod_RegisterTemplate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SayHello(::grpc::ServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/) override {
+    ::grpc::Status RegisterTemplate(::grpc::ServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
   };
   template <class BaseClass>
-  class WithRawMethod_SayHello : public BaseClass {
+  class WithRawMethod_RegisterTemplate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawMethod_SayHello() {
+    WithRawMethod_RegisterTemplate() {
       ::grpc::Service::MarkMethodRaw(0);
     }
-    ~WithRawMethod_SayHello() override {
+    ~WithRawMethod_RegisterTemplate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SayHello(::grpc::ServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/) override {
+    ::grpc::Status RegisterTemplate(::grpc::ServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestSayHello(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestRegisterTemplate(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
-  class ExperimentalWithRawCallbackMethod_SayHello : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_RegisterTemplate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    ExperimentalWithRawCallbackMethod_SayHello() {
+    ExperimentalWithRawCallbackMethod_RegisterTemplate() {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::Service::
     #else
@@ -251,48 +251,48 @@ class EngineService final {
     #else
                    ::grpc::experimental::CallbackServerContext*
     #endif
-                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SayHello(context, request, response); }));
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->RegisterTemplate(context, request, response); }));
     }
-    ~ExperimentalWithRawCallbackMethod_SayHello() override {
+    ~ExperimentalWithRawCallbackMethod_RegisterTemplate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SayHello(::grpc::ServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/) override {
+    ::grpc::Status RegisterTemplate(::grpc::ServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* SayHello(
+    virtual ::grpc::ServerUnaryReactor* RegisterTemplate(
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
     #else
-    virtual ::grpc::experimental::ServerUnaryReactor* SayHello(
+    virtual ::grpc::experimental::ServerUnaryReactor* RegisterTemplate(
       ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
     #endif
       { return nullptr; }
   };
   template <class BaseClass>
-  class WithStreamedUnaryMethod_SayHello : public BaseClass {
+  class WithStreamedUnaryMethod_RegisterTemplate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithStreamedUnaryMethod_SayHello() {
+    WithStreamedUnaryMethod_RegisterTemplate() {
       ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::internal::StreamedUnaryHandler< ::engine::HelloRequest, ::engine::HelloReply>(std::bind(&WithStreamedUnaryMethod_SayHello<BaseClass>::StreamedSayHello, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler< ::engine::TemplateRegisterRequest, ::engine::TemplateRegisterReply>(std::bind(&WithStreamedUnaryMethod_RegisterTemplate<BaseClass>::StreamedRegisterTemplate, this, std::placeholders::_1, std::placeholders::_2)));
     }
-    ~WithStreamedUnaryMethod_SayHello() override {
+    ~WithStreamedUnaryMethod_RegisterTemplate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status SayHello(::grpc::ServerContext* /*context*/, const ::engine::HelloRequest* /*request*/, ::engine::HelloReply* /*response*/) override {
+    ::grpc::Status RegisterTemplate(::grpc::ServerContext* /*context*/, const ::engine::TemplateRegisterRequest* /*request*/, ::engine::TemplateRegisterReply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedSayHello(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::engine::HelloRequest,::engine::HelloReply>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedRegisterTemplate(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::engine::TemplateRegisterRequest,::engine::TemplateRegisterReply>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_SayHello<Service > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_RegisterTemplate<Service > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_SayHello<Service > StreamedService;
+  typedef WithStreamedUnaryMethod_RegisterTemplate<Service > StreamedService;
 };
 
 }  // namespace engine

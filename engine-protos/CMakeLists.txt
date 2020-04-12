@@ -3,11 +3,13 @@
 list(APPEND ENGINE_GRPC_HEADERS
     "src/engine.pb.h"
     "src/engine.grpc.pb.h"
+    "src/grpc_options.h"
 )
 
 list (APPEND ENGINE_GRPC_SRC
     "src/engine.pb.cc"
     "src/engine.grpc.pb.cc"
+    "src/grpc_options.cpp"
     ${ENGINE_GRPC_HEADERS}
 )
 
